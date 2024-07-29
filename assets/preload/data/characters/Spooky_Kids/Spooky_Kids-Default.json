@@ -1,0 +1,90 @@
+{
+	"aspect": "Default",
+	"position": [
+		-25,
+		205
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"symbol": "note sing left",
+			"loop": false,
+			"fps": 24,
+			"key": "singLEFT",
+			"indices": []
+		},
+		{
+			"symbol": "spooky DOWN note",
+			"loop": false,
+			"fps": 24,
+			"key": "singDOWN",
+			"indices": []
+		},
+		{
+			"symbol": "spooky UP NOTE",
+			"loop": false,
+			"fps": 24,
+			"key": "singUP",
+			"indices": []
+		},
+		{
+			"symbol": "spooky dance idle",
+			"loop": false,
+			"fps": 24,
+			"key": "idle",
+			"indices": []
+		},
+		{
+			"symbol": "spooky sing right",
+			"loop": false,
+			"fps": 24,
+			"key": "singRIGHT",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "spooky dance idle",
+			"key": "danceLeft",
+			"fps": 24,
+			"indices": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			]
+		},
+		{
+			"loop": false,
+			"symbol": "spooky dance idle",
+			"key": "danceRight",
+			"fps": 24,
+			"indices": [
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			]
+		}
+	],
+	"name": "Spooky_Kids",
+	"image": "spooky_kids_assets",
+	"zoom": 0.8,
+	"antialiasing": true,
+	"onRight": true,
+	"skin": "Default",
+	"icon": "spooky",
+	"camera": [
+		15,
+		0
+	],
+	"singTime": 1,
+	"danceIdle": true
+}

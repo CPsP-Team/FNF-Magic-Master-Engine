@@ -2,7 +2,6 @@ package substates;
 
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import states.PlayState.SongListData;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.ui.FlxUI;
@@ -20,10 +19,10 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
-import FlxCustom.FlxUICustomNumericStepper;
-import FlxCustom.FlxUICustomButton;
-import FlxCustom.FlxUICustomList;
-import FlxCustom.FlxCustomButton;
+import objects.ui.UINumericStepper;
+import objects.ui.UIButton;
+import objects.ui.UIList;
+import flixel.ui.FlxCustomButton;
 
 class PopUpSubState extends MusicBeatSubstate {
 	public var onYes:Void->Void = function(){};

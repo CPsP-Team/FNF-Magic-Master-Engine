@@ -1,0 +1,18 @@
+<TextureAtlas imagePath="small_numbers.png">
+	<!-- Created with Adobe Animate version 21.0.0.35450 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture x="1" frameWidth="34" y="1" frameX="0" name="0 small0000" frameHeight="43" frameY="-6" width="34" height="37"/>
+	<SubTexture x="36" frameWidth="32" y="1" frameX="0" name="1 small0000" frameHeight="43" frameY="0" width="32" height="42"/>
+	<SubTexture x="69" frameWidth="35" y="1" frameX="0" name="2 small0000" frameHeight="43" frameY="-1" width="35" height="42"/>
+	<SubTexture x="105" frameWidth="34" y="1" frameX="0" name="3 small0000" frameHeight="43" frameY="0" width="34" height="43"/>
+	<SubTexture x="140" frameWidth="33" y="1" frameX="0" name="4 small0000" frameHeight="43" frameY="-2" width="33" height="40"/>
+	<SubTexture x="174" frameWidth="34" y="1" frameX="0" name="5 small0000" frameHeight="43" frameY="0" width="35" height="43"/>
+	<SubTexture x="210" frameWidth="34" y="1" frameX="0" name="6 small0000" frameHeight="43" frameY="0" width="34" height="43"/>
+	<SubTexture x="1" frameWidth="34" y="45" frameX="0" name="7 small0000" frameHeight="43" frameY="0" width="34" height="43"/>
+	<SubTexture x="36" frameWidth="33" y="45" frameX="0" name="8 small0000" frameHeight="43" frameY="0" width="33" height="41"/>
+	<SubTexture x="70" frameWidth="33" y="45" frameX="0" name="9 small0000" frameHeight="43" frameY="0" width="33" height="43"/>
+	<SubTexture x="104" frameWidth="15" y="45" frameX="0" name="left small0000" frameHeight="43" frameY="-12" width="15" height="22"/>
+	<SubTexture x="120" frameWidth="32" y="45" frameX="0" name="line small0000" frameHeight="43" frameY="-13" width="32" height="19"/>
+	<SubTexture x="153" frameWidth="17" y="45" frameX="0" name="period small0000" frameHeight="43" frameY="-26" width="17" height="17"/>
+	<SubTexture x="171" frameWidth="15" y="45" frameX="0" name="right small0000" frameHeight="43" frameY="-14" width="15" height="22"/>
+</TextureAtlas>

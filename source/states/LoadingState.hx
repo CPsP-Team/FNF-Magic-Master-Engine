@@ -3,45 +3,53 @@ package states;
 import flixel.graphics.frames.FlxAtlasFrames;
 import lime.utils.Assets as LimeAssets;
 import flixel.addons.util.FlxAsyncLoop;
+import objects.notes.Note.Event_Data;
+import objects.notes.Note.Note_Data;
+import objects.songs.Song.Song_File;
 import lime.utils.AssetManifest;
+import objects.notes.StrumLine;
 import flixel.util.FlxGradient;
 import lime.utils.AssetLibrary;
+import objects.game.Character;
+import objects.scripts.Script;
 import openfl.utils.AssetType;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import objects.game.Alphabet;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import openfl.utils.Assets;
+import objects.game.Stage;
+import objects.notes.Note;
 import sys.thread.Thread;
 import flixel.FlxSprite;
 import lime.app.Promise;
 import flixel.ui.FlxBar;
 import flixel.FlxState;
 import lime.app.Future;
+import utils.Language;
+import utils.Scripts;
 import haxe.io.Path;
 import flixel.FlxG;
 import haxe.Json;
-
-import Stage;
-import Song.SwagSong;
-import Note.NoteData;
-import Note.EventData;
 
 #if sys
 import sys.FileSystem;
 import sys.io.File;
 #end
 
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 class LoadingState extends MusicBeatState {
 	public static var globalStuff:Array<Dynamic> = [];
 	public var toLoadStuff:Array<Dynamic> = [];
 
-	public static var textLoad:String = "";
-	public var background:FlxSprite;
-	public var loadingText:Alphabet;
+	public var sprBackground:FlxSprite;
+	public var sprShape1:FlxSprite;
+	public var sprShape2:FlxSprite;
+	public var sprShape3:FlxSprite;
+	public var sprShape4:FlxSprite;
 
 	private var tempLoadingStuff:Array<Dynamic> = [];
 	private var totalCount:Int = 0;
@@ -66,41 +74,29 @@ class LoadingState extends MusicBeatState {
 
 	override function create():Void {
 		FlxG.mouse.visible = false;
-		textLoad = "Starting";
 
 		if(!WithMusic && FlxG.sound.music != null){FlxG.sound.music.stop();}
 		
-		preLoadStuff();
-		
-		totalCount = tempLoadingStuff.length;
-		
-		background = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
-		background.setGraphicSize(FlxG.width, FlxG.height);
-        background.color = 0xffff8cf7;
-		background.screenCenter();
-		add(background);
+		sprBackground = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
+		sprBackground.setGraphicSize(FlxG.width, FlxG.height);
+        sprBackground.color = 0xffff8cf7;
+		sprBackground.screenCenter();
+		add(sprBackground);
 
-		var shape_1:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, 100, FlxColor.BLACK); add(shape_1);
-        var shape_2:FlxSprite = new FlxSprite(0, 105).makeGraphic(FlxG.width, 5, FlxColor.BLACK); add(shape_2);
-        var shape_3:FlxSprite = new FlxSprite(0, FlxG.height - 110).makeGraphic(FlxG.width, 5, FlxColor.BLACK); add(shape_3);
-        var shape_4:FlxSprite = new FlxSprite(0, FlxG.height - 100).makeGraphic(FlxG.width, 100, FlxColor.BLACK); add(shape_4);
-
-		loadingText = new Alphabet(20, 525, [{text:'${LangSupport.getText("loading_info_1")} 0%'}]); add(loadingText);
-
-		loadStuff();
+		sprShape1 = new FlxSprite(0, 0).makeGraphic(FlxG.width, 100, FlxColor.BLACK); add(sprShape1);
+        sprShape2 = new FlxSprite(0, 105).makeGraphic(FlxG.width, 5, FlxColor.BLACK); add(sprShape2);
+        sprShape3 = new FlxSprite(0, FlxG.height - 110).makeGraphic(FlxG.width, 5, FlxColor.BLACK); add(sprShape3);
+        sprShape4 = new FlxSprite(0, FlxG.height - 100).makeGraphic(FlxG.width, 100, FlxColor.BLACK); add(sprShape4);
 				
 		super.create();
+		
+		preLoadStuff();
+		totalCount = tempLoadingStuff.length;
+		loadStuff();
 	}
 
 	override function update(elapsed:Float){
 		super.update(elapsed);
-	}
-
-	function updateText():Void {
-		var percent:Int = Std.int((totalCount - tempLoadingStuff.length) * 100 / totalCount);
-		if(loadingText.text == '${LangSupport.getText("loading_info_1")} ${percent} ${textLoad}'){return;}
-		loadingText.cur_data = [{text:'${LangSupport.getText("loading_info_1")} ${percent}% ${textLoad}'}];
-		loadingText.loadText();
 	}
 
 	private function preLoadStuff():Void {
@@ -118,82 +114,95 @@ class LoadingState extends MusicBeatState {
 			
 			switch(stuff.type){
 				case "SONG":{
-					var _song:SwagSong = cast stuff.instance;
+					var _song:Song_File = cast stuff.instance;
 					
 					tempLoadingStuff.push({ type: SOUND, instance:Paths.inst(_song.song, _song.category)});
 					
-					if(_song.hasVoices){
-						for(i in 0..._song.sectionStrums.length){
-							if(_song.sectionStrums[i].charToSing.length <= 0){continue;}
-							if(_song.characters.length <= _song.sectionStrums[i].charToSing[0]){continue;}
-							var voice_path:String = Paths.voice(i, _song.characters[_song.sectionStrums[i].charToSing[0]][0], _song.song, _song.category);
+					if(_song.voices){
+						for(i in 0..._song.strums.length){
+							if(_song.strums[i].characters.length <= 0){continue;}
+							if(_song.characters.length <= _song.strums[i].characters[0]){continue;}
+							var voice_path:String = Paths.voice(i, _song.characters[_song.strums[i].characters[0]][0], _song.song, _song.category);
 							if(!Paths.exists(voice_path)){continue;}
-							tempLoadingStuff.push({type:SOUND,instance:voice_path});
+							tempLoadingStuff.push({type: SOUND, instance: voice_path});
 						}
 					}
 
-					for(p in StrumLine.P_STAT){
-						tempLoadingStuff.push({ type:IMAGE, instance: Paths.styleImage(p.popup, _song.uiStyle, 'shared') });
+					for(p in StrumLine.ranks){
+						tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage(p.popup, _song.style, 'shared') });
 					}
 
-					for(p in PlayState.introAssets){
-						if(p.asset != null){tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage(p.asset, _song.uiStyle, 'shared') });}
-						if(p.sound != null){tempLoadingStuff.push({ type: SOUND, instance: Paths.styleSound(p.sound, _song.uiStyle, 'shared') });}
+					if((TARGET is PlayState)){
+						for(p in cast(TARGET, PlayState).introAssets){
+							if(p.asset != null){tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage(p.asset, _song.style, 'shared') });}
+							if(p.sound != null){tempLoadingStuff.push({ type: SOUND, instance: Paths.styleSound(p.sound, _song.style, 'shared') });}
+						}
 					}
 
-					tempLoadingStuff.push({type:SOUND,instance:Paths.styleSound('fnf_loss_sfx', _song.uiStyle, 'shared')});
-					tempLoadingStuff.push({type:MUSIC,instance:Paths.styleMusic('gameOverEnd', _song.uiStyle, 'shared')});
-					tempLoadingStuff.push({type:SOUND,instance:Paths.styleSound('missnote1', _song.uiStyle, 'shared')});
-					tempLoadingStuff.push({type:SOUND,instance:Paths.styleSound('missnote2', _song.uiStyle, 'shared')});
-					tempLoadingStuff.push({type:SOUND,instance:Paths.styleSound('missnote3', _song.uiStyle, 'shared')});
-					tempLoadingStuff.push({type:MUSIC,instance:Paths.styleMusic('gameOver', _song.uiStyle, 'shared')});
+					tempLoadingStuff.push({type: SOUND, instance: Paths.styleSound('fnf_loss_sfx', _song.style, 'shared')});
+					tempLoadingStuff.push({type: MUSIC, instance: Paths.styleMusic('gameOverEnd', _song.style, 'shared')});
+					tempLoadingStuff.push({type: SOUND, instance: Paths.styleSound('missnote1', _song.style, 'shared')});
+					tempLoadingStuff.push({type: SOUND, instance: Paths.styleSound('missnote2', _song.style, 'shared')});
+					tempLoadingStuff.push({type: SOUND, instance: Paths.styleSound('missnote3', _song.style, 'shared')});
+					tempLoadingStuff.push({type: MUSIC, instance: Paths.styleMusic('gameOver', _song.style, 'shared')});
+					tempLoadingStuff.push({type: MUSIC, instance: Paths.styleMusic('results', _song.style, 'shared')});
 					
-					Stage.getStageScript(_song.stage).exFunction("addToLoad", [tempLoadingStuff]);
-
-					var song_path:String = Paths.song_script(_song.song);
-					if(Paths.exists(song_path)){
-						var song_script:Script = new Script();
-						song_script.Name = "ScriptSong";
-						song_script.exScript(song_path.getText());
-						TARGET.tempScripts.set("ScriptSong", song_script);
+					var stage_script:Script = Scripts.quick(Paths.stage(_song.stage));
+					if(stage_script != null){stage_script.call("cache", [tempLoadingStuff]);}
+					
+					var song_script:Script = Scripts.quick(Paths.song(_song.song, 'Song_Events.hx'));
+					if (song_script != null) {
+						song_script.parent = TARGET;
+						TARGET.scripts.set("Script_Song", song_script);
 					}
 
 					for(char in _song.characters){
-						Character.addToLoad(tempLoadingStuff, char[0], char[4]);
+						Character.cache(tempLoadingStuff, char[0], char[4]);
 					}
 
-					for(ev in _song.events){
-						var cur_Event:EventData = Note.getEventData(ev);
+					for(event in _song.events){
+						var cur_Event:Event_Data = Note.getEventData(event);
 						if(cur_Event == null || cur_Event.isBroken){continue;}
-						for(dat in cur_Event.eventData){
-							if(!Paths.exists(Paths.event(dat[0]))){continue;}
-							tempLoadingStuff.push({type:"FUNCTION",instance:function(){
-								textLoad = "[Events]";
-								TARGET.pushTempScript(dat[0]);
-								TARGET.tempScripts.get(dat[0]).exFunction("preload_event", cast(dat[1],Array<Dynamic>));
+						for(cur_action in cur_Event.eventData){
+							if(!Paths.exists(Paths.event(cur_action[0]))){continue;}
+							var script_event:Script = TARGET.scripts.get(cur_action[0]);
+							if(script_event == null){
+								var script_event:Script = Scripts.quick(Paths.event(cur_action[0]));
+								TARGET.scripts.set(cur_action[0], script_event);
+								continue;
+							}
+							tempLoadingStuff.push({type: "FUNCTION", instance: function(){
+								script_event.call("preload_event", cast(cur_action[1], Array<Dynamic>));
 							}});
 						}
 					}
 
-					for(strum in _song.sectionStrums){
-						for(s in strum.notes){
-							for(ss in s.sectionNotes){
-								var cur_Note:NoteData = Note.getNoteData(ss);
-								var events_data:Array<Dynamic> = [];
-								if(cur_Note.eventData != null){events_data = cur_Note.eventData.copy();}
+					for(strum in _song.strums){
+						for(section in strum.sections){
+							for(note in section.notes){
+								var cur_Note:Note_Data = Note.getNoteData(note);
+								var note_events:Array<Dynamic> = [];
+								if(cur_Note.eventData != null){note_events = cur_Note.eventData.copy();}
+
 								if(cur_Note.preset != null && cur_Note.preset != "Default"){
-									var json_path:String = Paths.getPath('${cur_Note.preset}.json', TEXT, 'notes');
-									if(Paths.exists(json_path)){
-										var event_list:Array<Dynamic> = json_path.getJson().Events;
-										for(e in event_list){events_data.push(e);}
+									var preset_path:String = Paths.preset(cur_Note.preset);
+									if(Paths.exists(preset_path)){
+										for(event in cast(preset_path.getJson().Events, Array<Dynamic>)){
+											note_events.push(event);
+										}
 									}
 								}
-								for(dat in events_data){
-									if(!Paths.exists(Paths.event(dat[0]))){continue;}
-									tempLoadingStuff.push({type:"FUNCTION",instance:function(){
-										textLoad = "[Events]";
-										TARGET.pushTempScript(dat[0]);
-										TARGET.tempScripts.get(dat[0]).exFunction("preload_event", cast(dat[1],Array<Dynamic>));
+
+								for(cur_action in note_events){
+									if(!Paths.exists(Paths.event(cur_action[0]))){continue;}
+									var script_event:Script = TARGET.scripts.get(cur_action[0]);
+									if(script_event == null){
+										var script_event:Script = Scripts.quick(Paths.event(cur_action[0]));
+										TARGET.scripts.set(cur_action[0], script_event);
+										continue;
+									}
+									tempLoadingStuff.push({type: "FUNCTION", instance: function(){
+										script_event.call("preload_event", cast(cur_action[1], Array<Dynamic>));
 									}});
 								}
 							}
@@ -204,6 +213,7 @@ class LoadingState extends MusicBeatState {
 				}
 				case "PRELOAD":{
 					if(stuff.instance != null){stuff.instance(this);}
+					
 					continue;
 				}
 			}
@@ -211,7 +221,7 @@ class LoadingState extends MusicBeatState {
 			tempLoadingStuff.push(stuff);
 		}
 		
-		for(s in TARGET.scripts){s.exFunction("addToLoad", [tempLoadingStuff]);}
+		TARGET.scripts.call("cache", [tempLoadingStuff]);
 	}
 
 	private function loadStuff():Void {
@@ -223,9 +233,9 @@ class LoadingState extends MusicBeatState {
 
 				switch(_stuff.type){
 					default: { trace(_stuff); }
-					case IMAGE: {textLoad = "[Graphics]"; updateText(); SavedFiles.getGraphic(_stuff.instance);}
-					case SOUND, MUSIC: {textLoad = "[Sounds and Music]"; updateText(); SavedFiles.getSound(_stuff.instance);}
-					case TEXT: {textLoad = "[Texts]"; updateText(); SavedFiles.getText(_stuff.instance);}
+					case IMAGE: {if(!Settings.get("UseGpu")){Files.getGraphic(_stuff.instance);}}
+					case SOUND, MUSIC: {Files.getSound(_stuff.instance);}
+					case TEXT: {Files.getText(_stuff.instance);}
 					case "FUNCTION":{_stuff.instance();}
 				}
 			}

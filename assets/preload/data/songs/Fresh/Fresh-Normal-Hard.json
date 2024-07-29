@@ -1,7 +1,7 @@
 {
 	"song": {
-		"strumToPlay": 1,
-		"single_player": 1,
+		
+		"player": 1,
 		"characters": [
 			[
 				"Girlfriend",
@@ -41,367 +41,367 @@
 			]
 		],
 		"difficulty": "Hard",
-		"hasVoices": true,
-		"generalSection": [
+		"voices": true,
+		"sections": [
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 0,
+				"strum": 0,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			},
 			{
-				"strumToFocus": 1,
+				"strum": 1,
 				"lengthInSteps": 16,
-				"events": [],
-				"charToFocus": 0,
+
+				"character": 0,
 				"changeBPM": false,
 				"bpm": 120
 			}
 		],
 		"song": "Fresh",
-		"uiStyle": "Default",
+		"style": "Default",
 		"category": "Normal",
 		"stage": "Stage",
-		"needsVoices": true,
+
 		"playable": [
 			0
 		],
-		"validScore": true,
+
 		"bpm": 120,
-		"sectionStrums": [
+		"strums": [
 			{
-				"isPlayable": true,
+				"playable": true,
 				"keys": 4,
-				"charToSing": [
+				"characters": [
 					1
 				],
-				"notes": [
+				"sections": [
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								0,
 								1,
@@ -503,26 +503,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								4000,
 								1,
@@ -614,26 +614,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								8250,
 								0,
@@ -665,26 +665,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								12250,
 								0,
@@ -726,26 +726,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								16250.001,
 								0,
@@ -797,26 +797,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								20000,
 								3,
@@ -878,26 +878,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								24000,
 								3,
@@ -949,16 +949,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								26000,
 								1,
@@ -1030,36 +1030,36 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								32500.002,
 								0,
@@ -1121,16 +1121,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								34250,
 								0,
@@ -1182,36 +1182,36 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								40250,
 								0,
@@ -1263,26 +1263,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								44250,
 								0,
@@ -1334,26 +1334,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								48250,
 								0,
@@ -1405,26 +1405,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								52000,
 								3,
@@ -1496,26 +1496,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								56000,
 								3,
@@ -1567,16 +1567,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								58000,
 								1,
@@ -1648,36 +1648,36 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								64500.0039,
 								0,
@@ -1739,16 +1739,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								66250,
 								0,
@@ -1800,36 +1800,36 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								72000,
 								1,
@@ -1931,26 +1931,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								76000,
 								1,
@@ -2032,66 +2032,66 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							1
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					}
 				],
-				"noteStyle": "Default"
+				"style": "Default"
 			},
 			{
-				"isPlayable": true,
+				"playable": true,
 				"keys": 4,
-				"charToSing": [
+				"characters": [
 					2
 				],
-				"notes": [
+				"sections": [
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								2000,
 								1,
@@ -2193,26 +2193,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								6000,
 								1,
@@ -2304,26 +2304,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								10250,
 								0,
@@ -2355,26 +2355,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								14250,
 								0,
@@ -2416,26 +2416,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								18250,
 								0,
@@ -2487,26 +2487,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								22000,
 								3,
@@ -2568,36 +2568,36 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								28000,
 								3,
@@ -2649,16 +2649,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								30000,
 								1,
@@ -2730,36 +2730,36 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								36500,
 								0,
@@ -2821,16 +2821,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								38250,
 								0,
@@ -2882,26 +2882,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								42250,
 								0,
@@ -2953,26 +2953,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								46250,
 								0,
@@ -3024,26 +3024,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								50250,
 								0,
@@ -3095,26 +3095,26 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								54000,
 								3,
@@ -3186,36 +3186,36 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								60000,
 								3,
@@ -3267,16 +3267,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								62000,
 								1,
@@ -3348,36 +3348,36 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								68500,
 								0,
@@ -3439,16 +3439,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								70250,
 								0,
@@ -3500,16 +3500,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								72000,
 								1,
@@ -3611,16 +3611,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								74000,
 								1,
@@ -3722,16 +3722,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								76000,
 								1,
@@ -3813,16 +3813,16 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [
+
+
+						"notes": [
 							[
 								78000,
 								1,
@@ -3904,34 +3904,34 @@
 								[]
 							]
 						],
-						"charToSing": [
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					},
 					{
-						"keys": 4,
-						"changeKeys": false,
-						"sectionNotes": [],
-						"charToSing": [
+
+
+						"notes": [],
+						"characters": [
 							2
 						],
-						"altAnim": false,
-						"changeSing": false
+						"changeAlt": false,
+						"changeCharacters": false
 					}
 				],
-				"noteStyle": "Default"
+				"style": "Default"
 			}
 		],
 		"speed": 1.8

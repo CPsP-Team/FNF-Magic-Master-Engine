@@ -1,22 +1,9 @@
 package substates;
 
-import states.MusicBeatState;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxSubState;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.input.keyboard.FlxKey;
-import flixel.sound.FlxSound;
-import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
-import flixel.math.FlxPoint;
-import haxe.DynamicAccess;
+import objects.game.Alphabet;
 import flixel.FlxObject;
-
-import states.PlayState.SongListData;
+import flixel.FlxG;
 
 class InformationSubState extends MusicBeatSubstate {
     public var _cam_follow:FlxObject;
@@ -45,7 +32,7 @@ class InformationSubState extends MusicBeatSubstate {
         if(canControlle){
             _cam_follow.y -= FlxG.mouse.wheel * 15;
 			
-			if(principal_controls.checkAction("Menu_Back", JUST_PRESSED)){doClose();}
+			if(controls.check("MenuBack", JUST_PRESSED)){doClose();}
         }
 
         if(_cam_follow.y >= lblInfo.y + lblInfo.height - (FlxG.height/2)){_cam_follow.y = lblInfo.y + lblInfo.height - (FlxG.height/2);}

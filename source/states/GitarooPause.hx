@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 
-using SavedFiles;
+using utils.Files;
 
 class GitarooPause extends MusicBeatState
 {
@@ -54,10 +54,10 @@ class GitarooPause extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (principal_controls.checkAction("Menu_Left", JUST_PRESSED) || principal_controls.checkAction("Menu_Right", JUST_PRESSED))
+		if (controls.check("Menu_Left", JUST_PRESSED) || controls.check("MenuRight", JUST_PRESSED))
 			changeThing();
 
-		if (principal_controls.checkAction("Menu_Accept", JUST_PRESSED))
+		if (controls.check("MenuAccept", JUST_PRESSED))
 		{
 			if (replaySelect)
 			{

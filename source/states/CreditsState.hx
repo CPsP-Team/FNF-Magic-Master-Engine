@@ -1,9 +1,6 @@
 package states;
 
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.addons.text.FlxTypeText;
 import flixel.addons.ui.FlxUIButton;
 import flixel.input.mouse.FlxMouse;
 import flixel.effects.FlxFlicker;
@@ -11,6 +8,7 @@ import flixel.util.FlxGradient;
 import flixel.util.FlxGradient;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import objects.game.Alphabet;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import flixel.math.FlxPoint;
@@ -23,26 +21,17 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import io.newgrounds.NG;
 import flixel.FlxCamera;
+import utils.Magic;
 import flixel.FlxG;
 import haxe.Json;
 
-import Song.ItemWeek;
-import Song.SwagSong;
-import Character.Skins;
-import Song.SongStuffManager;
-import FlxCustom.FlxCustomButton;
-import FlxCustom.FlxUICustomList;
-import FlxCustom.FlxUICustomButton;
-import states.PlayState.SongListData;
-import FlxCustom.FlxUICustomNumericStepper;
-
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord;
 import sys.FileSystem;
 import sys.io.File;
 #end
 
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 class CreditsState extends MusicBeatState {
@@ -74,8 +63,8 @@ class CreditsState extends MusicBeatState {
 
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the credits", null);
-		MagicStuff.setWindowTitle('In the credits');
+		Discord.change("In the credits", null);
+		Magic.setWindowTitle('In the credits');
 		#end
 		
 		background = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
@@ -141,11 +130,11 @@ class CreditsState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float):Void {
-		MagicStuff.sortMembersByY(cast alphaGroup, (FlxG.height / 2) - (alphaGroup.members[curCredit].height / 2), curCredit, 50);
+		Magic.sortMembersByY(cast alphaGroup, (FlxG.height / 2) - (alphaGroup.members[curCredit].height / 2), curCredit, 50);
 
 		if(canControlle){
-			if(principal_controls.checkAction("Menu_Up", JUST_PRESSED)){changeCredit(-1);}
-			if(principal_controls.checkAction("Menu_Down", JUST_PRESSED)){changeCredit(1);}
+			if(controls.check("MenuUp", JUST_PRESSED)){changeCredit(-1);}
+			if(controls.check("MenuDown", JUST_PRESSED)){changeCredit(1);}
 		}
 		
         super.update(elapsed);

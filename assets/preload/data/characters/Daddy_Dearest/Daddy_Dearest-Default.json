@@ -1,0 +1,58 @@
+{
+	"aspect": "Default",
+	"icon": "dad",
+	"position": [
+		0,
+		-15
+	],
+	"scale": 1,
+	"zoom": 0.8,
+	"image": "DADDY_DEAREST",
+	"name": "Daddy_Dearest",
+	"color": "#dd6dfc",
+	"singTime": 1,
+	"antialiasing": true,
+	"skin": "Default",
+	"camera": [
+		274.146341463415,
+		301.829268292683
+	],
+	"onRight": true,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "Dad idle dance",
+			"fps": 24,
+			"indices": [],
+			"key": "idle"
+		},
+		{
+			"loop": false,
+			"symbol": "Dad sing left note",
+			"fps": 24,
+			"indices": [],
+			"key": "singRIGHT"
+		},
+		{
+			"loop": false,
+			"symbol": "Dad Sing Note DOWN",
+			"fps": 24,
+			"indices": [],
+			"key": "singDOWN"
+		},
+		{
+			"loop": false,
+			"symbol": "Dad Sing note UP",
+			"fps": 24,
+			"indices": [],
+			"key": "singUP"
+		},
+		{
+			"loop": false,
+			"symbol": "dad sing note right",
+			"fps": 24,
+			"indices": [],
+			"key": "singLEFT"
+		}
+	]
+}

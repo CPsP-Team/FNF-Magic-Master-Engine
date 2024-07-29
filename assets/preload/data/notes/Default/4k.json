@@ -1,0 +1,191 @@
+{
+    "static_notes":{
+        "general_animations":[],
+        "notes":[
+            {
+                "animations":[
+                    {
+                        "anim": "static",
+                        "symbol": "StaticLeft",
+    
+                        "fps": 32,
+                        "loop": false
+                    },
+                    {
+                        "anim": "pressed",
+                        "symbol": "PressLeft",
+    
+                        "fps": 32,
+                        "loop": false
+                    },
+                    {
+                        "anim": "confirm",
+                        "symbol": "ConfirmLeft",
+    
+                        "fps": 32,
+                        "loop": false
+                    }
+                ],
+                "antialiasing": true,
+                "color": "#c24b98"
+            },
+            {
+                "animations":[
+                    {
+                        "anim": "static",
+                        "symbol": "StaticDown",
+    
+                        "fps": 32,
+                        "loop": false
+                    },
+                    {
+                        "anim": "pressed",
+                        "symbol": "PressDown",
+    
+                        "fps": 32,
+                        "loop": false
+                    },
+                    {
+                        "anim": "confirm",
+                        "symbol": "ConfirmDown",
+    
+                        "fps": 32,
+                        "loop": false
+                    }
+                ],
+                "antialiasing": true,
+                "color": "#00ffff"
+            },
+            {
+                "animations":[
+                    {
+                        "anim": "static",
+                        "symbol": "StaticUp",
+    
+                        "fps": 32,
+                        "loop": false
+                    },
+                    {
+                        "anim": "pressed",
+                        "symbol": "PressUp",
+    
+                        "fps": 32,
+                        "loop": false
+                    },
+                    {
+                        "anim": "confirm",
+                        "symbol": "ConfirmUp",
+    
+                        "fps": 32,
+                        "loop": false
+                    }
+                ],
+                "antialiasing": true,
+                "color": "#11fa05"
+            },
+            {
+                "animations":[
+                    {
+                        "anim": "static",
+                        "symbol": "StaticRight",
+    
+                        "fps": 32,
+                        "loop": false
+                    },
+                    {
+                        "anim": "pressed",
+                        "symbol": "PressRight",
+    
+                        "fps": 32,
+                        "loop": false
+                    },
+                    {
+                        "anim": "confirm",
+                        "symbol": "ConfirmRight",
+    
+                        "fps": 32,
+                        "loop": false
+                    }
+                ],
+                "antialiasing": true,
+                "color": "#f9393f"
+            }
+        ]
+    },
+    "gameplay_notes":{
+        "general_animations":[
+            {
+                "anim": "sustain",
+                "symbol": "HoldPiece",
+
+                "fps": 32,
+                "loop": false
+            },
+            {
+                "anim": "end",
+                "symbol": "HoldEnd",
+
+                "fps": 32,
+                "loop": false
+            }
+        ],
+        "notes":[
+            {
+                "sing_animation": "singLEFT",
+                "animations":[
+                    {
+                        "anim": "static",
+                        "symbol": "Left",
+    
+                        "fps": 32,
+                        "loop": false
+                    }
+                ],
+                "antialiasing": true,
+                "color": "#c24b98"
+            },
+            {
+                "sing_animation": "singDOWN",
+                "animations":[
+                    {
+                        "anim": "static",
+                        "symbol": "Down",
+    
+                        "fps": 32,
+                        "loop": false
+                    }
+                ],
+                "antialiasing": true,
+                "color": "#00ffff"
+            },
+            {
+                "sing_animation": "singUP",
+                "animations":[
+                    {
+                        "anim": "static",
+                        "symbol": "Up",
+    
+                        "fps": 32,
+                        "loop": false
+                    }
+                ],
+                "antialiasing": true,
+                "color": "#11fa05"
+            },
+            {
+                "sing_animation": "singRIGHT",
+                "animations":[
+                    {
+                        "anim": "static",
+                        "symbol": "Right",
+    
+                        "fps": 32,
+                        "loop": false
+                    }
+                ],
+                "antialiasing": true,
+                "color": "#f9393f"
+            }
+        ]
+    }
+}

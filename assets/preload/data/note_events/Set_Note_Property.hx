@@ -14,6 +14,6 @@ preset("defaultValues",
 );
 
 function execute(property:String, value:Dynamic){
-    if(_note == null || property == "" || value == ""){return;}
+    if(_note == null || property == ""){return;}
     Reflect.setProperty(_note, property, value);
 }

@@ -1,0 +1,24 @@
+{
+    "name": "Sprite",
+
+    "variables": [
+        { "name": "x", "type": "float", "placeholder": 0 },
+        { "name": "y", "type": "float", "placeholder": 0 },
+        { "name": "flipX", "type": "bool", "placeholder": false },
+        { "name": "flipY", "type": "bool", "placeholder": false },
+        { "name": "alpha", "type": "float", "placeholder": 1, "args": [0, 1.1] },
+        { "name": "scale-x", "type": "float", "placeholder": 1, "args": [0.1, 10] },
+        { "name": "scale-y", "type": "float", "placeholder": 1, "args": [0.1, 10] },
+        { "name": "scrollFactor-x", "type": "float", "placeholder": 1, "args": [0, 5.1] },
+        { "name": "scrollFactor-y", "type": "float", "placeholder": 1, "args": [0, 5.1] }
+    ],
+
+    "imports": [ "flixel.FlxSprite" ],
+    "sources": [
+        { "source": "var ${name}:FlxSprite;", "type": "initial" },
+        { "source": "${name} = new FlxSprite(${x}, ${y});", "type": "pre-create" },
+        { "source": "${name}.scrollFactor.x = ${scrollFactor-x};\n${name}.scrollFactor.y = ${scrollFactor-y};\n${name}.scale.x = ${scale-x};\n${name}.scale.y = ${scale-y};\n${name}.flipX = ${flipX};\n${name}.flipY = ${flipY};\npush(${name});", "type": "post-create" }
+    ],
+
+    "create_object": true
+}

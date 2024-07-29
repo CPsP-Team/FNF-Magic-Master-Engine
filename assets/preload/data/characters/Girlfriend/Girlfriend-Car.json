@@ -1,0 +1,95 @@
+{
+	"aspect": "Car",
+	"position": [
+		-140,
+		85
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "GF Dancing Beat Hair blowing CAR",
+			"key": "idle",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "GF Dancing Beat Hair blowing CAR",
+			"key": "danceLeft",
+			"fps": 24,
+			"indices": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			]
+		},
+		{
+			"loop": false,
+			"symbol": "GF Dancing Beat Hair blowing CAR",
+			"key": "danceRight",
+			"fps": 24,
+			"indices": [
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29
+			]
+		},
+		{
+			"indices": [
+				13,
+				14
+			],
+			"symbol": "GF Dancing Beat Hair blowing CAR",
+			"fps": 16,
+			"key": "danceLeft-loop",
+			"loop": true
+		},
+		{
+			"indices": [
+				25,
+				26
+			],
+			"symbol": "GF Dancing Beat Hair blowing CAR",
+			"fps": 16,
+			"key": "danceRight-loop",
+			"loop": true
+		}
+	],
+	"zoom": 0.8,
+	"image": "gfCar",
+	"name": "Girlfriend",
+	"antialiasing": true,
+	"skin": "Default",
+	"icon": "gf",
+	"camera": [
+		-10,
+		-100
+	],
+	"onRight": false,
+	"singTime": 1,
+	"danceIdle": true
+}

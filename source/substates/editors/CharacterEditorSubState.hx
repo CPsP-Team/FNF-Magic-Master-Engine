@@ -1,15 +1,18 @@
 package substates.editors;
 
-import flixel.addons.transition.FlxTransitionableState;
+import objects.ui.UINumericStepper;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUITabMenu;
+import objects.songs.Song.Song_File;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIGroup;
+import flixel.ui.FlxCustomButton;
+import objects.game.Character;
 import flixel.addons.ui.FlxUI;
 import flixel.tweens.FlxTween;
 import flixel.sound.FlxSound;
@@ -19,22 +22,17 @@ import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import objects.game.Stage;
 import flixel.FlxSubState;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.FlxG;
 
-import FlxCustom.FlxUICustomNumericStepper;
-import FlxCustom.FlxUICustomButton;
-import FlxCustom.FlxUICustomList;
-import FlxCustom.FlxCustomButton;
-import Song.SwagSong;
-
 class CharacterEditorSubState extends MusicBeatSubstate {
     public var last_cameras:Array<FlxCamera> = [];
     public var characters_stage:Stage;
-    public var song_edit:SwagSong;
+    public var song:Song_File;
 
 	public var curCharacter:Int = 0;
 	public var selCharacter:Character;
@@ -45,9 +43,9 @@ class CharacterEditorSubState extends MusicBeatSubstate {
     var arrayFocus:Array<FlxUIInputText> = [];
     var MENU:FlxUITabMenu;
 
-	public function new(song:SwagSong, stage:Stage, onClose:Void->Void):Void {
+	public function new(song:Song_File, stage:Stage, onClose:Void->Void):Void {
 		this.characters_stage = stage;
-        this.song_edit = song;
+        this.song = song;
         super(onClose);
 		curCamera.bgColor.alpha = 200;
 		curCamera.alpha = 0;
@@ -98,44 +96,44 @@ class CharacterEditorSubState extends MusicBeatSubstate {
             if(FlxG.keys.pressed.SHIFT){
                 if(FlxG.mouse.wheel != 0){curCamera.zoom += (FlxG.mouse.wheel * 0.1);}
 				
-				if(song_edit.characters[curCharacter] != null){
-					if(FlxG.keys.justPressed.W){song_edit.characters[curCharacter][1][1] -= 10; updateStage();}
-					if(FlxG.keys.justPressed.A){song_edit.characters[curCharacter][1][0] -= 10; updateStage();}
-					if(FlxG.keys.justPressed.S){song_edit.characters[curCharacter][1][1] += 10; updateStage();}
-					if(FlxG.keys.justPressed.D){song_edit.characters[curCharacter][1][0] += 10; updateStage();}
+				if(song.characters[curCharacter] != null){
+					if(FlxG.keys.justPressed.W){song.characters[curCharacter][1][1] -= 10; updateStage();}
+					if(FlxG.keys.justPressed.A){song.characters[curCharacter][1][0] -= 10; updateStage();}
+					if(FlxG.keys.justPressed.S){song.characters[curCharacter][1][1] += 10; updateStage();}
+					if(FlxG.keys.justPressed.D){song.characters[curCharacter][1][0] += 10; updateStage();}
 					
-					if(FlxG.keys.justPressed.E){song_edit.characters[curCharacter][6] += 1; updateStage();}
-					if(FlxG.keys.justPressed.Q){song_edit.characters[curCharacter][6] -= 1; updateStage();}
+					if(FlxG.keys.justPressed.E){song.characters[curCharacter][6] += 1; updateStage();}
+					if(FlxG.keys.justPressed.Q){song.characters[curCharacter][6] -= 1; updateStage();}
 				}
 			}else{
                 if(FlxG.mouse.wheel != 0){curCamera.zoom += (FlxG.mouse.wheel * 0.01);}
 
-				if(song_edit.characters[curCharacter] != null){
-					if(FlxG.keys.justPressed.W){song_edit.characters[curCharacter][1][1] -= 1; updateStage();}
-					if(FlxG.keys.justPressed.A){song_edit.characters[curCharacter][1][0] -= 1; updateStage();}
-					if(FlxG.keys.justPressed.S){song_edit.characters[curCharacter][1][1] += 1; updateStage();}
-					if(FlxG.keys.justPressed.D){song_edit.characters[curCharacter][1][0] += 1; updateStage();}
+				if(song.characters[curCharacter] != null){
+					if(FlxG.keys.justPressed.W){song.characters[curCharacter][1][1] -= 1; updateStage();}
+					if(FlxG.keys.justPressed.A){song.characters[curCharacter][1][0] -= 1; updateStage();}
+					if(FlxG.keys.justPressed.S){song.characters[curCharacter][1][1] += 1; updateStage();}
+					if(FlxG.keys.justPressed.D){song.characters[curCharacter][1][0] += 1; updateStage();}
 					
-					if(FlxG.keys.justPressed.E){song_edit.characters[curCharacter][2] += 0.1; updateStage();}
-					if(FlxG.keys.justPressed.Q){song_edit.characters[curCharacter][2] -= 0.1; updateStage();}
+					if(FlxG.keys.justPressed.E){song.characters[curCharacter][2] += 0.1; updateStage();}
+					if(FlxG.keys.justPressed.Q){song.characters[curCharacter][2] -= 0.1; updateStage();}
 				}
 			}
 			
-			if(song_edit.characters[curCharacter] != null){
-				if(FlxG.keys.justPressed.F){song_edit.characters[curCharacter][3] = !song_edit.characters[curCharacter][3]; updateStage();}
+			if(song.characters[curCharacter] != null){
+				if(FlxG.keys.justPressed.F){song.characters[curCharacter][3] = !song.characters[curCharacter][3]; updateStage();}
 			}
 
 			if(FlxG.keys.justPressed.Z){changeCharacter(-1);}
 			if(FlxG.keys.justPressed.X){changeCharacter(1);}
 
-			if(principal_controls.checkAction("Menu_Back", JUST_PRESSED)){doClose();}
+			if(controls.check("MenuBack", JUST_PRESSED)){doClose();}
         }
 	}
 
 	public function changeCharacter(value:Int = 0, force:Bool = false):Void {
 		curCharacter = force ? value : curCharacter + value;
-		if(curCharacter < 0){curCharacter = song_edit.characters.length - 1;}
-		if(curCharacter >= song_edit.characters.length){curCharacter = 0;}
+		if(curCharacter < 0){curCharacter = song.characters.length - 1;}
+		if(curCharacter >= song.characters.length){curCharacter = 0;}
 
 		for(c in characters_stage.characterData){c.alpha = 0.5;}
 		selCharacter = characters_stage.characterData[curCharacter];
@@ -145,7 +143,7 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 	}
 
 	public function updateStage():Void {
-        characters_stage.setCharacters(song_edit.characters);
+        characters_stage.setCharacters(song.characters);
 		
 		for(c in characters_stage.characterData){c.alpha = 0.5;}
 		selCharacter = characters_stage.characterData[curCharacter];
@@ -156,7 +154,7 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 
 	public function updateValues():Void {
 		if(selCharacter == null){return;}
-		var char_data:Array<Dynamic> = song_edit.characters[curCharacter];
+		var char_data:Array<Dynamic> = song.characters[curCharacter];
 
 		txtCharacter.text = char_data[0];
 		txtAspect.text = char_data[4];
@@ -183,8 +181,8 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 		super.close();
 	}
 
-	var stpCharX:FlxUICustomNumericStepper;
-	var stpCharY:FlxUICustomNumericStepper;
+	var stpCharX:UINumericStepper;
+	var stpCharY:UINumericStepper;
 	var stpCharLayout:FlxUINumericStepper;
 	var stpCharSize:FlxUINumericStepper;
 	var txtCharacter:FlxUIInputText;
@@ -195,8 +193,8 @@ class CharacterEditorSubState extends MusicBeatSubstate {
         tabMENU.name = "Characters";
         MENU.addGroup(tabMENU);
 
-        var btnAddChar:FlxButton = new FlxCustomButton(25, 25, 100, null, "Create Character", null, null, function(){song_edit.characters.push(["Boyfriend", [100, 100], 1, false, "Default", "NORMAL", 0]); updateStage(); updateValues();}); tabMENU.add(btnAddChar);
-        var btnDelChar:FlxButton = new FlxCustomButton(150, 25, 100, null, "Delete Character", null, null, function(){song_edit.characters.remove(song_edit.characters[curCharacter]); updateStage(); updateValues();}); tabMENU.add(btnDelChar);
+        var btnAddChar:FlxButton = new FlxCustomButton(25, 25, 100, null, "Create Character", null, null, function(){song.characters.push(["Boyfriend", [100, 100], 1, false, "Default", "NORMAL", 0]); updateStage(); updateValues();}); tabMENU.add(btnAddChar);
+        var btnDelChar:FlxButton = new FlxCustomButton(150, 25, 100, null, "Delete Character", null, null, function(){song.characters.remove(song.characters[curCharacter]); updateStage(); updateValues();}); tabMENU.add(btnDelChar);
         
         var lblCharacter = new FlxText(25, 75, 0, "Name:", 8); tabMENU.add(lblCharacter);
         txtCharacter = new FlxUIInputText(25 + lblCharacter.width + 5, lblCharacter.y, 200, "", 8); tabMENU.add(txtCharacter);
@@ -211,7 +209,7 @@ class CharacterEditorSubState extends MusicBeatSubstate {
         chkLEFT = new FlxUICheckBox(25, 125, null, null, "onRight?", 100); tabMENU.add(chkLEFT);
 
         var lblCharX = new FlxText(25, 150, 0, "X:", 8); tabMENU.add(lblCharX);
-        stpCharX = new FlxUICustomNumericStepper(25 + lblCharX.width + 5, 150, 90, 1, 0, -99999, 99999, 1); tabMENU.add(stpCharX);
+        stpCharX = new UINumericStepper(25 + lblCharX.width + 5, 150, 90, 1, 0, -99999, 99999, 1); tabMENU.add(stpCharX);
             @:privateAccess arrayFocus.push(cast stpCharX.text_field);
         stpCharX.name = "CHARACTER_X";
 
@@ -221,7 +219,7 @@ class CharacterEditorSubState extends MusicBeatSubstate {
         stpCharSize.name = "CHARACTER_SIZE";
 
         var lblCharY = new FlxText(25, 175, 0, "Y:", 8); tabMENU.add(lblCharY);
-        stpCharY = new FlxUICustomNumericStepper(25 + lblCharY.width + 5, 175, 100, 1, 0, -99999, 99999, 1); tabMENU.add(stpCharY);
+        stpCharY = new UINumericStepper(25 + lblCharY.width + 5, 175, 100, 1, 0, -99999, 99999, 1); tabMENU.add(stpCharY);
             @:privateAccess arrayFocus.push(cast stpCharY.text_field);
         stpCharY.name = "CHARACTER_Y";
 
@@ -244,8 +242,8 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 			var wname = check.getLabel().text;
 			switch(wname){
                 case "onRight?":{
-                    if(song_edit.characters[curCharacter] == null){return;}
-					song_edit.characters[curCharacter][3] = check.checked;
+                    if(song.characters[curCharacter] == null){return;}
+					song.characters[curCharacter][3] = check.checked;
                     updateStage();
                 }
 			}
@@ -255,13 +253,13 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 
 			switch(wname){
 				case "CHARACTER_NAME":{
-                    if(song_edit.characters[curCharacter] == null){return;}
-					song_edit.characters[curCharacter][0] = input.text;
+                    if(song.characters[curCharacter] == null){return;}
+					song.characters[curCharacter][0] = input.text;
 					updateStage();
 				}
                 case "CHARACTER_ASPECT":{
-                    if(song_edit.characters[curCharacter] == null){return;}
-					song_edit.characters[curCharacter][4] = input.text;
+                    if(song.characters[curCharacter] == null){return;}
+					song.characters[curCharacter][4] = input.text;
 					updateStage();
 				}
 			}
@@ -271,23 +269,23 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 
 			switch(wname){
                 case "CHARACTER_X":{
-                    if(song_edit.characters[curCharacter] == null){return;}
-                    song_edit.characters[curCharacter][1][0] = nums.value;
+                    if(song.characters[curCharacter] == null){return;}
+                    song.characters[curCharacter][1][0] = nums.value;
                     updateStage();
                 }
                 case "CHARACTER_Y":{
-                    if(song_edit.characters[curCharacter] == null){return;}
-                    song_edit.characters[curCharacter][1][1] = nums.value;
+                    if(song.characters[curCharacter] == null){return;}
+                    song.characters[curCharacter][1][1] = nums.value;
                     updateStage();
                 }
                 case "CHARACTER_SIZE":{
-                    if(song_edit.characters[curCharacter] == null){return;}
-					song_edit.characters[curCharacter][2] = nums.value;
+                    if(song.characters[curCharacter] == null){return;}
+					song.characters[curCharacter][2] = nums.value;
                     updateStage();
                 }
                 case "CHARACTER_LAYOUT":{
-                    if(song_edit.characters[curCharacter] == null){return;}
-                    song_edit.characters[curCharacter][6] = Std.int(nums.value);
+                    if(song.characters[curCharacter] == null){return;}
+                    song.characters[curCharacter][6] = Std.int(nums.value);
                     updateStage();
                 }
 			}

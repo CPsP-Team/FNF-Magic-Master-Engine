@@ -1,0 +1,64 @@
+{
+	"aspect": "Default",
+	"position": [
+		-6,
+		95
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "DOWN",
+			"key": "singDOWN",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "IDLE",
+			"key": "idle",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "LEFT",
+			"key": "singLEFT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "RIGHT",
+			"key": "singRIGHT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "SMOKIN'",
+			"key": "shokin",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "UP",
+			"key": "singUP",
+			"fps": 24,
+			"indices": []
+		}
+	],
+	"name": "Cassette_Girl",
+	"image": "cassettegirl",
+	"zoom": 0.8,
+	"antialiasing": true,
+	"singTime": 1,
+	"onRight": true,
+	"skin": "Default",
+	"camera": [
+		-10,
+		-60
+	],
+	"healthicon": "cassette"
+}

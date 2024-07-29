@@ -1,0 +1,93 @@
+{
+	"aspect": "Christmas",
+	"position": [
+		0,
+		340
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "BF HEY!!",
+			"key": "hey",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF NOTE DOWN",
+			"key": "singDOWN",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "MISS BF NOTE DOWN",
+			"key": "singDOWNmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF NOTE LEFT",
+			"key": "singLEFT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "MISS BF NOTE LEFT",
+			"key": "singLEFTmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF NOTE RIGHT",
+			"key": "singRIGHT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "MISS BF NOTE RIGHT",
+			"key": "singRIGHTmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF NOTE UP",
+			"key": "singUP",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "MISS BF NOTE UP",
+			"key": "singUPmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF idle dance",
+			"key": "idle",
+			"fps": 24,
+			"indices": []
+		}
+	],
+	"zoom": 0.8,
+	"image": "bfChristmas",
+	"name": "Boyfriend",
+	"antialiasing": true,
+	"singTime": 1,
+	"icon": "bf",
+	"camera": [
+		0,
+		0
+	],
+	"onRight": false,
+	"color": "#409fff",
+	"skin": "Default"
+}

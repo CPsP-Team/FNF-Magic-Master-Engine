@@ -1,266 +1,274 @@
 package states;
 
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.ui.interfaces.IFlxUIClickable;
-import flixel.addons.ui.interfaces.IEventGetter;
-import flixel.addons.ui.interfaces.IFlxUIButton;
-import flixel.addons.ui.interfaces.IFlxUIWidget;
-import flixel.addons.transition.TransitionData;
-import flixel.addons.ui.interfaces.IResizable;
-import flixel.graphics.FlxGraphic;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxGradient;
-import flixel.system.FlxAssets;
-import flixel.sound.FlxSound;
+import flixel.addons.display.FlxGridOverlay;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.ui.FlxUIGroup;
+import objects.menu.MenuButton;
 import flixel.tweens.FlxTween;
-import openfl.utils.AssetType;
-import flixel.group.FlxGroup;
 import flixel.tweens.FlxEase;
-import flixel.math.FlxPoint;
-import flixel.util.FlxTimer;
-import flash.geom.Rectangle;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import haxe.DynamicAccess;
+import objects.game.ModCard;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.FlxG;
-import haxe.Json;
-
-import flixel.addons.ui.*;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord;
 import sys.FileSystem;
 import sys.io.File;
 #end
 
-import FlxCustom.FlxCustomShader;
-import FlxCustom.FlxUICustomButton;
-import ModSupport.Mod;
-
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 class ModListState extends MusicBeatState {
-    public static var isFirst:Bool = true;
+	public var options:Array<Dynamic> = [
+		{option: "reload", display:"reload", color: 0xff45ff98},
+		{option: "enableall", display:"enableall", color: 0xff96ff6d},
+		{option: "toggleall", display:"toggleall", color: 0xff6d88ff},
+		{option: "disableall", display:"disableall", color: 0xffff6d6d},
+		{option: "save", display:"save", color: 0xffe26dff},
+	];
 
-    private var ModsList:FlxTypedGroup<ItemMod>;
-    private var index:Int = 0;
+	public var arrOptions:Array<MenuButton> = [];
+	public var gpMods:FlxTypedGroup<ModCard>;
+	public var gpOptions:FlxUIGroup;
 
-    private var btnToggleAll:FlxUIButton;
-    private var btnEnableAll:FlxUIButton;
-    private var btnDisableAll:FlxUIButton;
-    private var btnReady:FlxUIButton;
+	public var _onConfirm:String;
 
-    private var toNext:String;
+	public var curOption:Int = 4;
+	public var curMod:Int = 0;
+	public var curTab:Int = 1;
 
-	override public function create():Void {
-        if(!isFirst){for(s in ModSupport.modDataScripts){s.exFunction("onExit");}}
-        isFirst = false;
+	override function create(){
+		if(onConfirm != null){_onConfirm = onConfirm; onConfirm = null;}
+		Paths.useMods = false;
+		Magic.unload();
 
-        if(FlxG.sound.music != null){FlxG.sound.music.stop();}
+		// Updating Discord Rich Presence
+		Discord.change("Configuring Mods", null);
+		Magic.setWindowTitle('Configuring Mods');
+		
+        FlxG.sound.playMusic(Paths.music('break_song').getSound());
 
-        if(onConfirm != null){toNext = onConfirm; onConfirm = null;}
+		var bg = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
+		bg.setGraphicSize(FlxG.width, FlxG.height);
+        bg.color = 0xff1eb386;
+		bg.screenCenter();
+		add(bg);
 
-        var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
-        bg.setGraphicSize(Std.int(FlxG.width), Std.int(FlxG.height)); bg.screenCenter();
-        bg.color = 0xff77ffd6;
-        add(bg);
+        var backGrid:FlxSprite = FlxGridOverlay.create(50, 50, 100, 100, true, 0x6c000000, 0x13000000);
+        var backDrop:FlxBackdrop = new FlxBackdrop(backGrid.pixels);
+        backDrop.velocity.set(50, 50);
+		add(backDrop);
 
-        ModsList = new FlxTypedGroup<ItemMod>();
-        var i:Int = 0;
-        for(mod in ModSupport.MODS){
-            var modCard:ItemMod = new ItemMod(mod);
-            modCard.onButton = function(){changeIndex();}
-            modCard.ID = i; modCard.x = 10;
+		gpOptions = new FlxUIGroup();
+		gpOptions.cameras = [camHUD];
+		add(gpOptions);
 
-            ModsList.add(modCard);
-            i++;
-        }
-        add(ModsList);
+		for(option in options){
+			var curButton:MenuButton = new MenuButton(0, 0, Language.getText('opt_${option.display}'), 0.3, option.method, {enableColor: option.color});
+			curButton.callAfterTransition = false;
+			arrOptions.push(curButton);
+			gpOptions.add(curButton);
+		}
+		
+		var backMenu:FlxSprite = Magic.roundRect(0, 0, Std.int(FlxG.width) - 60, Std.int(arrOptions[0].height) + 20, 15, 15, 0x62000000);
+		gpOptions.insert(0, backMenu);
 
-        changeIndex();
-        
-        var hud_up:FlxSprite = new FlxSprite(0,-5).loadGraphic(Paths.image("upBar").getGraphic()); add(hud_up);
-        var hud_down:FlxSprite = new FlxSprite().loadGraphic(Paths.image("downBar").getGraphic()); hud_down.y = FlxG.height - hud_down.height; add(hud_down);
+		arrOptions[2].setPosition((backMenu.width / 2) - (arrOptions[2].width / 2), 10);
+		for(i in 0...arrOptions.length){
+			var curButton:MenuButton = arrOptions[i];
+			switch(options[i].option){
+				case "reload": {
+					curButton.setPosition(10, 10);
+					curButton.callAfterTransition = true;
+				}
+				case "enableall": {curButton.setPosition(arrOptions[2].x - curButton.width - 10, 10);}
+				case "disableall": {curButton.setPosition(arrOptions[2].x + arrOptions[2].width + 10, 10);}
+				case "save": {
+					curButton.callAfterTransition = true;
+					curButton.setPosition(backMenu.width - curButton.width - 10, 10);
+				}
+			}
+		}
 
-        btnToggleAll = new FlxUICustomButton(100, 620, 100, 100, '', Paths.image("toggle_button"), null, function(){for(i in ModsList.members){i.setToggleEnableMod();}}); 
-        add(btnToggleAll);
+		gpOptions.screenCenter(X);
+		gpOptions.y = FlxG.height - gpOptions.height - 30;
+		
+		gpMods = new FlxTypedGroup<ModCard>();
+		gpMods.cameras = [camBHUD];
+		createModCards();
+		add(gpMods);
 
-        btnEnableAll = new FlxUICustomButton(400, 620, 100, 100, '', Paths.image("on_button"), null, function(){for(i in ModsList.members){i.setToggleEnableMod(true);}}); 
-        add(btnEnableAll);
+		camBHUD.zoom = 0.7;
 
-        btnDisableAll = new FlxUICustomButton(700, 620, 100, 100, '', Paths.image("off_button"), null, function(){for(i in ModsList.members){i.setToggleEnableMod(false);}});
-        add(btnDisableAll);
-        
-        btnReady = new FlxUICustomButton(1050, 560, 170, 170, '', Paths.image("accept_button"), null, onReady);
-        add(btnReady);
-        
-        var lblModList = new Alphabet(10,20,LangSupport.getText("mod_list")); add(lblModList);
+		changeOption(4, true);
 
 		super.create();
-        
-        FlxG.mouse.visible = true;
 	}
 
-	override function update(elapsed:Float){        
-        super.update(elapsed);
+	public function createModCards():Void {
+		gpMods.clear();
+		
+		for(mod in Mods.list){
+			var curModCard:ModCard = new ModCard(0, 30, 426, 570, mod);
+			curModCard.showTabId("hidden");
 
-        if(FlxG.keys.justPressed.UP){changeIndex(-1);}
-        if(FlxG.keys.justPressed.DOWN){changeIndex(1);}
-        if(FlxG.mouse.wheel > 0){changeIndex(-1);}
-        if(FlxG.mouse.wheel < 0){changeIndex(1);}
+			curModCard.callbacks.set("enable", ()->{
+				canControlle = false;
+				curModCard.canControlle = true;
+				
+				curModCard.showTabId("normal");
+				curModCard.changeOption(curModCard.options.indexOf(curModCard.optEnable), true);
 
-        if(FlxG.mouse.justPressedRight){for(c in ModsList){if(FlxG.mouse.overlaps(c) && c.ID != index){index = c.ID; changeIndex();}}}
+				FlxTween.cancelTweensOf(gpOptions);
+				FlxTween.cancelTweensOf(curModCard);
 
-        var selectedCard = ModsList.members[index];
-        MagicStuff.sortMembersByY(cast ModsList, (FlxG.height / 2) - (selectedCard.height / 2), index, 10, 0.5);
+				FlxTween.tween(gpOptions, {y: FlxG.height + 30}, 0.2, { ease: FlxEase.quadInOut });
+				FlxTween.tween(curModCard, {y: (FlxG.height / 2) - (curModCard.height / 2)}, 0.2, { ease: FlxEase.quadInOut });
+			});
+			curModCard.callbacks.set("disable", ()->{
+				canControlle = true;
+				curModCard.canControlle = false;
+
+				curModCard.showTabId("hidden");
+
+				FlxTween.cancelTweensOf(gpOptions);
+				FlxTween.cancelTweensOf(curModCard);
+
+				FlxTween.tween(curModCard, {y: 30}, 0.2, { ease: FlxEase.quadInOut });
+				FlxTween.tween(gpOptions, {y: FlxG.height - gpOptions.height - 30}, 0.2, { ease: FlxEase.quadInOut });
+			});
+
+			curModCard.callbacks.set("onLeft", ()->{curMod = curModCard.id; sortMods();});
+			curModCard.callbacks.set("onRight", ()->{curMod = curModCard.id; sortMods();});
+
+			gpMods.add(curModCard);
+		}
 	}
 
-    public function changeIndex(change:Int = 0){
-        rePositionItems();
-
-        index += change;
-
-        if(index < 0){index = ModsList.length - 1;}
-        if(index >= ModsList.length){index = 0;}
-
-        for(i in 0...ModsList.length){
-            var modCard:ItemMod = ModsList.members[i];
-
-            modCard._selected = false;
-            modCard.showTabId("4ModUnSelected");
-        }
-        
-        ModsList.members[index]._selected = true;
-        ModsList.members[index].showTabId("1ModName");
-        
-        #if desktop MagicStuff.setWindowTitle('Checking Mods > ${ModsList.members[index].refMod.name} [${ModsList.members[index].refMod.enabled ? "O" : "X"}] <'); DiscordClient.changePresence('> ${ModsList.members[index].refMod.name} [${ModsList.members[index].refMod.enabled ? "✓": "X"}] <', '[Checking Mods]'); #end
-    }
-    
-    public function rePositionItems():Void{
-        for(i in 0...ModSupport.MODS.length){
-            if(ModsList.members[i].refMod != ModSupport.MODS[i]){
-                for(ii in 0...ModsList.members.length){
-                    if(ModsList.members[ii].refMod == ModSupport.MODS[i]){
-                        ModsList.members[i].ID = ii;
-                        ModsList.members[ii].ID = i;
-                        break;
-                    }
-                }
-            }
-        }
-
-        ModsList.members.sort((a, b) -> Std.int(a.ID - b.ID));
-    }
-
-    public function onReady():Void {
-        MagicStuff.reload_data();
-        MusicBeatState.loadState(toNext, [], []);
-    }
-}
-
-class ItemMod extends FlxUITabMenu {
-    public var refMod:Mod;
-    public var mScript:Script;
-
-    public var _selected:Bool = false;
-
-    public var _btnToggle:FlxUICustomButton;
-    public var _btnMoveUp:FlxUICustomButton;
-    public var _btnMoveDown:FlxUICustomButton;
-
-    public var openSize:FlxPoint;
-    public var closedSize:FlxPoint;
-    public var delay:Float = 0.3;
-
-    public var onButton:Void -> Void = function(){};
-    
-    public function new(mod:Mod){
-        this.refMod = mod;
- 
-        mScript = new Script();
-        mScript.setVariable("getInstance", function(){return this;});
-        mScript.setVariable("mod", refMod);
-
-        var script_path = '${refMod.path}/itemMod.hx';
-        if(Paths.exists(script_path)){
-            mScript.exScript(script_path.getText());
-        }else{
-            mScript.exScript(Paths.getPath('data/item_mod_template.hx', TEXT, null, null).getText());
-        }
-
-        var back_ = new FlxUI9SliceSprite(0, 0, Paths.image("custom_default_chrome_flat", null, refMod.name).getGraphic(), new Rectangle(0, 0, 100, 100), [20, 20, 78, 78], FlxUI9SliceSprite.TILE_BOTH);
-
-        super(back_, null, []);
-        resize(Std.int(FlxG.width - 20), 300);
-
-        openSize = new FlxPoint(FlxG.width - 20, 300);
-        closedSize = new FlxPoint(FlxG.width - 20, 75);
-              
-        mScript.exFunction("create");
-
-        _btnToggle = new FlxUICustomButton(0,0,80,20,"", Paths.image(!refMod.enabled ? "disable_button" : "enabled_button", null, refMod.name), null, function(){setToggleEnableMod(); onButton();});
-        _btnToggle.setPosition(this.width - _btnToggle.width - 5, -(_btnToggle.height));
-        _btnToggle.antialiasing = true;
-        add(_btnToggle);
-        
-        _btnMoveUp = new FlxUICustomButton(0,5,30,15,"", Paths.image("up_button", null, refMod.name), null, function(){ModSupport.moveMod(this.ID, true); onButton();});
-        _btnMoveUp.setPosition(_btnToggle.x - _btnMoveUp.width, -(_btnMoveUp.height));
-        _btnMoveUp.antialiasing = true;
-        add(_btnMoveUp);
-        
-        _btnMoveDown = new FlxUICustomButton(0,5,30,15,"", Paths.image("down_button", null, refMod.name), null, function(){ModSupport.moveMod(this.ID, false); onButton();});
-        _btnMoveDown.setPosition(_btnMoveUp.x - _btnMoveDown.width, -(_btnMoveDown.height));
-        _btnMoveDown.antialiasing = true;
-        add(_btnMoveDown);
-
-        setToggleEnableMod(refMod.enabled);
-
-        calcBounds();
-    }
-
-    public function setToggleEnableMod(?set:Bool){
-        if(set == null){set = !refMod.enabled;}
-
-        refMod.enabled = set;
-
-        _btnToggle.setButtonFrames(Paths.image(!refMod.enabled ? "disable_button" : "enabled_button", null, refMod.name));
-    }
-
-    override function update(elapsed:Float){
+	override function update(elapsed:Float){		
 		super.update(elapsed);
 
-        var curSize:FlxPoint = closedSize;
-        if(_selected){
-            curSize = openSize;
-            if(this.selected_tab_id != "Selected"){this.showTabId("Selected");}
-        }else if(this.selected_tab_id != "UnSelected"){
-            this.showTabId("UnSelected");
-        }
-        if((this.width < curSize.x - 5 || this.width > curSize.x + 5) || (this.height < curSize.y - 5 || this.height > curSize.y + 5)){resize(FlxMath.lerp(this.width, curSize.x, delay), FlxMath.lerp(this.height, curSize.y, delay));}
-	
-        mScript.exFunction("update", [elapsed]);
-    }
+        Magic.sortMembersByX(cast gpMods, (FlxG.width / 2) - (gpMods.members[curMod].width / 2), curMod, 30);
 
-    override public function replaceBack(newBack:FlxSprite):Void {
-        var i:Int = members.indexOf(_back);
-        if(i != -1){
-            var oldBack = _back;
-            if((newBack is IResizable)){
-                var ir:IResizable = cast newBack;
-                ir.resize(oldBack.width, oldBack.height);
-            }
-            newBack.x = oldBack.x;
-            newBack.y = oldBack.y;
-            members[i] = newBack;
-            _back = newBack;
-            oldBack.destroy();
-        }
-    }
+		if(!canControlle){return;}
+
+		switch(curTab){
+			case 0:{
+				if(controls.check("MenuDown")){changeTab(1);}
+				if(controls.check("MenuLeft")){changeMod(-1);}
+				if(controls.check("MenuRight")){changeMod(1);}
+				if(controls.check("MenuAccept")){gpMods.members[curMod].callbacks.get("enable")();}
+			}
+			case 1:{
+				if(controls.check("MenuUp")){changeTab(-1);}
+				if(controls.check("MenuLeft")){changeOption(-1);}
+				if(controls.check("MenuRight")){changeOption(1);}
+				if(controls.check("MenuAccept")){chooseOption();}
+			}
+		}
+	}
+
+	public function sortMods():Void {
+		gpMods.members.sort(function(a, b) {
+			if(a.id < b.id) return -1;
+			else if(a.id > b.id) return 1;
+			else return 0;
+		});
+	}
+
+	public function changeTab(_value:Int = 0, _force:Bool = false):Void {
+		curTab = _force ? _value : curTab + _value;
+		if(curTab < 0){curTab = 1;}
+		if(curTab > 1){curTab = 0;}
+
+		switch(curTab){
+			case 0:{
+				FlxTween.cancelTweensOf(camBHUD);
+				FlxTween.tween(camBHUD, {zoom: 1}, 0.1, {ease: FlxEase.quadInOut});
+
+				for(option in arrOptions){option.disable();}
+			}
+			case 1:{
+				FlxTween.cancelTweensOf(camBHUD);
+				FlxTween.tween(camBHUD, {zoom: 0.7}, 0.1, {ease: FlxEase.quadInOut});
+
+				for(mod in gpMods){mod.showTabId("hidden");}
+				arrOptions[curOption].enable();
+			}
+		}
+				
+        if(!_force){FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5);}
+	}
+
+	public function changeMod(_value:Int = 0, _force:Bool = false):Void {
+		var lastMod = curMod; curMod = _force ? _value : curMod + _value;
+
+		if(curMod < 0){curMod = Mods.list.length - 1;}
+		if(curMod >= Mods.list.length){curMod = 0;}
+		
+		if(lastMod != curMod){
+			if(gpMods.members[lastMod].callbacks.exists("unselect")){gpMods.members[lastMod].callbacks.get("unselect")();}
+			if(gpMods.members[curMod].callbacks.exists("select")){gpMods.members[curMod].callbacks.get("select")();}
+		}
+		
+        if(!_force){FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5);}
+	}
+
+	public function changeOption(_value:Int = 0, _force:Bool = false):Void {
+		curOption = _force ? _value : curOption + _value;
+
+		if(curOption < 0){curOption = options.length - 1;}
+		if(curOption >= options.length){curOption = 0;}
+
+		for(option in arrOptions){option.disable();}
+		arrOptions[curOption].enable();
+		
+        if(!_force){FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5);}
+	}
+
+	public function chooseOption():Void {
+		var cur_option = arrOptions[curOption];
+		switch(options[curOption].option){
+			case "reload":{
+				canControlle = false;
+				Mods.reload();
+				
+				if(curMod < 0){curMod = Mods.list.length - 1;}
+				if(curMod >= Mods.list.length){curMod = 0;}
+	
+				createModCards();
+				canControlle = true;
+			}
+			case "enableall":{
+				for(mod in Mods.list){mod.enabled = true;}
+				for(mod in cast(MusicBeatState.state, ModListState).gpMods.members){
+					mod.optEnable.enableColor = 0xff61c54d;
+					mod.showTabId("hidden");
+				}
+			}
+			case "toggleall":{
+				for(mod in Mods.list){mod.enabled = !mod.enabled;}
+				for(mod in cast(MusicBeatState.state, ModListState).gpMods.members){
+					mod.optEnable.enableColor = mod.mod.enabled ? 0xff61c54d : 0xffc54d4d;
+					mod.showTabId("hidden");
+				}
+			}
+			case "disableall":{
+				for(mod in Mods.list){mod.enabled = false;}
+				for(mod in cast(MusicBeatState.state, ModListState).gpMods.members){
+					mod.optEnable.enableColor = 0xffc54d4d;
+					mod.showTabId("hidden");
+				}
+			}
+			case "save":{
+				Paths.useMods = true;
+				canControlle = false;
+				Magic.reload();
+				MusicBeatState.switchState(_onConfirm != null ? _onConfirm : "states.TitleState", []);
+			}
+		}
+		cur_option.click();
+	}
 }

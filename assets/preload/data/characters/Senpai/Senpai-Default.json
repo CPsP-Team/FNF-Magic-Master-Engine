@@ -1,0 +1,56 @@
+{
+	"aspect": "Default",
+	"position": [
+		-195,
+		-130
+	],
+	"scale": 6,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "SENPAI DOWN NOTE",
+			"key": "singDOWN",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "SENPAI LEFT NOTE",
+			"key": "singLEFT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "SENPAI RIGHT NOTE",
+			"key": "singRIGHT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "SENPAI UP NOTE",
+			"key": "singUP",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Senpai Idle",
+			"key": "idle",
+			"fps": 24,
+			"indices": []
+		}
+	],
+	"zoom": 0.8,
+	"image": "senpai",
+	"name": "Senpai",
+	"singTime": 1,
+	"icon": "senpai-pixel",
+	"camera": [
+		280,
+		410
+	],
+	"skin": "Default",
+	"onRight": true
+}

@@ -1,25 +1,16 @@
-import("states.MusicBeatState", "MusicBeatState");
+
 import("flixel.tweens.FlxTween", "FlxTween");
 import("flixel.util.FlxTimer", "FlxTimer");
 import("flixel.tweens.FlxEase", "FlxEase");
 import("states.PlayState", "PlayState");
 import("flixel.FlxSprite", "FlxSprite");
 import("flixel.FlxObject", "FlxObject");
-import("flixel.FlxCamera", "FlxCamera");
 import("haxe.Timer", "Timer");
 import("flixel.FlxG", "FlxG");
 
-import("LangSupport");
 import("DialogueBox");
-import("PreSettings");
-import("SavedFiles");
-import("MagicStuff");
-import("Character");
-import("Alphabet");
-import("Script");
+import("Files");
 import("Paths");
-import("Type");
-import("Std");
 
 var whiteScreen:FlxSprite;
 var redScreen:FlxSprite;
@@ -44,7 +35,7 @@ function preload():Void {
 
     senpaidies = new FlxSprite(0,-120);
     senpaidies.cameras = [getState().camBHUD];
-    senpaidies.frames = SavedFiles.getAtlas(Paths.image("senpaiCrazy", "stages/schoolEvil"));
+    senpaidies.frames = Files.getAtlas(Paths.image("senpaiCrazy", "stages/schoolEvil"));
     senpaidies.animation.addByPrefix("die", "Senpai Pre Explosion instance 1", 24, false);
     senpaidies.scale.set(6,6); senpaidies.updateHitbox();
     senpaidies.antialiasing = false;
@@ -60,11 +51,11 @@ function preload():Void {
 function startSong(startCountdown:Void->Void):Void {
     if(!PlayState.isStoryMode || PlayState.total_plays > 1){return false;}
 
-    FlxG.sound.play(SavedFiles.getSound(Paths.sound("ANGRY_TEXT_BOX", "stages/schoolEvil")));
+    FlxG.sound.play(Files.getSound(Paths.sound("ANGRY_TEXT_BOX", "stages/schoolEvil")));
     
     FlxTween.tween(whiteScreen, {alpha: 0.5}, 3, {ease: FlxEase.linear});
     FlxTween.tween(getState().camHUD, {alpha: 0}, 1, {ease: FlxEase.linear, onComplete: function(twn:FlxTween){
-        dialogue = new DialogueBox(SavedFiles.getJson(Paths.dialogue(PlayState.SONG.song)), {onComplete: function(){onEndDialogue(startCountdown);}});
+        dialogue = new DialogueBox(Files.getJson(Paths.dialogue(PlayState.SONG.song)), {onComplete: function(){onEndDialogue(startCountdown);}});
         dialogue.cameras = [getState().camBHUD];
         getState().add(dialogue);
     }});
@@ -76,17 +67,17 @@ function endSong(endCountdown:Void->Void):Void {
     if(!PlayState.isStoryMode || PlayState.total_plays > 1){return false;}
 
     getState().camFHUD.fade(0xFFFF0000, 1, true);
-    FlxG.sound.play(SavedFiles.getSound(Paths.sound("ANGRY", "stages/schoolEvil")));
+    FlxG.sound.play(Files.getSound(Paths.sound("ANGRY", "stages/schoolEvil")));
 
     FlxTween.tween(getState().camHUD, {alpha: 0}, 2, {ease: FlxEase.linear});
     var evil_timer:FlxTimer = new FlxTimer().start(2, function(tmr:FlxTimer){
         getState().camFHUD.fade(0xFFFF0000, 1, true);
-        FlxG.sound.play(SavedFiles.getSound(Paths.sound("ANGRY", "stages/schoolEvil")));
-        FlxG.sound.playMusic(SavedFiles.getSound(Paths.music("LunchboxScary", "stages/schoolEvil")));
+        FlxG.sound.play(Files.getSound(Paths.sound("ANGRY", "stages/schoolEvil")));
+        FlxG.sound.playMusic(Files.getSound(Paths.music("LunchboxScary", "stages/schoolEvil")));
 
         FlxG.sound.music.fadeIn(2, 0, 1, function(twn:FlxTween){
-            FlxG.sound.play(SavedFiles.getSound(Paths.sound("ANGRY", "stages/schoolEvil")));
-            FlxG.sound.play(SavedFiles.getSound(Paths.sound("Senpai_Dies", "stages/schoolEvil")), 1, false, null, true, endCountdown);
+            FlxG.sound.play(Files.getSound(Paths.sound("ANGRY", "stages/schoolEvil")));
+            FlxG.sound.play(Files.getSound(Paths.sound("Senpai_Dies", "stages/schoolEvil")), 1, false, null, true, endCountdown);
 
             getState().camFHUD.fade(0xFFFF0000, 0.8, true);
             redScreen.alpha = 1;

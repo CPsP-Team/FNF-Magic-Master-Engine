@@ -1,10 +1,13 @@
 package states;
 
+import objects.ui.UINumericStepper;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.addons.ui.FlxUIButton;
+import objects.songs.Song.Song_File;
 import flixel.util.FlxGradient;
+import objects.game.Character;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flash.text.TextField;
@@ -19,38 +22,26 @@ import flixel.FlxState;
 import flixel.FlxG;
 import haxe.Json;
 
-import FlxCustom.FlxUICustomNumericStepper;
-import states.PlayState.SongListData;
-import FlxCustom.FlxUICustomButton;
-import FlxCustom.FlxUICustomList;
-import Song.SongStuffManager;
-import Song.SongPlayer;
-import Song.SongsData;
-import Song.ItemSong;
-import Song.SwagSong;
-import MagicStuff;
-
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord;
 import sys.FileSystem;
 import sys.io.File;
 #end
 
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 class PlayerSelectorState extends MusicBeatState {
-	var strum_players:Array<SongPlayer> = [];
-	var selSong:SwagSong;
+	public var song:Song_File;
 	
-	var background:FlxSprite;
+	public var background:FlxSprite;
 
-	var cursorGroup:FlxTypedGroup<FlxSprite>;
-	var charGroup:FlxTypedGroup<Character>;
-	var strumGroup:FlxTypedGroup<FlxSprite>;
+	public var cursorGroup:FlxTypedGroup<FlxSprite>;
+	public var charGroup:FlxTypedGroup<Character>;
+	public var strumGroup:FlxTypedGroup<FlxSprite>;
 	
-	public function new(_selSong:SwagSong, ?onConfirm:String, ?onBack:String){
-		selSong = _selSong;
+	public function new(_selSong:Song_File, ?onConfirm:String, ?onBack:String){
+		song = _selSong;
 		super(onConfirm, onBack);
 	}
 
@@ -59,8 +50,8 @@ class PlayerSelectorState extends MusicBeatState {
 		
         #if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence('Selecting', '[Song Selector]');
-		MagicStuff.setWindowTitle('Selector', 1);
+		Discord.change('Selecting', '[Song Selector]');
+		Magic.setWindowTitle('Selector', 1);
 		#end		
 
 		background = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
@@ -71,8 +62,8 @@ class PlayerSelectorState extends MusicBeatState {
 		add(background);
 
 		var playable_strums:Array<Int> = [];
-		for(i in 0...selSong.sectionStrums.length){
-			if(!selSong.sectionStrums[i].isPlayable){continue;}
+		for(i in 0...song.strums.length){
+			if(!song.strums[i].playable){continue;}
 			playable_strums.push(i);
 		}
 
@@ -82,13 +73,13 @@ class PlayerSelectorState extends MusicBeatState {
 		strumGroup = new FlxTypedGroup<FlxSprite>();
 		charGroup = new FlxTypedGroup<Character>();
 		for(i in 0...playable_strums.length){
-			var cur_strum = selSong.sectionStrums[playable_strums[i]];
+			var cur_strum = song.strums[playable_strums[i]];
 			var new_stage:FlxSprite = new FlxSprite().loadGraphic(Paths.image('mini_stage').getGraphic());
 			new_stage.setGraphicSize(Std.int((FlxG.width - 20) / playable_strums.length)); new_stage.updateHitbox();
 			new_stage.setPosition(cur_width, FlxG.height - (new_stage.height / 2)); cur_width += new_stage.width + 10;
 
-			if(cur_strum.charToSing.length > 0){
-				var char_data:Array<Dynamic> = selSong.characters[cur_strum.charToSing[0]];
+			if(cur_strum.characters.length > 0){
+				var char_data:Array<Dynamic> = song.characters[cur_strum.characters[0]];
 				var new_char:Character = new Character(0, 0, char_data[0], char_data[4], char_data[5]);
 				new_char.c.setGraphicSize(Std.int((new_stage.width / 2) - 10)); new_char.c.updateHitbox();
 				new_char.c.setPosition(new_stage.x + (new_stage.width / 2) - (new_char.c.width / 2), new_stage.y - new_char.c.height + 90);
@@ -101,9 +92,12 @@ class PlayerSelectorState extends MusicBeatState {
 		add(strumGroup);
 		add(charGroup);
 
+		Songs.players = [];
+
 		cursorGroup = new FlxTypedGroup<FlxSprite>();
-		for(i in 0...PlayerSettings.getNumPlayers()){
-			strum_players.push({alive: true, strum: 0});
+		for(i in 0...Players.length){
+			Songs.players.push(0);
+
 			var new_cursor:FlxSprite = new FlxSprite(100, 100);
 			if(i == 0){new_cursor.loadGraphic(Paths.image("keyboard_icon").getGraphic());}
 			else{new_cursor.loadGraphic(Paths.image("controller_icon").getGraphic());}
@@ -114,17 +108,17 @@ class PlayerSelectorState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float){
-		for(i in 0...strum_players.length){
+		for(i in 0...Players.length){
 			var cur_cursor = cursorGroup.members[i];
-			var cur_grid = strumGroup.members[strum_players[i].strum];
-			if(cur_grid != null){MagicStuff.lerpX(cur_cursor, (cur_grid.x + (cur_grid.width / 2) - (cur_cursor.width / 2)));}
+			var cur_grid = strumGroup.members[Songs.players[i]];
+			if(cur_grid != null){Magic.lerpX(cur_cursor, (cur_grid.x + (cur_grid.width / 2) - (cur_cursor.width / 2)));}
 		}
 
 		if(canControlle){
-			if(principal_controls.checkAction("Menu_Accept", JUST_PRESSED)){goToSong();}
-			for(i in 0...PlayerSettings.getNumPlayers()){
-				if(PlayerSettings.getPlayer(i).controls.checkAction("Menu_Left", JUST_PRESSED)){changeStrum(i, -1);}
-				if(PlayerSettings.getPlayer(i).controls.checkAction("Menu_Right", JUST_PRESSED)){changeStrum(i, 1);}
+			if(controls.check("MenuAccept", JUST_PRESSED)){goToSong();}
+			for(i in 0...Players.length){
+				if(Players.get(i).controls.check("MenuLeft", JUST_PRESSED)){changeStrum(i, -1);}
+				if(Players.get(i).controls.check("MenuRight", JUST_PRESSED)){changeStrum(i, 1);}
 			}
         }
 
@@ -132,20 +126,14 @@ class PlayerSelectorState extends MusicBeatState {
 	}
 
 	function changeStrum(_id:Int, _change:Int):Void {
-		var cur_play = strum_players[_id];
-		var cur_change = cur_play.strum;
-		var new_change = cur_play.strum + _change;
+		if(Songs.players.length <= _id){return;}
+		Songs.players[_id] += _change;
 
-		if(new_change < 0){new_change = strumGroup.members.length -1;}
-		if(new_change >= strumGroup.members.length){new_change = 0;}
-
-		for(cur_strum in strum_players){if(cur_strum.strum != _change){continue;} cur_strum.strum = cur_change;}
-		cur_play.strum = new_change;
+		if(Songs.players[_id] < 0){Songs.players[_id] = strumGroup.members.length -1;}
+		if(Songs.players[_id] >= strumGroup.members.length){Songs.players[_id] = 0;}
 	}
 
 	function goToSong():Void {
-		SongListData.loadAndPlaySong(selSong, FlxG.keys.pressed.SHIFT);
-		PlayState.isDuel = true;
-		PlayState.strum_players = strum_players;
+		Songs.quickPlay(song, FlxG.keys.pressed.SHIFT);
 	}
 }

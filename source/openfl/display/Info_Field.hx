@@ -70,7 +70,7 @@ class Info_Field extends TextField {
 		text += "FPS: " + get_fps(currentCount);
 
 		textColor = 0xFFFFFFFF;
-		if (current_memory > 3000 || get_fps(currentCount) <= PreSettings.getPreSetting("FrameRate", "Graphic Settings") / 2){textColor = 0xFFFF0000;}
+		if (current_memory > 3000 || get_fps(currentCount) <= Settings.get("FrameRate") / 2){textColor = 0xFFFF0000;}
 
 		#if (gl_stats && !disable_cffi && (!html5 || !canvas))
 		text += "\ntotalDC: " + Context3DStats.totalDrawCalls();

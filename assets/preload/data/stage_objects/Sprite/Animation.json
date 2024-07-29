@@ -1,0 +1,20 @@
+{
+    "name": "Animation",
+
+    "variables": [
+        { "name": "key", "type": "string", "placeholder": "play" },
+        { "name": "symbol", "type": "string", "placeholder": "" },
+        { "name": "framerate", "type": "int", "placeholder": 24 },
+        { "name": "loop", "type": "bool", "placeholder": false },
+        { "name": "flip-x", "type": "bool", "placeholder": false },
+        { "name": "flip-y", "type": "bool", "placeholder": false }
+    ],
+
+    "imports": [],
+    "sources": [
+        { "source": "${name}.animation.addByPrefix('${key}', '${symbol}', ${framerate}, ${loop}, ${flip-x}, ${flip-y});", "type": "create" }
+    ],
+
+    "attribute": true,
+    "unique": false
+}

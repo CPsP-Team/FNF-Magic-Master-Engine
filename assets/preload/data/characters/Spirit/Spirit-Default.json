@@ -1,0 +1,57 @@
+{
+	"script": "Spirit_Script",
+	"aspect": "Default",
+	"position": [
+		-15,
+		20
+	],
+	"scale": 6,
+	"animations": [
+		{
+			"symbol": "idle_spirit",
+			"loop": false,
+			"fps": 24,
+			"key": "idle",
+			"indices": []
+		},
+		{
+			"symbol": "spirit_down",
+			"loop": false,
+			"fps": 24,
+			"key": "singDOWN",
+			"indices": []
+		},
+		{
+			"symbol": "left",
+			"loop": false,
+			"fps": 24,
+			"key": "singLEFT",
+			"indices": []
+		},
+		{
+			"symbol": "right",
+			"loop": false,
+			"fps": 24,
+			"key": "singRIGHT",
+			"indices": []
+		},
+		{
+			"symbol": "up",
+			"loop": false,
+			"fps": 24,
+			"key": "singUP",
+			"indices": []
+		}
+	],
+	"name": "Spirit",
+	"image": "spirit",
+	"zoom": 0.8,
+	"onRight": true,
+	"skin": "Default",
+	"camera": [
+		184,
+		357
+	],
+	"icon": "spirit-pixel",
+	"singTime": 1
+}

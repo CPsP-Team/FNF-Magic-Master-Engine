@@ -1,0 +1,16 @@
+{
+    "name": "Animated-Graphic",
+
+    "variables": [
+        { "name": "path", "type": "string", "placeholder": "stages/stage/stageback" }
+    ],
+
+    "imports": [ "utils.Files", "utils.Paths" ],
+    "sources": [
+        { "source": "list.push({type: 'IMAGE', instance: Paths.image('${path}')});", "type": "cache" },
+        { "source": "${name}.frames = Files.getAtlas(Paths.image('${path}'));", "type": "create" }
+    ],
+
+    "attribute": true,
+    "unique": true
+}

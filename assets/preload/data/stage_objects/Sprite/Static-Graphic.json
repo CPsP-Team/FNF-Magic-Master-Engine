@@ -1,0 +1,16 @@
+{
+    "name": "Static-Graphic",
+
+    "variables": [
+        { "name": "path", "type": "string", "placeholder": "stages/stage/stageback" }
+    ],
+
+    "imports": [ "utils.Paths" ],
+    "sources": [
+        { "source": "list.push({type: 'IMAGE', instance: Paths.image('${path}')});", "type": "cache" },
+        { "source": "${name}.loadGraphic(Paths.image('${path}'));", "type": "create" }
+    ],
+
+    "attribute": true,
+    "unique": true
+}

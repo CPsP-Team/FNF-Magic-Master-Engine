@@ -1,24 +1,14 @@
-import("states.MusicBeatState", "MusicBeatState");
+
 import("flixel.tweens.FlxTween", "FlxTween");
-import("flixel.util.FlxTimer", "FlxTimer");
-import("flixel.tweens.FlxEase", "FlxEase");
-import("flixel.text.FlxText", "FlxText");
 import("states.PlayState", "PlayState");
 import("flixel.FlxSprite", "FlxSprite");
 import("flixel.FlxObject", "FlxObject");
-import("flixel.FlxCamera", "FlxCamera");
-import("haxe.Timer", "Timer");
 import("flixel.FlxG", "FlxG");
 
-import("PreSettings");
-import("SavedFiles");
-import("MagicStuff");
 import("Character");
-import("Alphabet");
-import("Script");
 import("Paths");
+import("Files");
 import("Type");
-import("Std");
 
 var ughCinematic:FlxSprite;
 
@@ -45,12 +35,12 @@ function addToLoad(list:Array<Dynamic>){
 function preload():Void {
     if(!PlayState.isStoryMode || PlayState.total_plays > 1){return false;}
 
-    tankman = getState().stage.getCharacterByName("Tankman");
-    boyfriend = getState().stage.getCharacterByName("Boyfriend");
-    girlfriend = getState().stage.getCharacterByName("Girlfriend");
+    tankman = stage.getCharacterByName("Tankman");
+    boyfriend = stage.getCharacterByName("Boyfriend");
+    girlfriend = stage.getCharacterByName("Girlfriend");
 
     ughCinematic = new FlxSprite(tankman.x - 160, tankman.y + 110);
-    ughCinematic.frames = SavedFiles.getSparrowAtlas(Paths.image("cutscenes/ugh", "stages/war"));
+    ughCinematic.frames = Files.getSparrowAtlas(Paths.image("cutscenes/ugh", "stages/war"));
     ughCinematic.animation.addByPrefix("play_1", "TANK TALK 1 P1", 24, false);
     ughCinematic.animation.addByPrefix("play_2", "TANK TALK 1 P2", 24, false);
     ughCinematic.visible = true;
@@ -58,7 +48,7 @@ function preload():Void {
 
     tankman.c.visible = false;
 
-    camFollow = getState().camFollow;
+    camFollow = camFollow;
 }
 
 function startSong(_startCountdown:Void->Void):Void {
@@ -67,12 +57,12 @@ function startSong(_startCountdown:Void->Void):Void {
     onCinematic = true;
 
     girlfriend.dance();
-    Character.setCameraToCharacter(tankman, camFollow, getState().stage);
+    Character.setCameraToCharacter(tankman, camFollow, stage);
 
-    FlxG.sound.playMusic(SavedFiles.getSound(Paths.music("DISTORTO", "stages/war")));
+    FlxG.sound.playMusic(Files.getSound(Paths.music("DISTORTO", "stages/war")));
     FlxG.sound.music.fadeIn();
 
-    FlxTween.tween(getState().camHUD, {alpha: 0}, 0.5);
+    FlxTween.tween(camHUD, {alpha: 0}, 0.5);
 
     return true;
 }
@@ -85,16 +75,16 @@ function update(elapsed:Float){
         total_events++;
 
         ughCinematic.animation.play("play_1");
-        FlxG.sound.play(SavedFiles.getSound(Paths.sound("ugh_1", "stages/war")), 1, false, null, true);
+        FlxG.sound.play(Files.getSound(Paths.sound("ugh_1", "stages/war")), 1, false, null, true);
     }else if(total_time >= 3 && total_events == 1){
         total_events++;
 
-        Character.setCameraToCharacter(boyfriend, camFollow, getState().stage);
+        Character.setCameraToCharacter(boyfriend, camFollow, stage);
     }else if(total_time >= 4 && total_events == 2){
         total_events++;
 
         boyfriend.playAnim("singUP");
-        FlxG.sound.play(SavedFiles.getSound(Paths.sound("ugh_2", "stages/war")), 1, false, null, true);
+        FlxG.sound.play(Files.getSound(Paths.sound("ugh_2", "stages/war")), 1, false, null, true);
     }else if(total_time >= 4.35 && total_events == 3){
         total_events++;
 
@@ -102,9 +92,9 @@ function update(elapsed:Float){
     }else if(total_time >= 5.35 && total_events == 4){
         total_events++;
 
-        Character.setCameraToCharacter(tankman, camFollow, getState().stage);
+        Character.setCameraToCharacter(tankman, camFollow, stage);
         ughCinematic.animation.play("play_2");
-        FlxG.sound.play(SavedFiles.getSound(Paths.sound("ugh_3", "stages/war")), 1, false, null, true);
+        FlxG.sound.play(Files.getSound(Paths.sound("ugh_3", "stages/war")), 1, false, null, true);
     }else if(total_time >= 11.35 && total_events == 5){
         total_events++;
 
@@ -113,7 +103,7 @@ function update(elapsed:Float){
         ughCinematic.kill();
 
         FlxG.sound.music.fadeOut();
-        FlxTween.tween(getState().camHUD, {alpha: 1}, 0.5);                            
+        FlxTween.tween(camHUD, {alpha: 1}, 0.5);                            
         startCountdown();
     }else if(total_time >= 12 && total_events == 6){
         total_events++;

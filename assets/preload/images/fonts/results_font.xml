@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="RESULTS ALPHABET.png">
+	<!-- Created with Adobe Animate version 23.0.2.103 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="exclamation point0000" x="0" y="0" width="90" height="122"/>
+	<SubTexture name="A capital0000" x="387" y="0" width="125" height="132"/>
+	<SubTexture name="B capital0000" x="512" y="0" width="100" height="109"/>
+	<SubTexture name="C capital0000" x="612" y="0" width="108" height="103"/>
+	<SubTexture name="D capital0000" x="720" y="0" width="103" height="116"/>
+	<SubTexture name="E capital0000" x="823" y="0" width="116" height="116"/>
+	<SubTexture name="F capital0000" x="0" y="134" width="117" height="121"/>
+	<SubTexture name="G capital0000" x="117" y="134" width="108" height="114"/>
+	<SubTexture name="H capital0000" x="225" y="134" width="108" height="118"/>
+	<SubTexture name="I capital0000" x="333" y="134" width="105" height="111"/>
+	<SubTexture name="J capital0000" x="438" y="134" width="108" height="109"/>
+	<SubTexture name="K capital0000" x="546" y="134" width="108" height="119"/>
+	<SubTexture name="L capital0000" x="654" y="134" width="115" height="106"/>
+	<SubTexture name="M capital0000" x="769" y="134" width="129" height="116"/>
+	<SubTexture name="N capital0000" x="898" y="134" width="117" height="115"/>
+	<SubTexture name="O capital0000" x="0" y="255" width="108" height="120"/>
+	<SubTexture name="P capital0000" x="108" y="255" width="118" height="136"/>
+	<SubTexture name="Q capital0000" x="226" y="255" width="118" height="131"/>
+	<SubTexture name="R capital0000" x="344" y="255" width="126" height="126"/>
+	<SubTexture name="S capital0000" x="470" y="255" width="116" height="116"/>
+	<SubTexture name="T capital0000" x="586" y="255" width="128" height="106"/>
+	<SubTexture name="U capital0000" x="714" y="255" width="107" height="105"/>
+	<SubTexture name="V capital0000" x="821" y="255" width="109" height="120"/>
+	<SubTexture name="W capital0000" x="0" y="391" width="141" height="116"/>
+	<SubTexture name="X capital0000" x="141" y="391" width="109" height="123"/>
+	<SubTexture name="Y capital0000" x="250" y="391" width="118" height="123"/>
+	<SubTexture name="Z capital0000" x="368" y="391" width="113" height="114"/>
+	<SubTexture name="Ñ capital0000" x="725" y="391" width="95" height="132"/>
+</TextureAtlas>

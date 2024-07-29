@@ -1,0 +1,44 @@
+{
+	"aspect": "Default",
+	"position": [
+		-30,
+		400
+	],
+	"scale": 0.8,
+	"animations": [
+		{
+			"indices": [3,4,5,6,7,8,9],
+			"symbol": "Boyfriend Good Anim",
+			"fps": 24,
+			"key": "Waiting",
+			"loop": false
+		},
+		{
+			"indices": [10,11,12,13],
+			"symbol": "Boyfriend Good Anim",
+			"fps": 24,
+			"key": "Perfect",
+			"loop": false
+		},
+		{
+			"indices": [14,15,16,17,18,19,20],
+			"symbol": "Boyfriend Good Anim",
+			"fps": 24,
+			"key": "Perfect-loop",
+			"loop": true
+		}
+	],
+	"name": "Boyfriend",
+	"image": "BOYFRIEND_RESULT",
+	"zoom": 0.8,
+	"antialiasing": true,
+	"singTime": 1,
+	"skin": "Default",
+	"onRight": false,
+	"icon": "bf",
+	"color": "#409fff",
+	"camera": [
+		25,
+		20
+	]
+}

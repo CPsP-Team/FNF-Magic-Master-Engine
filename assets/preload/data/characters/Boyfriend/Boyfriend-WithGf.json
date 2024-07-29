@@ -1,0 +1,93 @@
+{
+	"aspect": "WithGf",
+	"position": [
+		0,
+		320
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "BF NOTE DOWN",
+			"key": "singDOWN",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "MISS BF NOTE DOWN",
+			"key": "singDOWNmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF NOTE LEFT",
+			"key": "singLEFT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "MISS BF NOTE LEFT",
+			"key": "singLEFTmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF NOTE RIGHT",
+			"key": "singRIGHT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "MISS BF NOTE RIGHT",
+			"key": "singRIGHTmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF NOTE UP",
+			"key": "singUP",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "MISS BF NOTE UP",
+			"key": "singUPmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF catches GF",
+			"key": "catch",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF idle dance",
+			"key": "idle",
+			"fps": 24,
+			"indices": []
+		}
+	],
+	"name": "Boyfriend",
+	"image": "BfHoldingGf",
+	"zoom": 0.8,
+	"antialiasing": true,
+	"skin": "Default",
+	"onRight": false,
+	"camera": [
+		0,
+		0
+	],
+	"icon": "bf",
+	"color": "#409fff",
+	"singTime": 1
+}

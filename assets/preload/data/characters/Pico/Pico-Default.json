@@ -1,0 +1,85 @@
+{
+	"aspect": "Default",
+	"position": [
+		-5,
+		290
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"symbol": "Pico Down Note",
+			"loop": false,
+			"fps": 24,
+			"key": "singDOWN",
+			"indices": []
+		},
+		{
+			"symbol": "MISS Pico Down Note",
+			"loop": false,
+			"fps": 24,
+			"key": "singDOWNmiss",
+			"indices": []
+		},
+		{
+			"symbol": "Pico Idle Dance",
+			"loop": false,
+			"fps": 24,
+			"key": "idle",
+			"indices": []
+		},
+		{
+			"symbol": "Pico NOTE LEFT",
+			"loop": false,
+			"fps": 24,
+			"key": "singLEFT",
+			"indices": []
+		},
+		{
+			"symbol": "miss Pico NOTE LEFT",
+			"loop": false,
+			"fps": 24,
+			"key": "singLEFTmiss",
+			"indices": []
+		},
+		{
+			"symbol": "Pico Note Right",
+			"loop": false,
+			"fps": 24,
+			"key": "singRIGHT",
+			"indices": []
+		},
+		{
+			"symbol": "Miss Pico Note Right",
+			"loop": false,
+			"fps": 24,
+			"key": "singRIGHTmiss",
+			"indices": []
+		},
+		{
+			"symbol": "pico Up note",
+			"loop": false,
+			"fps": 24,
+			"key": "singUP",
+			"indices": []
+		},
+		{
+			"symbol": "miss pico Up note",
+			"loop": false,
+			"fps": 24,
+			"key": "singUPmiss",
+			"indices": []
+		}
+	],
+	"name": "Pico",
+	"image": "Pico_FNF_Assetss",
+	"zoom": 0.8,
+	"antialiasing": true,
+	"singTime": 1,
+	"skin": "Default",
+	"onRight": false,
+	"icon": "pico",
+	"camera": [
+		-29,
+		0
+	]
+}

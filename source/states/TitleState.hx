@@ -1,19 +1,12 @@
 package states;
 
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.TransitionData;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.input.gamepad.FlxGamepad;
-import flixel.system.ui.FlxSoundTray;
-import flixel.graphics.FlxGraphic;
 import flixel.util.FlxGradient;
-import flixel.sound.FlxSound;
 import flixel.tweens.FlxTween;
+import flixel.sound.FlxSound;
 import flixel.math.FlxRandom;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxEase;
+import objects.game.Alphabet;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
@@ -25,18 +18,19 @@ import io.newgrounds.NG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.FlxState;
+import utils.Language;
 import openfl.Assets;
 import flixel.FlxG;
 import haxe.Timer;
 
 #if (desktop && sys)
-import Discord.DiscordClient;
+import utils.Discord;
 import sys.thread.Thread;
 import sys.FileSystem;
 import sys.io.File;
 #end
 
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 class TitleState extends MusicBeatState {
@@ -62,7 +56,7 @@ class TitleState extends MusicBeatState {
 	override public function create():Void {
 		FlxG.mouse.visible = false;
 
-		intro_list = LangSupport.getText('intro_list');
+		intro_list = Language.get('intro_list');
 		otherStuff.add(new FlxSprite());
 
 		gradient = FlxGradient.createGradientFlxSprite(FlxG.width, Std.int(FlxG.height / 2), [0x00000000, 0xFF23FFB6]);
@@ -81,7 +75,7 @@ class TitleState extends MusicBeatState {
 		logo.visible = false;
 		add(logo);
 
-		press_title = new Alphabet(0,0, LangSupport.getText('intro_start'));
+		press_title = new Alphabet(0,0, Language.get('intro_start'));
 		press_title.y = FlxG.height + 10; press_title.screenCenter(X);
 		press_title.cameras = [camFGame];
 		add(press_title);
@@ -92,17 +86,14 @@ class TitleState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float){
-		if(FlxG.sound.music != null){conductor.songPosition = FlxG.sound.music.time;}
+		if(FlxG.sound.music != null){conductor.position = FlxG.sound.music.time;}
 
 		super.update(elapsed);
 
 		if(logo != null){logo.scale.set(FlxMath.lerp(logo.scale.x, 1, 0.1), FlxMath.lerp(logo.scale.y, 1, 0.1));}
 
 		if(canControlle){
-			if(FlxG.keys.justPressed.T){cur_text--;}
-			if(FlxG.keys.justPressed.G){cur_text++;}
-
-			if(principal_controls.checkAction("Menu_Accept", JUST_PRESSED)){
+			if(controls.check("MenuAccept")){
 				if(inIntro){
 					skipIntro(true);
 				}else{
@@ -154,22 +145,22 @@ class TitleState extends MusicBeatState {
 
 		if(inIntro){
 			switch(curBeat){
-				case 4:{changeAlpha(LangSupport.getText('intro_1'));}
+				case 4:{changeAlpha(Language.get('intro_1'));}
 				case 7:{changeAlpha();}
-				case 8:{changeAlpha(LangSupport.getText('intro_2'));}
+				case 8:{changeAlpha(Language.get('intro_2'));}
 				case 11:{changeAlpha();}
-				case 12:{changeAlpha(LangSupport.getText('intro_3'));}
+				case 12:{changeAlpha(Language.get('intro_3'));}
 				case 15:{changeAlpha();}
-				case 16:{changeAlpha(LangSupport.getText('intro_4'));}
+				case 16:{changeAlpha(Language.get('intro_4'));}
 				case 19:{changeAlpha();}
 				case 20:{changeAlpha([intro_list[FlxG.random.int(0,intro_list.length-1)]]);}
 				case 23:{changeAlpha();}
 				case 24:{FlxTween.tween(gradient, {y: FlxG.height - gradient.height}, (conductor.crochet / 1000) * 6, {ease: FlxEase.quadInOut}); changeAlpha([intro_list[FlxG.random.int(0,intro_list.length-1)]]);}
 				case 27:{changeAlpha();}
-				case 28:{changeAlpha(LangSupport.getText('intro_5'));}
-				case 29:{changeAlpha(LangSupport.getText('intro_6'));}
-				case 30:{changeAlpha(LangSupport.getText('intro_7'));}
-				case 31:{changeAlpha(LangSupport.getText('intro_8'));}
+				case 28:{changeAlpha(Language.get('intro_5'));}
+				case 29:{changeAlpha(Language.get('intro_6'));}
+				case 30:{changeAlpha(Language.get('intro_7'));}
+				case 31:{changeAlpha(Language.get('intro_8'));}
 				case 32:{skipIntro();}
 			}
 

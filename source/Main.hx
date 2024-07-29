@@ -7,6 +7,7 @@ import flixel.graphics.FlxGraphic;
 import openfl.display.Info_Field;
 import haxe.CallStack.StackItem;
 import flixel.tweens.FlxTween;
+import objects.utils.Controls;
 import openfl.display.Sprite;
 import lime.app.Application;
 import flixel.util.FlxTimer;
@@ -14,13 +15,16 @@ import openfl.events.Event;
 import flixel.FlxState;
 import flixel.FlxGame;
 import haxe.CallStack;
-import sys.FileSystem;
-import sys.io.Process;
 import openfl.Assets;
 import haxe.io.Path;
-import sys.io.File;
 import flixel.FlxG;
 import openfl.Lib;
+
+#if desktop
+import sys.FileSystem;
+import sys.io.Process;
+import sys.io.File;
+#end
 
 class Main extends Sprite {
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
@@ -74,18 +78,40 @@ class Main extends Sprite {
 		#if !debug
 		initialState = states.PreLoaderState;
 		#end
-		
+
 		Info = new Info_Field(10, 3, 0xFFFFFF);
+		
+		NGio.noLogin(APIStuff.API);
 
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
-
-		#if !mobile
-		addChild(Info);
+		#if ng
+		var ng:NGio = new NGio(APIStuff.API, APIStuff.EncKey);
+		trace('Newgrounds Loaded');
 		#end
+		FlxG.save.bind('funkin', 'Yirius125');
+
+		Highscore.init();
+		Controls.init();
+		Settings.init();
+		Language.init();
+		Mods.init();
+		
+		#if desktop
+		Discord.init();
+		Application.current.onExit.add(function(exitCode){Discord.shutdown();});
+
+            #if !switch
+                NGio.unlockMedal(60960);
+
+                // If it's Friday according to da clock
+                if(Date.now().getDay() == 5){NGio.unlockMedal(61034);}
+			#end
+		#end
+		
+		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
+		#if !mobile addChild(Info); #end
 	}
 
-	function onCrash(e:UncaughtErrorEvent):Void
-	{
+	function onCrash(e:UncaughtErrorEvent):Void {
 		var errMsg:String = "";
 		var path:String;
 		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
@@ -103,7 +129,7 @@ class Main extends Sprite {
 				case FilePos(s, file, line, column):
 					errMsg += file + " (line " + line + ")\n";
 				default:
-					Sys.println(stackItem);
+					#if desktop Sys.println(stackItem); #end
 			}
 		}
 

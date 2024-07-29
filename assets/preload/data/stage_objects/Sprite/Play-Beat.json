@@ -1,0 +1,15 @@
+{
+    "name": "Play-Beat",
+
+    "variables": [
+        { "name": "beatkey", "type": "string", "placeholder": "play" }
+    ],
+
+    "imports": [],
+    "sources": [
+        { "source": "${name}.animation.play('${beatkey}');", "type": "beat" }
+    ],
+
+    "attribute": true,
+    "unique": true
+}

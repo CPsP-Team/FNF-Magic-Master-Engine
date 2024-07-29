@@ -1,0 +1,85 @@
+{
+	"aspect": "Default",
+	"position": [
+		10,
+		135
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "DOWN",
+			"key": "singDOWN",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BEATBOX DOWN",
+			"key": "singDOWN-alt",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "IDLE",
+			"key": "idle",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "LEFT",
+			"key": "singLEFT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BEATBOX LEFT",
+			"key": "singLEFT-alt",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "RIGHT",
+			"key": "singRIGHT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BEATBOX RIGHT",
+			"key": "singRIGHT-alt",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "UP",
+			"key": "singUP",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BEATBOX UP",
+			"key": "singUP-alt",
+			"fps": 24,
+			"indices": []
+		}
+	],
+	"zoom": 0.8,
+	"image": "Manolo",
+	"name": "Manolo",
+	"antialiasing": true,
+	"camera": [
+		0,
+		-25
+	],
+	"icon": "manolo",
+	"onRight": true,
+	"skin": "Default",
+	"singTime": 1
+}

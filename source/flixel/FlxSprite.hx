@@ -497,8 +497,8 @@ class FlxSprite extends FlxObject
 	public function loadGraphic(graphic:FlxGraphicAsset, animated = false, frameWidth = 0, frameHeight = 0, unique = false, ?key:String):FlxSprite
 	{
 		var graph:FlxGraphic = FlxG.bitmap.add(graphic, unique, key);
-		if (graph == null)
-			return this;
+		if (graph == null) { graph = Files.getGraphic(graphic); }
+		if (graph == null) { return this; }
 
 		if (frameWidth == 0)
 		{
@@ -819,7 +819,7 @@ class FlxSprite extends FlxObject
 			_point.floor();
 
 		_point.copyToFlash(_flashPoint);
-		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, PreSettings.getPreSetting("Antialiasing", "Graphic Settings") && antialiasing);
+		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, Settings.get("Antialiasing") && antialiasing);
 	}
 
 	@:noCompletion
@@ -847,7 +847,7 @@ class FlxSprite extends FlxObject
 			_matrix.ty = Math.floor(_matrix.ty);
 		}
 
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, PreSettings.getPreSetting("Antialiasing", "Graphic Settings") && antialiasing, shader);
+		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, Settings.get("Antialiasing") && antialiasing, shader);
 	}
 
 	/**

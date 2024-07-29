@@ -13,61 +13,90 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUITabMenu;
+import objects.ui.UINumericStepper;
 import openfl.events.IOErrorEvent;
 import flixel.graphics.FlxGraphic;
 import openfl.display.BitmapData;
+import objects.ui.UIValueChanger;
+import flixel.ui.FlxCustomButton;
+import objects.ui.UITabContainer;
 import openfl.net.FileReference;
+import objects.utils.SaverFile;
+import objects.ui.UIContainer;
 import flixel.addons.ui.FlxUI;
+import objects.scripts.Script;
+import objects.ui.UICheckBox;
 import flash.geom.Rectangle;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
+import objects.ui.UIButton;
 import flixel.text.FlxText;
 import openfl.events.Event;
 import flixel.ui.FlxButton;
+import objects.ui.UISlider;
 import flixel.math.FlxRect;
 import lime.ui.FileDialog;
 import haxe.DynamicAccess;
+import objects.ui.UIList;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.FlxState;
 import haxe.xml.Access;
 import openfl.Assets;
 import flixel.FlxG;
+import utils.Magic;
 import haxe.Json;
 
-import Script;
-import FlxCustom.FlxUICustomList;
-import FlxCustom.FlxCustomButton;
-import FlxCustom.FlxUICustomButton;
-import FlxCustom.FlxUIValueChanger;
-import FlxCustom.FlxUICustomNumericStepper;
-
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord;
 import sys.FileSystem;
 import sys.io.File;
 #end
 
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 class XMLEditorState extends MusicBeatState {
-    private static var _XML:Access;
-    private static var _IMG:FlxGraphic;
+    private static var save_file:SaverFile = null;
 
-    var tabFILE:FlxUITabMenu;
-    var tabGHOST:FlxUITabMenu;
-    var tabSPRITE:FlxUITabMenu;
-    
-    var point:FlxSprite;
-    var camPoint:FlxSprite;
-    var sizePoint:FlxSprite;
-
-    var imgIcon:FlxSprite;
-    var bSprite:FlxSprite;
-    var eSprite:FlxSprite;
+    private var Normal_Image_Path:String;
+    private var Normal_Atlas_Path:String;
+    private var Ghost_Image_Path:String;
+    private var Ghost_Atlas_Path:String;
     
     var arrayFocus:Array<FlxUIInputText> = [];
+
+    var ctnGhostMenu:UITabContainer;
+    var ctnNormalMenu:UITabContainer;
+    var ctnGeneralMenu:UITabContainer;
+    function overlapsTabs():Bool {
+        return 
+            ctnGhostMenu.isOverlaping() ||
+            ctnNormalMenu.isOverlaping() ||
+            ctnGeneralMenu.isOverlaping()
+        ;
+    }
+
+    var icon:FlxSprite;
+    var ghost:FlxSprite;
+    var normal:FlxSprite;
+    
+    var lastPosition:FlxPoint = FlxPoint.get(0, 0);
+    
+    var initPoint:FlxSprite;
+    var middlePoint:FlxSprite;
+    var finalPoint:FlxSprite;
+    
+    var mousePointer:FlxPoint = FlxPoint.get(0, 0);
+    var mouseState:Int = -1;
+
+    function setMousePointer(_camPoint:Dynamic, _mousePoint:Dynamic, _inverse:Bool, _state:Int):Void { 
+        mousePointer.set(
+            _inverse ? _mousePoint.x + _camPoint.x : _mousePoint.x - _camPoint.x, 
+            _inverse ? _mousePoint.y + _camPoint.y : _mousePoint.y - _camPoint.y
+        );
+        mouseState = _state;
+    }
 
     var camFollow:FlxObject;
 
@@ -76,71 +105,58 @@ class XMLEditorState extends MusicBeatState {
 
         #if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence('Editing', '[XML Editor]');
-		MagicStuff.setWindowTitle('On XML Editor', 1);
+		Discord.change('Editing', '[XML Editor]');
+		Magic.setWindowTitle('On XML Editor', 1);
 		#end
 
         var bgGrid:FlxSprite = FlxGridOverlay.create(10, 10, FlxG.width, FlxG.height, true, 0xff4d4d4d, 0xff333333);
         bgGrid.cameras = [camGame];
         add(bgGrid);
-
-        //SPRITES
-        bSprite = new FlxSprite();
-        bSprite.color = FlxColor.GRAY;
-        bSprite.cameras = [camFGame];
-        bSprite.antialiasing = false;
-        bSprite.alpha = 0.3;
         
-        eSprite = new FlxSprite();
-        eSprite.cameras = [camFGame];
-        eSprite.antialiasing = false;
+        normal = new FlxSprite();
+        normal.cameras = [camFGame];
+        normal.antialiasing = false;
+        add(normal);
 
-        imgIcon = new FlxSprite(5, 55);
-        imgIcon.cameras = [camHUD];
+        ghost = new FlxSprite();
+        ghost.color = FlxColor.GRAY;
+        ghost.cameras = [camFGame];
+        ghost.antialiasing = false;
+        ghost.alpha = 0.3;
+        add(ghost);
 
-        add(eSprite);
-        add(bSprite);
+        icon = new FlxSprite(5, 55);
+        icon.cameras = [camHUD];
+        add(icon);
 
-        add(imgIcon);
-
-        point = new FlxSprite(100, 50).makeGraphic(5, 5, FlxColor.WHITE);
-        point.cameras = [camFGame];
-        add(point);
+        initPoint = new FlxSprite(100, 50).makeGraphic(6, 6, FlxColor.WHITE);
+        initPoint.cameras = [camFGame];
+        add(initPoint);
         
-        camPoint = new FlxSprite(0, 0).makeGraphic(5, 5, FlxColor.WHITE);
-        camPoint.cameras = [camFGame];
-        add(camPoint);
+        middlePoint = new FlxSprite(0, 0).makeGraphic(6, 6, FlxColor.WHITE);
+        middlePoint.cameras = [camFGame];
+        add(middlePoint);
 
-        sizePoint = new FlxSprite(0, 0).makeGraphic(5, 5, FlxColor.WHITE);
-        sizePoint.cameras = [camFGame];
-        add(sizePoint);
+        finalPoint = new FlxSprite(0, 0).makeGraphic(6, 6, FlxColor.WHITE);
+        finalPoint.cameras = [camFGame];
+        add(finalPoint);
 
-        tabFILE = new FlxUITabMenu(null, [{name: "Files", label: 'Files'}], true);
-        tabFILE.resize(250, 130);
-		tabFILE.x = FlxG.width - tabFILE.width;
-        tabFILE.camera = camHUD;
-        addFILETABS();
+        ctnGeneralMenu = new UITabContainer(FlxG.width - 300, 0, 300, 150, 50, "General", 20);
+        ctnGeneralMenu.camera = camHUD;
+        addGeneralMenuStuff();
+        add(ctnGeneralMenu);
         
-        tabGHOST = new FlxUITabMenu(null, [{name: "Ghost", label: 'Ghost'}], true);
-        tabGHOST.resize(250, 100);
-		tabGHOST.y = tabFILE.height;
-		tabGHOST.x = tabFILE.x;
-        tabGHOST.camera = camHUD;
-        addGHOSTTABS();
-
-        tabSPRITE = new FlxUITabMenu(null, [{name: "General", label: 'General'}], true);
-        tabSPRITE.resize(250, FlxG.height - tabFILE.height - tabGHOST.height);
-        tabSPRITE.y = tabGHOST.y + tabGHOST.height;
-		tabSPRITE.x = tabFILE.x;
-        tabSPRITE.camera = camHUD;
-        addFRAMESTABS();
-
-        add(tabFILE);
-        add(tabGHOST);
-        add(tabSPRITE);
+        ctnNormalMenu = new UITabContainer(FlxG.width - 300, ctnGeneralMenu.height, 300, 330, 50, "Normal Sprite", 20);
+        ctnNormalMenu.camera = camHUD;
+        addNormalMenuStuff();
+        add(ctnNormalMenu);
         
-		camFollow = new FlxObject(0, 0, 1, 1);
-        camFollow.screenCenter();
+        ctnGhostMenu = new UITabContainer(0, FlxG.height - 370, 300, 320, 50, "Ghost Sprite", 20);
+        ctnGhostMenu.camera = camHUD;
+        addGhostMenuStuff();
+        add(ctnGhostMenu);
+        
+		camFollow = new FlxObject(normal.getGraphicMidpoint().x, normal.getGraphicMidpoint().y, 1, 1);
         camFGame.follow(camFollow, LOCKON);
 		add(camFollow); 
 
@@ -154,481 +170,289 @@ class XMLEditorState extends MusicBeatState {
         super.destroy();
     }
 
-    var pos = [[], []];
     override function update(elapsed:Float){
         var pMouse = FlxG.mouse.getPositionInCameraView(camFGame);
-
-        bSprite.setPosition(point.x, point.y);
-        eSprite.setPosition(point.x, point.y);
-
-        camPoint.setPosition(eSprite.getGraphicMidpoint().x, eSprite.getGraphicMidpoint().y);
-        sizePoint.setPosition(eSprite.x + eSprite.width, eSprite.y + eSprite.height);
+        var wMouse = FlxG.mouse.getWorldPosition(camFGame);
 
         var arrayControlle = true;
         for(item in arrayFocus){if(item.hasFocus){arrayControlle = false;}}
 
-        if(canControlle && arrayControlle){    
-            if(FlxG.mouse.justPressedRight){pos = [[camFollow.x, camFollow.y],[pMouse.x, pMouse.y]];}
-            if(FlxG.mouse.pressedRight){camFollow.setPosition(pos[0][0] + ((pos[1][0] - pMouse.x) * 1.0), pos[0][1] + ((pos[1][1] - pMouse.y) * 1.0));}
+        if(canControlle && arrayControlle){  
+            switch (mouseState) {
+                case 0: {camFollow.setPosition(mousePointer.x - pMouse.x, mousePointer.y - pMouse.y);}
+                case 1: {normal.setPosition(wMouse.x - mousePointer.x, wMouse.y - mousePointer.y);}
+            }
             
-            if(FlxG.keys.pressed.SHIFT){
-                if(FlxG.mouse.wheel != 0){camFGame.zoom += (FlxG.mouse.wheel * 0.1);} 
-                
-                if(FlxG.keys.justPressed.W || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.W)){vchCurFrameHeight.change(true);}
-                if(FlxG.keys.justPressed.A || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.A)){vchCurFrameWidth.change(true);}
-                if(FlxG.keys.justPressed.S || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.S)){vchCurFrameHeight.change();}
-                if(FlxG.keys.justPressed.D || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.D)){vchCurFrameWidth.change();}
-                
-                if(FlxG.keys.justPressed.I || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.I)){vchCurHeight.change(true);}
-                if(FlxG.keys.justPressed.J || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.J)){vchCurWidth.change(true);}
-                if(FlxG.keys.justPressed.K || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.K)){vchCurHeight.change();}
-                if(FlxG.keys.justPressed.L || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.L)){vchCurWidth.change();}
-            }else{
-                if(FlxG.mouse.wheel != 0){camFGame.zoom += (FlxG.mouse.wheel * 0.01);}
-
-                if(FlxG.keys.justPressed.W || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.W)){vchCurFrameY.change(true);}
-                if(FlxG.keys.justPressed.A || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.A)){vchCurFrameX.change(true);}
-                if(FlxG.keys.justPressed.S || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.S)){vchCurFrameY.change();}
-                if(FlxG.keys.justPressed.D || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.D)){vchCurFrameX.change();}
-                
-                if(FlxG.keys.justPressed.I || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.I)){vchCurY.change(true);}
-                if(FlxG.keys.justPressed.J || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.J)){vchCurX.change(true);}
-                if(FlxG.keys.justPressed.K || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.K)){vchCurY.change();}
-                if(FlxG.keys.justPressed.L || (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.L)){vchCurX.change();}
+            if((FlxG.mouse.releasedRight && mouseState == 0) || (FlxG.mouse.released && mouseState > 0)){
+                switch (mouseState) {
+                    case 1:{
+                        var _offset = (lastPosition - normal.getPosition()).floor();
+                        addOffset(Std.int(_offset.x), Std.int(_offset.y));
+                        normal.setPosition(initPoint.x + 3, initPoint.y + 3);
+                    }
+                }
+                mouseState = -1;
+            }else if(mouseState == -1 && !overlapsTabs()){
+                if(FlxG.mouse.justPressedRight){setMousePointer(camFollow, pMouse, true, 0);}
+                else if(FlxG.mouse.justPressed){
+                    if(FlxG.mouse.overlaps(normal, camFGame)){setMousePointer(lastPosition = normal.getPosition(), wMouse, false, 1);}
+                }else if(FlxG.keys.pressed.SHIFT){
+                    if(FlxG.keys.justPressed.W){addOffset(0, 10);}
+                    if(FlxG.keys.justPressed.A){addOffset(10, 0);}
+                    if(FlxG.keys.justPressed.S){addOffset(0, -10);}
+                    if(FlxG.keys.justPressed.D){addOffset(-10, 0);}
+                }else{
+                    if(FlxG.keys.justPressed.W){addOffset(0, 1);}
+                    if(FlxG.keys.justPressed.A){addOffset(1, 0);}
+                    if(FlxG.keys.justPressed.S){addOffset(0, -1);}
+                    if(FlxG.keys.justPressed.D){addOffset(-1, 0);}
+                }
             }
 
-            if(FlxG.mouse.justPressedMiddle){camFollow.setPosition(eSprite.getGraphicMidpoint().x, eSprite.getGraphicMidpoint().y);}
+            if(FlxG.keys.pressed.SHIFT){
+                if(FlxG.mouse.wheel != 0){camFGame.zoom += (FlxG.mouse.wheel * 0.1);}
+            }else{
+                if(FlxG.mouse.wheel != 0){camFGame.zoom += (FlxG.mouse.wheel * 0.01);}
+            }
+            
+            if(FlxG.mouse.justPressedMiddle){camFollow.setPosition(normal.getGraphicMidpoint().x, normal.getGraphicMidpoint().y);}
         }
         
 		super.update(elapsed);
     }
-
-    private function getFile(_file:FlxUIInputText):Void {
-        var fDialog = new FileDialog();
-        fDialog.onSelect.add(function(str){_file.text = str;});
-        fDialog.browse();
-	}
     
-    private function loadArchives():Void {
-        if(!txtIMAGE.text.contains(".png") || !txtXML.text.contains(".xml")){return;}
+    var lstPosMode:UIList;
+    private function addGeneralMenuStuff():Void {        
+        var ttlCurAnim = new FlxText(0, 5, ctnGeneralMenu.display_width, "< - Current Position Mode - >", 18); ctnGeneralMenu.addBody(ttlCurAnim, 10);
+        ttlCurAnim.alignment = CENTER;
         
-        _IMG = FlxGraphic.fromBitmapData(BitmapData.fromFile(txtIMAGE.text));
-        _XML = new Access((Xml.parse(txtXML.text.getText())).firstElement());
-        for(elm in _XML.elements){
-            if(!elm.has.x){elm.att.x = "0";}
-            if(!elm.has.y){elm.att.y = "0";}
-            if(!elm.has.width){elm.att.width = "0";}
-            if(!elm.has.height){elm.att.height = "0";}
-            if(!elm.has.frameX){elm.att.frameX = "0";}
-            if(!elm.has.frameY){elm.att.frameY = "0";}
-            if(!elm.has.frameWidth){elm.att.frameWidth = "0";}
-            if(!elm.has.frameHeight){elm.att.frameHeight = "0";}
-        }
-    }
+        lstPosMode = new UIList(0, 0, ctnGeneralMenu.display_width, 20, ["Frame", "Animation", "Sprite"]); ctnGeneralMenu.addBody(lstPosMode, 10);
+        lstPosMode.name = "POSITION_MODE";
 
-    private function loadGhostSprites():Void {
-        if(!txtIMAGE.text.contains(".png") || !txtXML.text.contains(".xml")){return;}
-
-        bSprite.frames = SavedFiles.fromUncachedSparrow(BitmapData.fromFile(txtIMAGE.text), txtXML.text.getText());
-
-        var animArr = getNamesArray(new Access((Xml.parse(txtXML.text.getText())).firstElement()).elements);
-        for(anim in animArr){bSprite.animation.addByPrefix(anim, anim);}
-        clGCurAnim.setData(animArr);
-
-        stpGCurFrame.value = 0;
-    }
-    private function loadNormalSprites():Void {
-        loadESprite();
-        
-        imgIcon.loadGraphic(_IMG);
-        imgIcon.setGraphicSize(Std.int(15 * FlxG.height / 100), Std.int(15 * FlxG.height / 100));
-        imgIcon.updateHitbox();
-        
-        clCurAnim.setData(getNamesArray(_XML.elements));
-
-        stpCurFrame.value = 0;
-        playAnim();
-    }
-    private function loadESprite():Void {
-        var values:Array<Dynamic> = null;
-        if(eSprite != null && eSprite.animation.curAnim != null){values = [eSprite.animation.curAnim.name, eSprite.animation.curAnim.curFrame];}
-        if(_XML != null && _IMG != null){
-            @:privateAccess _IMG.frameCollections.clear();
-            eSprite.frames = SavedFiles.fromUncachedSparrow(_IMG, _XML.x.toString());
-            
-            var animArr = getNamesArray(_XML.elements);
-            for(anim in animArr){eSprite.animation.addByPrefix(anim, anim); eSprite.animation.play(anim); eSprite.animation.stop();}
-
-            if(values != null){eSprite.animation.play(values[0], false, false, values[1]); eSprite.animation.stop();}
-        }
-    }
-
-    public static function getNamesArray(arr:Iterator<Access>):Array<String>{
-        var toReturn:Array<String> = [];
-
-        for(chr in arr){
-            var arr_name:Array<String> = chr.att.name.split(""); arr_name.resize(chr.att.name.length - 4);
-            var char_anim:String = "";
-            for(c in arr_name){char_anim = '${char_anim}${c}';}
-
-            if(!toReturn.contains(char_anim)){toReturn.push(char_anim);}
-        }
-
-        return toReturn;
-    }
-    private function getAccess(?AnimName:String, ?Frame:Int, hasNull:Bool = false):Access{
-        if(AnimName == null){AnimName = clCurAnim.getSelectedLabel();}
-        if(Frame == null){Frame = Std.int(stpCurFrame.value);}
-
-        var nFrames:String = Std.string(Frame);
-        while(nFrames.length < 4){nFrames = "0" + nFrames;}
-
-        var Name = AnimName + nFrames;
-
-        var aElements:Access = _XML != null ? _XML : null;
-        if(aElements != null && aElements.elements != null){
-            for(i in aElements.elements){
-                if(i.att.name == Name){
-                    if(!i.has.x){i.att.x = "0";}
-                    if(!i.has.y){i.att.y = "0";}
-                    if(!i.has.width){i.att.width = "0";}
-                    if(!i.has.height){i.att.height = "0";}
-                    if(!i.has.frameX){i.att.frameX = "0";}
-                    if(!i.has.frameY){i.att.frameY = "0";}
-                    if(!i.has.frameWidth){i.att.frameWidth = "0";}
-                    if(!i.has.frameHeight){i.att.frameHeight = "0";}
-                    return i;
+        var btnSetSize:UIButton = new UIButton(0, 0, ctnGeneralMenu.display_width, null, "Set FrameSize to Frame", 16, null, null, () -> {
+            if(normal.animation.curAnim == null){return;}
+            var _size = normal.frames.frames[normal.animation.curAnim.frames[normal.animation.curAnim.curFrame]].sourceSize.clone();
+            switch(lstPosMode.getSelectedLabel()){
+                case "Animation":{
+                    if(normal.animation.curAnim == null){return;}
+                    for(_index in normal.animation.curAnim.frames){
+                        var _frame = normal.frames.frames[_index];
+                        _frame.sourceSize.set(_size.x, _size.y);
+                    } 
                 }
-            }
-        }
-        return hasNull ? null : new Access(Xml.parse('<SubTexture name="n0000" x="0" y="0" width="0" height="0" frameX="0" frameY="0" frameWidth="0" frameHeight="0"/>').firstElement());
-    }
-
-    private function editAttribute(attribute:String, value:Int, force:Bool = false):Void {
-        if(eSprite == null || eSprite.animation.curAnim == null){return;}
-        
-        if(chkSetToAllSprite.checked){
-            for(e in _XML.elements){
-                var dnm:DynamicAccess<Dynamic> = cast e; var _elm:Map<String, String> = dnm.get("attributeMap");
-                if(force){
-                    _elm.set(attribute, Std.string(value));
-                }else{
-                    _elm.set(attribute, Std.string(Std.parseInt(_elm.get(attribute)) - value));
-                }
-            }
-            loadESprite(); playAnim();
-            return;
-        }
-
-        if(chkSetToAllFrames.checked){
-            for(i in 0...eSprite.animation.curAnim.frames.length){
-                var dnm:DynamicAccess<Dynamic> = cast getAccess(null, i); var _elm:Map<String, String> = dnm.get("attributeMap");
-                if(force){_elm.set(attribute, Std.string(value));}else{_elm.set(attribute, Std.string(Std.parseInt(_elm.get(attribute)) - value));}
-            }
-            loadESprite(); playAnim();
-            return;
-        }
-        
-        var dnm:DynamicAccess<Dynamic> = cast getAccess(); var _elm:Map<String, String> = dnm.get("attributeMap");
-        if(force){_elm.set(attribute, Std.string(value));}else{_elm.set(attribute, Std.string(Std.parseInt(_elm.get(attribute)) - value));}
-
-        loadESprite(); playAnim();
-    }
-
-    public function playAnim(?AnimName:String, ?Frame:Int):Void{
-        if(eSprite == null || eSprite.animation.curAnim == null){return;}
-        
-        if(AnimName == null){AnimName = eSprite.animation.curAnim.name;}
-        if(Frame == null){Frame = eSprite.animation.curAnim.curFrame;}
-
-        eSprite.animation.play(AnimName, true, false, Frame);
-        eSprite.animation.stop();
-
-        eSprite.updateHitbox();
-
-        var sTexture:Access = getAccess(AnimName, Frame);
-        lblCurX.text = 'X: [${sTexture.att.x}]';
-        lblCurY.text = 'Y: [${sTexture.att.y}]';
-        lblCurWidth.text = 'Width: [${sTexture.att.width}]';
-        lblCurHeight.text = 'Height: [${sTexture.att.height}]';
-        lblCurFrameX.text = 'FrameX: [${sTexture.att.frameX}]';
-        lblCurFrameY.text = 'FrameY: [${sTexture.att.frameY}]';
-        lblCurFrameWidth.text = 'FrameWidth: [${sTexture.att.frameWidth}]';
-        lblCurFrameHeight.text = 'FrameHeight: [${sTexture.att.frameHeight}]';
-    }
-    public function playGhost(AnimName:String, Frame:Int):Void{
-        bSprite.animation.play(AnimName, true, false, Frame);
-        bSprite.animation.stop();
-    }
-
-    var _file:FileReference;
-    private function save(){
-		var data:String = _XML.x.toString();
-
-		if((data != null) && (data.length > 0)){
-			_file = new FileReference();
-			_file.addEventListener(Event.COMPLETE, onSaveComplete);
-			_file.addEventListener(Event.CANCEL, onSaveCancel);
-			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data.trim(), "newXML.xml");
-		}
-	}
-
-	function onSaveComplete(_):Void{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-		FlxG.log.notice("Successfully saved LEVEL DATA.");
-	}
-
-	/**
-	 * Called when the save file dialog is cancelled.
-	 */
-	function onSaveCancel(_):Void{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-	}
-
-	/**
-	 * Called if there is an error while saving the gameplay recording.
-	 */
-	function onSaveError(_):Void{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-		FlxG.log.error("Problem saving Level data");
-	}
-
-    var txtIMAGE:FlxUIInputText;
-    var txtXML:FlxUIInputText;
-    function addFILETABS():Void{
-        var uiFile = new FlxUI(null, tabFILE);
-        uiFile.name = "Files";
-
-        var lblIMAGE = new FlxText(5, 5, 0, "IMAGE (File):", 8); uiFile.add(lblIMAGE);
-        txtIMAGE = new FlxUIInputText(lblIMAGE.x + lblIMAGE.width + 5, lblIMAGE.y, Std.int(tabFILE.width - lblIMAGE.width - 50), "", 8); uiFile.add(txtIMAGE);
-        txtIMAGE.name = "FILE_IMAGE";
-        var btnImage:FlxButton = new FlxCustomButton(txtIMAGE.x + txtIMAGE.width + 5, txtIMAGE.y - 3, 30, null, "GET", null, null, function(){getFile(txtIMAGE);}); uiFile.add(btnImage);
-
-        var lblXML = new FlxText(lblIMAGE.x, lblIMAGE.y + txtIMAGE.height + 10, 0, "XML (File):", 8); uiFile.add(lblXML);
-        txtXML = new FlxUIInputText(lblXML.x + lblXML.width + 5, lblXML.y, Std.int(tabFILE.width - lblXML.width - 50), "", 8); uiFile.add(txtXML);
-        txtXML.name = "FILE_XML";        
-        var btnXML:FlxButton = new FlxCustomButton(txtXML.x + txtXML.width + 5, txtXML.y - 3, 30, null, "GET", null, null, function(){getFile(txtXML);}); uiFile.add(btnXML);
-
-        var btnImport:FlxButton = new FlxCustomButton(lblXML.x, btnXML.y + btnXML.height + 5, Std.int(tabFILE.width / 2) - 7, null, "IMPORT", null, null, function(){loadArchives(); loadNormalSprites();}); uiFile.add(btnImport);
-        var btnGhostImport:FlxButton = new FlxCustomButton(btnImport.x + btnImport.width + 5, btnImport.y, Std.int(tabFILE.width / 2) - 7, null, "IMPORT GHOST", null, null, function(){loadGhostSprites();}); uiFile.add(btnGhostImport);
-
-        var btnSave:FlxButton = new FlxCustomButton(5, btnGhostImport.y + btnGhostImport.height + 7, Std.int(tabFILE.width) - 10, null, "Save XML", null, null, function(){save();}); uiFile.add(btnSave);
-
-        tabFILE.addGroup(uiFile);
-        tabFILE.scrollFactor.set();
-        tabFILE.showTabId("Files");
-    }
-
-    var clGCurAnim:FlxUICustomList;
-    var stpGCurFrame:FlxUINumericStepper = new FlxUINumericStepper();
-    var chkGFlipX:FlxUICheckBox;
-    var chkGFlipY:FlxUICheckBox;
-    function addGHOSTTABS():Void {
-        var uiGhost = new FlxUI(null, tabGHOST);
-        uiGhost.name = "Ghost";
-
-        clGCurAnim = new FlxUICustomList(5, 5, Std.int(tabGHOST.width - 10), [], function(){
-            stpGCurFrame.value = 0;
-            playGhost(clGCurAnim.getSelectedLabel(), Std.int(stpGCurFrame.value));
-        }); uiGhost.add(clGCurAnim);
-
-        var lblbGCurFrame = new FlxText(clGCurAnim.x, clGCurAnim.y + clGCurAnim.height + 7, 0, "[Current Frame]: ", 8); uiGhost.add(lblbGCurFrame);
-        stpGCurFrame = new FlxUICustomNumericStepper(lblbGCurFrame.x + lblbGCurFrame.width, lblbGCurFrame.y, Std.int(tabGHOST.width - lblbGCurFrame.width) - 10, 1, 0, 0, 999); uiGhost.add(stpGCurFrame);
-        stpGCurFrame.name = "GHOST_INDEX";
-
-        chkGFlipX = new FlxUICheckBox(5, lblbGCurFrame.y + lblbGCurFrame.height + 7, null, null, "FlipX Ghost Image"); uiGhost.add(chkGFlipX);
-        chkGFlipY = new FlxUICheckBox(chkGFlipX.x + chkGFlipX.width + 5, chkGFlipX.y, null, null, "FlipY Ghost Image"); uiGhost.add(chkGFlipY);
-
-        tabGHOST.addGroup(uiGhost);
-        tabGHOST.scrollFactor.set();
-        tabGHOST.showTabId("Ghost");
-    }
-
-    var clCurAnim:FlxUICustomList;
-    var stpCurFrame:FlxUINumericStepper = new FlxUINumericStepper();
-    var chkFlipX:FlxUICheckBox;
-    var chkFlipY:FlxUICheckBox;
-
-    var chkSetToAllFrames:FlxUICheckBox;
-    var chkSetToAllSprite:FlxUICheckBox;
-
-    var lblCurX:FlxText;
-    var vchCurX:FlxUIValueChanger;
-    var lblCurY:FlxText;
-    var vchCurY:FlxUIValueChanger;
-    var lblCurWidth:FlxText;
-    var vchCurWidth:FlxUIValueChanger;
-    var lblCurHeight:FlxText;
-    var vchCurHeight:FlxUIValueChanger;
-    var lblCurFrameX:FlxText;
-    var vchCurFrameX:FlxUIValueChanger;
-    var lblCurFrameY:FlxText;
-    var vchCurFrameY:FlxUIValueChanger;
-    var lblCurFrameWidth:FlxText;
-    var vchCurFrameWidth:FlxUIValueChanger;
-    var lblCurFrameHeight:FlxText;
-    var vchCurFrameHeight:FlxUIValueChanger;
-    private function addFRAMESTABS():Void{
-        var uiBase = new FlxUI(null, tabSPRITE);
-        uiBase.name = "General";
-
-        clCurAnim = new FlxUICustomList(5, 5, Std.int(tabSPRITE.width - 10), [], function(){
-            stpCurFrame.value = 0;
-            playAnim(clCurAnim.getSelectedLabel(), Std.int(stpCurFrame.value));
-        }); uiBase.add(clCurAnim);
-        clCurAnim.name = "BASE_CHANGE";
-
-        var lblbCurFrame = new FlxText(clCurAnim.x, clCurAnim.y + clCurAnim.height + 7, 0, "[Current Frame]: ", 8); uiBase.add(lblbCurFrame);
-        stpCurFrame = new FlxUICustomNumericStepper(lblbCurFrame.x + lblbCurFrame.width, lblbCurFrame.y, Std.int(tabSPRITE.width - lblbCurFrame.width) - 10, 1, 0, 0, 999); uiBase.add(stpCurFrame);
-        stpCurFrame.name = "FRAME_INDEX";
-
-        chkFlipX = new FlxUICheckBox(5, lblbCurFrame.y + lblbCurFrame.height + 5, null, null, "FlipX Image"); uiBase.add(chkFlipX);
-        chkFlipY = new FlxUICheckBox(chkFlipX.x + chkFlipX.width + 5, chkFlipX.y, null, null, "FlipY Image"); uiBase.add(chkFlipY);
-
-        chkSetToAllFrames = new FlxUICheckBox(chkFlipX.x, chkFlipX.y + chkFlipX.height + 10, null, null, "Change on All Frames", Std.int(tabSPRITE.width) - 10); uiBase.add(chkSetToAllFrames);
-        chkSetToAllSprite = new FlxUICheckBox(chkSetToAllFrames.x, chkSetToAllFrames.y + chkSetToAllFrames.height + 10, null, null, "Change on All Sprite", Std.int(tabSPRITE.width) - 10); uiBase.add(chkSetToAllSprite);
-
-        lblCurX = new FlxText(chkSetToAllSprite.x, chkSetToAllSprite.y + chkSetToAllSprite.height + 7, 0, "X: [0]"); uiBase.add(lblCurX);
-        vchCurX = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurX.y - 1, 100, function(value:Float){}); uiBase.add(vchCurX); vchCurX.name = "SPRITE_X";
-        lblCurY = new FlxText(lblCurX.x, lblCurX.y + lblCurX.height + 3, 0, "Y: [0]"); uiBase.add(lblCurY);
-        vchCurY = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurY.y - 1, 100, function(value:Float){}); uiBase.add(vchCurY); vchCurY.name = "SPRITE_Y";
-        
-        lblCurWidth = new FlxText(lblCurY.x, lblCurY.y + lblCurY.height + 7, 0, "Width: [0]"); uiBase.add(lblCurWidth);
-        vchCurWidth = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurWidth.y - 1, 100, function(value:Float){}); uiBase.add(vchCurWidth); vchCurWidth.name = "SPRITE_WIDTH";
-        lblCurHeight = new FlxText(lblCurWidth.x, lblCurWidth.y + lblCurWidth.height + 3, 0, "Height: [0]"); uiBase.add(lblCurHeight);
-        vchCurHeight = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurHeight.y - 1, 100, function(value:Float){}); uiBase.add(vchCurHeight); vchCurHeight.name = "SPRITE_HEIGHT";
-        
-        lblCurFrameX = new FlxText(lblCurHeight.x, lblCurHeight.y + lblCurHeight.height + 7, 0, "FrameX: [0]"); uiBase.add(lblCurFrameX);
-        vchCurFrameX = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurFrameX.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameX); vchCurFrameX.name = "SPRITE_FRAMEX";
-        lblCurFrameY = new FlxText(lblCurFrameX.x, lblCurFrameX.y + lblCurFrameX.height + 3, 0, "FrameY: [0]"); uiBase.add(lblCurFrameY);
-        vchCurFrameY = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurFrameY.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameY); vchCurFrameY.name = "SPRITE_FRAMEY";
-        
-        lblCurFrameWidth = new FlxText(lblCurFrameY.x, lblCurFrameY.y + lblCurFrameY.height + 7, 0, "FrameWidth: [0]"); uiBase.add(lblCurFrameWidth);
-        vchCurFrameWidth = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurFrameWidth.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameWidth); vchCurFrameWidth.name = "SPRITE_FRAMEWIDTH";
-        lblCurFrameHeight = new FlxText(lblCurFrameWidth.x, lblCurFrameWidth.y + lblCurFrameWidth.height + 3, 0, "FrameHeight: [0]"); uiBase.add(lblCurFrameHeight);
-        vchCurFrameHeight = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurFrameHeight.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameHeight); vchCurFrameHeight.name = "SPRITE_FRAMEHEIGHT";
-
-        var btnSetFrameSize0 = new FlxUICustomButton(5, lblCurFrameHeight.y + lblCurFrameHeight.height + 5, Std.int(tabSPRITE.width) - 10, null, "\nSet FrameSize to 0", null, null, function(){
-            editAttribute("frameWidth", 0, true);
-            editAttribute("frameHeight", 0, true);
-        }); uiBase.add(btnSetFrameSize0);
-
-        var btnSetFrameSize = new FlxUICustomButton(5, btnSetFrameSize0.y + btnSetFrameSize0.height + 5, Std.int(tabSPRITE.width) - 10, null, "Set FrameSize", null, null, function(){
-            editAttribute("frameWidth", Std.parseInt(getAccess().att.width), true);
-            editAttribute("frameHeight", Std.parseInt(getAccess().att.height), true);
-        }); uiBase.add(btnSetFrameSize);
-
-
-        tabSPRITE.addGroup(uiBase);
-        tabSPRITE.scrollFactor.set();
-        tabSPRITE.showTabId("General");
-    }
-    
-    override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>){
-        if((sender is FlxUICheckBox)){
-            var check:FlxUICheckBox = cast sender;
-            var label = check.getLabel().text;
-
-            switch(id){
-                case FlxUICheckBox.CLICK_EVENT:{
-                    switch(label){
-                        default:{trace("[FlxUICheckBox]: Works!");}
-                        case "FlipX Ghost Image":{bSprite.flipX = check.checked;}
-                        case "FlipY Ghost Image":{bSprite.flipY = check.checked;}
-                        case "FlipX Image":{eSprite.flipX = check.checked;}
-                        case "FlipY Image":{eSprite.flipY = check.checked;}
-                    }
-                }
-            }
-        }else if((sender is FlxUIInputText)){
-            var input:FlxUIInputText = cast sender;
-            var wname = input.name;
-
-            switch(id){
-                case FlxUIInputText.CHANGE_EVENT:{
-                    switch(wname){
-                        default:{trace("[FlxUIInputText]: Works!");}
-                    }
-                }
-            }
-        }else if((sender is FlxUIDropDownMenu)){
-            var drop:FlxUIDropDownMenu = cast sender;
-            var wname = drop.name;
-
-            switch(id){
-                case FlxUIDropDownMenu.CLICK_EVENT:{
-                    switch(wname){
-                        default:{trace("[FlxUIDropDownMenu]: Works!");}
-                    }
-                }
-            }
-        }else if((sender is FlxUINumericStepper)){
-            var nums:FlxUINumericStepper = cast sender;
-            var wname = nums.name;
-
-            switch(id){
-                case FlxUINumericStepper.CHANGE_EVENT:{
-                    switch(wname){
-                        default:{trace("[FlxUINumericStepper]: Works!");}
-                        case "FRAME_INDEX":{
-                            if(eSprite == null || eSprite.animation.curAnim == null){return;}
-
-                            if(Std.int(nums.value) < 0){nums.value = eSprite.animation.curAnim.frames.length - 1;}
-                            if(Std.int(nums.value) >= eSprite.animation.curAnim.frames.length){nums.value = 0;}
-
-                            playAnim(clCurAnim.getSelectedLabel(), Std.int(nums.value));
-                        }
-                        case "GHOST_INDEX":{
-                            if(bSprite == null || bSprite.animation.curAnim == null){return;}
-
-                            if(Std.int(nums.value) < 0){nums.value = bSprite.animation.curAnim.frames.length - 1;}
-                            if(Std.int(nums.value) >= bSprite.animation.curAnim.frames.length){nums.value = 0;}
-
-                            playGhost(clGCurAnim.getSelectedLabel(), Std.int(nums.value));
+                case "Sprite":{
+                    for(_animation in normal.animation.getNameList()){
+                        for(_index in normal.animation.getByName(_animation).frames){
+                            var _frame = normal.frames.frames[_index];
+                            _frame.sourceSize.set(_size.x, _size.y);
                         }
                     }
                 }
-            }        
-        }else if((sender is FlxUIValueChanger)){
-            var nums:FlxUIValueChanger = cast sender;
-            var wname = nums.name;
-
-            var chValue:Int = Std.int(nums.value);
-            if(data){chValue = -Std.int(nums.value);}
                 
-            switch(id){
-                case FlxUIValueChanger.CHANGE_EVENT:{
-                    switch(wname){
-                        case "SPRITE_X":{editAttribute("x", chValue);}
-                        case "SPRITE_Y":{editAttribute("y", chValue);}
-                        case "SPRITE_WIDTH":{editAttribute("width", chValue);}
-                        case "SPRITE_HEIGHT":{editAttribute("height", chValue);}
-                        case "SPRITE_FRAMEX":{editAttribute("frameX", chValue);}
-                        case "SPRITE_FRAMEY":{editAttribute("frameY", chValue);}
-                        case "SPRITE_FRAMEWIDTH":{editAttribute("frameWidth", chValue);}
-                        case "SPRITE_FRAMEHEIGHT":{editAttribute("frameHeight", chValue);}
+                var _curFrame = normal.animation.curAnim.curFrame;
+                normal.animation.play(lstNormalAnimations.getSelectedLabel()); 
+                normal.animation.pause();
+                normal.animation.curAnim.curFrame = _curFrame;
+            }
+        }); ctnGeneralMenu.addBody(btnSetSize, 10);
+    }
+
+    var lstNormalAnimations:UIList;
+    var sldNormalFrame:UISlider;
+    private function addNormalMenuStuff():Void {
+        var ttlFiles = new FlxText(0, 5, ctnNormalMenu.display_width, "< - Files - >", 20); ctnNormalMenu.addBody(ttlFiles, 10);
+        ttlFiles.alignment = CENTER;
+
+        var btnNormal:UIButton = new UIButton(0, 0, ctnNormalMenu.display_width, null, "Import Normal Sprite", 16, null, null, () -> {
+            var _dialog = new FileDialog();
+            _dialog.onSelect.add(loadNormal); 
+            _dialog.browse();
+        }); ctnNormalMenu.addBody(btnNormal);
+
+        var btnSave:UIButton = new UIButton(0, 0, ctnNormalMenu.display_width, null, "Save XML", 16, null, null, () -> {
+            if(save_file != null){return;}
+
+            var _file_name:String = Normal_Image_Path.split("\\").pop();
+            var _data:String = '<TextureAtlas imagePath="${_file_name}">\n\t<!-- Created with Magic XML Editor version 2.0 -->\n';
+            for(_frame in normal.frames.frames){
+                _data += '\t<SubTexture ';
+                _data += 'name="${_frame.name}" ';
+                _data += 'x="${_frame.frame.x}" ';
+                _data += 'y="${_frame.frame.y}" ';
+                _data += 'width="${_frame.frame.width}" ';
+                _data += 'height="${_frame.frame.height}" ';
+                _data += 'frameX="${-_frame.offset.x}" ';
+                _data += 'frameY="${-_frame.offset.y}" ';
+                _data += 'frameWidth="${_frame.sourceSize.x}" ';
+                _data += 'frameHeight="${_frame.sourceSize.y}"';
+                _data += '/>\n';
+            }
+            _data += '</TextureAtlas>';
+            
+            save_file = new SaverFile([{name: _file_name.replace(".png", ".xml"), data: _data}], {destroyOnComplete: true, onComplete: ()->{save_file = null;}});
+			save_file.saveFile();
+        }); ctnNormalMenu.addBody(btnSave, 10);
+        
+        var ttlCurAnim = new FlxText(0, 5, ctnNormalMenu.display_width, "< - Current Animation - >", 18); ctnNormalMenu.addBody(ttlCurAnim, 10);
+        ttlCurAnim.alignment = CENTER;
+        
+        lstNormalAnimations = new UIList(0, 0, ctnNormalMenu.display_width, 20); ctnNormalMenu.addBody(lstNormalAnimations);
+        lstNormalAnimations.name = "NORMAL_ANIMATION";
+        
+        var lblCurFrame = new FlxText(0, 0, ctnNormalMenu.display_width, "Framerate:", 12); ctnNormalMenu.addBody(lblCurFrame, 0);
+        sldNormalFrame = new UISlider(10, 0, 12, ctnNormalMenu.display_width - 20, 20, false, null, null, 0, 120);
+        sldNormalFrame.callback = (_value) -> {
+            normal.updateHitbox();
+            normal.setPosition(initPoint.x + 3, initPoint.y + 3);
+            middlePoint.setPosition(normal.getGraphicMidpoint().x - 3, normal.getGraphicMidpoint().y - 3);
+            finalPoint.setPosition(normal.x + normal.width - 3, normal.y + normal.height - 3);
+        };
+        ctnNormalMenu.addBody(sldNormalFrame);
+        
+        var chkFlipX:UICheckBox = new UICheckBox(0, 0, ctnNormalMenu.display_width, "Flip X", 18, false, (_check)->{normal.flipX = _check;}); ctnNormalMenu.addBody(chkFlipX, 0);
+        
+        var chkFlipY:UICheckBox = new UICheckBox(0, 0, ctnNormalMenu.display_width, "Flip Y", 18, false, (_check)->{normal.flipY = _check;}); ctnNormalMenu.addBody(chkFlipY, 0);
+    }
+    
+    var lstGhostAnimations:UIList;
+    var sldGhostFrame:UISlider;
+    private function addGhostMenuStuff():Void {
+        var ttlFiles = new FlxText(0, 5, ctnGhostMenu.display_width, "< - Files - >", 20); ctnGhostMenu.addBody(ttlFiles, 10);
+        ttlFiles.alignment = CENTER;
+
+        var btnGhost:UIButton = new UIButton(0, 0, ctnGhostMenu.display_width, null, "Import Ghost Sprite", 16, null, null, () -> {
+            var _dialog = new FileDialog();
+            _dialog.onSelect.add(loadGhost);
+            _dialog.browse();
+        }); ctnGhostMenu.addBody(btnGhost);
+        
+        var ttlCurAnim = new FlxText(0, 5, ctnGhostMenu.display_width, "< - Current Animation - >", 18); ctnGhostMenu.addBody(ttlCurAnim, 10);
+        ttlCurAnim.alignment = CENTER;
+        
+        lstGhostAnimations = new UIList(0, 0, ctnGhostMenu.display_width, 20); ctnGhostMenu.addBody(lstGhostAnimations);
+        lstGhostAnimations.name = "GHOST_ANIMATION";
+        
+        var lblCurFrame = new FlxText(0, 0, ctnGhostMenu.display_width, "Framerate:", 12); ctnGhostMenu.addBody(lblCurFrame, 0);
+        sldGhostFrame = new UISlider(10, 0, 12, ctnGhostMenu.display_width - 20, 20, false, null, null, 0, 120);
+        ctnGhostMenu.addBody(sldGhostFrame);
+        
+        var chkFlipX:UICheckBox = new UICheckBox(0, 0, ctnGhostMenu.display_width, "Flip X", 18, false, (_check)->{ghost.flipX = _check;}); ctnGhostMenu.addBody(chkFlipX, 0);
+        
+        var chkFlipY:UICheckBox = new UICheckBox(0, 0, ctnGhostMenu.display_width, "Flip Y", 18, false, (_check)->{ghost.flipY = _check;}); ctnGhostMenu.addBody(chkFlipY, 0);
+        
+        var lblAlpha = new FlxText(0, 0, ctnGhostMenu.display_width, "Alpha:", 12); ctnGhostMenu.addBody(lblAlpha, 0);
+        var lstAlpha = new UISlider(10, 0, 12, ctnGhostMenu.display_width - 20, 20, false, ghost, "alpha", 0, 1); ctnGhostMenu.addBody(lstAlpha);
+        lstAlpha.decimals = 1;
+    }
+
+    public function addOffset(_x:Int, _y:Int):Void {
+        switch(lstPosMode.getSelectedLabel()){
+            case "Frame":{
+                if(normal.animation.curAnim == null){return;}
+                var _frame = normal.frames.frames[normal.animation.curAnim.frames[normal.animation.curAnim.curFrame]];
+                _frame.offset.x -= _x;
+                _frame.offset.y -= _y;
+                
+                var _curFrame = normal.animation.curAnim.curFrame;
+                normal.animation.play(lstNormalAnimations.getSelectedLabel()); 
+                normal.animation.pause();
+                normal.animation.curAnim.curFrame = _curFrame;
+            }
+            case "Animation":{
+                if(normal.animation.curAnim == null){return;}
+                for(_index in normal.animation.curAnim.frames){
+                    var _frame = normal.frames.frames[_index];
+                    _frame.offset.x -= _x;
+                    _frame.offset.y -= _y;
+                }
+                
+                var _curFrame = normal.animation.curAnim.curFrame;
+                normal.animation.play(lstNormalAnimations.getSelectedLabel()); 
+                normal.animation.pause();
+                normal.animation.curAnim.curFrame = _curFrame;
+            }
+            case "Sprite":{
+                for(_animation in normal.animation.getNameList()){
+                    for(_index in normal.animation.getByName(_animation).frames){
+                        var _frame = normal.frames.frames[_index];
+                        _frame.offset.x -= _x;
+                        _frame.offset.y -= _y;
                     }
                 }
+                
+                var _curFrame = normal.animation.curAnim.curFrame;
+                normal.animation.play(lstNormalAnimations.getSelectedLabel()); 
+                normal.animation.pause();
+                normal.animation.curAnim.curFrame = _curFrame;
             }
-        }else if((sender is FlxUICustomList)){
-            var nums:FlxUICustomList = cast sender;
+        }
+    }
+
+    private function loadNormal(_path:String):Void {
+        if(!_path.endsWith(".png")){trace("File is Not PNG"); return;}
+
+        Normal_Image_Path = _path;
+        Normal_Atlas_Path = _path.replace(".png", ".xml");
+        var _animations:Array<String> = Normal_Atlas_Path.getXMLAnimations();
+
+        icon.loadGraphic(Normal_Image_Path);
+        icon.setGraphicSize(Std.int(FlxG.height / 8), Std.int(FlxG.height / 8));
+        icon.updateHitbox();
+
+        normal.frames = _path.getSparrowAtlas();
+        for(_anim in _animations){normal.animation.addByPrefix(_anim, _anim, 24, false);}
+
+        camFollow.setPosition(normal.getGraphicMidpoint().x, normal.getGraphicMidpoint().y);
+
+        lstNormalAnimations.setData(_animations);
+        lstNormalAnimations.setIndex();
+    }
+    private function loadGhost(_path:String):Void {
+        if(!_path.endsWith(".png")){trace("File is Not PNG"); return;}
+
+        Ghost_Image_Path = _path;
+        Ghost_Atlas_Path = _path.replace(".png", ".xml");
+        var _animations:Array<String> = Ghost_Atlas_Path.getXMLAnimations();
+
+        ghost.frames = _path.getSparrowAtlas();
+        for(_anim in _animations){ghost.animation.addByPrefix(_anim, _anim, 24, false);}
+        
+        lstGhostAnimations.setData(_animations);
+        lstGhostAnimations.setIndex();
+        
+        ghost.setPosition(initPoint.x + 3, initPoint.y + 3);
+    }
+
+    override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>){
+        if(id == UIList.CHANGE_EVENT && (sender is UIList)){
+            var nums:UIList = cast sender;
             var wname = nums.name;
-            
-            switch(id){
-                case FlxUICustomList.CHANGE_EVENT:{
-                    switch(wname){
-                        default:{}
-                    }
+
+            switch(wname){
+                default:{trace('${wname} is Working!');}
+                case "NORMAL_ANIMATION":{
+                    normal.animation.play(nums.getSelectedLabel()); 
+                    normal.animation.pause();
+                    var _anim = normal.animation.curAnim;
+                    if(_anim == null){return;}
+
+                    sldNormalFrame.maxValue = _anim.frames.length - 1;
+                    sldNormalFrame._object = _anim;
+                    sldNormalFrame.varString = "curFrame";
+
+                    normal.updateHitbox();
+                    normal.setPosition(initPoint.x + 3, initPoint.y + 3);
+                    middlePoint.setPosition(normal.getGraphicMidpoint().x - 3, normal.getGraphicMidpoint().y - 3);
+                    finalPoint.setPosition(normal.x + normal.width - 3, normal.y + normal.height - 3);
+                }
+                case "GHOST_ANIMATION":{
+                    ghost.animation.play(nums.getSelectedLabel()); 
+                    ghost.animation.pause();
+                    var _anim = ghost.animation.curAnim;
+                    if(_anim == null){return;}
+                    sldGhostFrame.maxValue = _anim.frames.length - 1;
+                    sldGhostFrame._object = _anim;
+                    sldGhostFrame.varString = "curFrame";
                 }
             }
         }

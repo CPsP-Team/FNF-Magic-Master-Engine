@@ -1,0 +1,87 @@
+{
+	"aspect": "Pixel",
+	"position": [
+		0,
+		320
+	],
+	"nAntialiasing": true,
+	"scale": 6,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "BF DOWN MISS",
+			"key": "singDOWNmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF DOWN NOTE",
+			"key": "singDOWN",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF IDLE",
+			"key": "idle",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF LEFT MISS",
+			"key": "singLEFTmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF LEFT NOTE",
+			"key": "singLEFT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF RIGHT MISS",
+			"key": "singRIGHTmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF RIGHT NOTE",
+			"key": "singRIGHT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF UP MISS",
+			"key": "singUPmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "BF UP NOTE",
+			"key": "singUP",
+			"fps": 24,
+			"indices": []
+		}
+	],
+	"zoom": 0.8,
+	"image": "bfPixel",
+	"name": "Boyfriend",
+	"antialiasing": false,
+	"singTime": 1,
+	"icon": "bf-pixel",
+	"camera": [
+		171,
+		213
+	],
+	"onRight": false,
+	"color": "#409fff",
+	"skin": "Default"
+}

@@ -21,17 +21,12 @@ import haxe.io.Path;
 import flixel.FlxG;
 import haxe.Json;
 
-import Stage;
-import Song.SwagSong;
-import Note.NoteData;
-import Note.EventData;
-
 #if sys
 import sys.FileSystem;
 import sys.io.File;
 #end
 
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 class VoidState extends FlxState {
@@ -44,7 +39,7 @@ class VoidState extends FlxState {
     }
 
 	override function create(){
-		if(clearAssets){SavedFiles.clearMemoryAssets();}else{trace("Not Clearing");}
+		if(clearAssets){Files.clearMemoryAssets();}else{trace("Not Clearing");}
         clearAssets = true;
         FlxG.switchState(target);
     }

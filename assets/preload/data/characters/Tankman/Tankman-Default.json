@@ -1,0 +1,99 @@
+{
+	"aspect": "Default",
+	"position": [
+		-40,
+		200
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"loop": false,
+			"symbol": "PRETTY GOOD tankman 1",
+			"key": "good",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "TANKMAN UGH 1",
+			"key": "hey",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman DOWN note 1",
+			"key": "singDOWN",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman Idle Dance 1",
+			"key": "idle",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman Note Left 1",
+			"key": "singLEFT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman Right Note 1",
+			"key": "singRIGHT",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman UP note 1",
+			"key": "singUP",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman DOWN note MISS",
+			"key": "singDOWNmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman Note Left MISS",
+			"key": "singLEFTmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman Right Note MISS",
+			"key": "singRIGHTmiss",
+			"fps": 24,
+			"indices": []
+		},
+		{
+			"loop": false,
+			"symbol": "Tankman UP note MISS",
+			"key": "singUPmiss",
+			"fps": 24,
+			"indices": []
+		}
+	],
+	"zoom": 0.8,
+	"image": "tankmanCaptain",
+	"name": "Tankman",
+	"antialiasing": true,
+	"singTime": 1,
+	"icon": "tankman",
+	"camera": [
+		18,
+		-19
+	],
+	"onRight": false,
+	"skin": "Default"
+}

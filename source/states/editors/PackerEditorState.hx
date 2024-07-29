@@ -35,20 +35,20 @@ import openfl.Assets;
 import flixel.FlxG;
 import haxe.Json;
 
-import Script;
-import FlxCustom.FlxUICustomList;
-import FlxCustom.FlxCustomButton;
-import FlxCustom.FlxUICustomButton;
-import FlxCustom.FlxUIValueChanger;
-import FlxCustom.FlxUICustomNumericStepper;
+import objects.scripts.Script;
+import objects.ui.UIList;
+import flixel.ui.FlxCustomButton;
+import objects.ui.UIButton;
+import objects.ui.UIValueChanger;
+import objects.ui.UINumericStepper;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord;
 import sys.FileSystem;
 import sys.io.File;
 #end
 
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 typedef PackerData = {
@@ -88,8 +88,8 @@ class PackerEditorState extends MusicBeatState {
 
         #if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence('Editing', '[Packer Editor]');
-		MagicStuff.setWindowTitle('On Packer Editor', 1);
+		Discord.change('Editing', '[Packer Editor]');
+		Magic.setWindowTitle('On Packer Editor', 1);
 		#end
 
         var bgGrid:FlxSprite = FlxGridOverlay.create(10, 10, FlxG.width, FlxG.height, true, 0xff4d4d4d, 0xff333333);
@@ -216,7 +216,7 @@ class PackerEditorState extends MusicBeatState {
     private function loadGhostSprites():Void {
         if(!txtIMAGE.text.contains(".png") || !txtPACKER.text.contains(".txt")){return;}
 
-        bSprite.frames = SavedFiles.fromUncachedSpriteSheetPacker(BitmapData.fromFile(txtIMAGE.text), txtPACKER.text.getText());
+        //bSprite.frames = Files.fromUncachedSpriteSheetPacker(BitmapData.fromFile(txtIMAGE.text), txtPACKER.text.getText());
 
         var animArr = getNamesArray(parseData(txtPACKER.text.getText()));
         for(anim in animArr){bSprite.animation.addByPrefix(anim, anim);}
@@ -240,7 +240,7 @@ class PackerEditorState extends MusicBeatState {
         var values:Array<Dynamic> = null;
         if(eSprite != null && eSprite.animation.curAnim != null){values = [eSprite.animation.curAnim.name, eSprite.animation.curAnim.curFrame];}
         if(_PACKER != null && _IMG != null){
-            eSprite.frames = SavedFiles.fromUncachedSpriteSheetPacker(_IMG, convertData(_PACKER));
+            //eSprite.frames = Files.fromUncachedSpriteSheetPacker(_IMG, convertData(_PACKER));
             
             var animArr = getNamesArray(_PACKER);
             for(anim in animArr){eSprite.animation.addByPrefix(anim, anim); eSprite.animation.play(anim); eSprite.animation.stop();}
@@ -474,7 +474,7 @@ class PackerEditorState extends MusicBeatState {
         tabFILE.showTabId("Files");
     }
 
-    var clGCurAnim:FlxUICustomList;
+    var clGCurAnim:UIList;
     var stpGCurFrame:FlxUINumericStepper = new FlxUINumericStepper();
     var chkGFlipX:FlxUICheckBox;
     var chkGFlipY:FlxUICheckBox;
@@ -482,13 +482,13 @@ class PackerEditorState extends MusicBeatState {
         var uiGhost = new FlxUI(null, tabGHOST);
         uiGhost.name = "Ghost";
 
-        clGCurAnim = new FlxUICustomList(5, 5, Std.int(tabGHOST.width - 10), [], function(){
+        clGCurAnim = new UIList(5, 5, Std.int(tabGHOST.width - 10), [], function(){
             stpGCurFrame.value = 0;
             playGhost(clGCurAnim.getSelectedLabel(), Std.int(stpGCurFrame.value));
         }); uiGhost.add(clGCurAnim);
 
         var lblbGCurFrame = new FlxText(clGCurAnim.x, clGCurAnim.y + clGCurAnim.height + 7, 0, "[Current Frame]: ", 8); uiGhost.add(lblbGCurFrame);
-        stpGCurFrame = new FlxUICustomNumericStepper(lblbGCurFrame.x + lblbGCurFrame.width, lblbGCurFrame.y, Std.int(tabGHOST.width - lblbGCurFrame.width) - 10, 1, 0, 0, 999); uiGhost.add(stpGCurFrame);
+        stpGCurFrame = new UINumericStepper(lblbGCurFrame.x + lblbGCurFrame.width, lblbGCurFrame.y, Std.int(tabGHOST.width - lblbGCurFrame.width) - 10, 1, 0, 0, 999); uiGhost.add(stpGCurFrame);
         stpGCurFrame.name = "GHOST_INDEX";
 
         chkGFlipX = new FlxUICheckBox(5, lblbGCurFrame.y + lblbGCurFrame.height + 7, null, null, "FlipX Ghost Image"); uiGhost.add(chkGFlipX);
@@ -499,40 +499,40 @@ class PackerEditorState extends MusicBeatState {
         tabGHOST.showTabId("Ghost");
     }
 
-    var clCurAnim:FlxUICustomList;
+    var clCurAnim:UIList;
     var stpCurFrame:FlxUINumericStepper = new FlxUINumericStepper();
     var chkFlipX:FlxUICheckBox;
     var chkFlipY:FlxUICheckBox;
     var chkSetToAllFrames:FlxUICheckBox;
     var chkSetToAllSprite:FlxUICheckBox;
     var lblCurX:FlxText;
-    var vchCurX:FlxUIValueChanger;
+    var vchCurX:UIValueChanger;
     var lblCurY:FlxText;
-    var vchCurY:FlxUIValueChanger;
+    var vchCurY:UIValueChanger;
     var lblCurWidth:FlxText;
-    var vchCurWidth:FlxUIValueChanger;
+    var vchCurWidth:UIValueChanger;
     var lblCurHeight:FlxText;
-    var vchCurHeight:FlxUIValueChanger;
+    var vchCurHeight:UIValueChanger;
     var lblCurFrameX:FlxText;
-    var vchCurFrameX:FlxUIValueChanger;
+    var vchCurFrameX:UIValueChanger;
     var lblCurFrameY:FlxText;
-    var vchCurFrameY:FlxUIValueChanger;
+    var vchCurFrameY:UIValueChanger;
     var lblCurFrameWidth:FlxText;
-    var vchCurFrameWidth:FlxUIValueChanger;
+    var vchCurFrameWidth:UIValueChanger;
     var lblCurFrameHeight:FlxText;
-    var vchCurFrameHeight:FlxUIValueChanger;
+    var vchCurFrameHeight:UIValueChanger;
     private function addFRAMESTABS():Void{
         var uiBase = new FlxUI(null, tabSPRITE);
         uiBase.name = "General";
 
-        clCurAnim = new FlxUICustomList(5, 5, Std.int(tabSPRITE.width - 10), [], function(){
+        clCurAnim = new UIList(5, 5, Std.int(tabSPRITE.width - 10), [], function(){
             stpCurFrame.value = 0;
             playAnim(clCurAnim.getSelectedLabel(), Std.int(stpCurFrame.value));
         }); uiBase.add(clCurAnim);
         clCurAnim.name = "BASE_CHANGE";
 
         var lblbCurFrame = new FlxText(clCurAnim.x, clCurAnim.y + clCurAnim.height + 7, 0, "[Current Frame]: ", 8); uiBase.add(lblbCurFrame);
-        stpCurFrame = new FlxUICustomNumericStepper(lblbCurFrame.x + lblbCurFrame.width, lblbCurFrame.y, Std.int(tabSPRITE.width - lblbCurFrame.width) - 10, 1, 0, 0, 999); uiBase.add(stpCurFrame);
+        stpCurFrame = new UINumericStepper(lblbCurFrame.x + lblbCurFrame.width, lblbCurFrame.y, Std.int(tabSPRITE.width - lblbCurFrame.width) - 10, 1, 0, 0, 999); uiBase.add(stpCurFrame);
         stpCurFrame.name = "FRAME_INDEX";
 
         chkFlipX = new FlxUICheckBox(5, lblbCurFrame.y + lblbCurFrame.height + 5, null, null, "FlipX Image"); uiBase.add(chkFlipX);
@@ -542,24 +542,24 @@ class PackerEditorState extends MusicBeatState {
         chkSetToAllSprite = new FlxUICheckBox(chkSetToAllFrames.x, chkSetToAllFrames.y + chkSetToAllFrames.height + 10, null, null, "Change on All Sprite", Std.int(tabSPRITE.width) - 10); uiBase.add(chkSetToAllSprite);
 
         lblCurX = new FlxText(chkSetToAllSprite.x, chkSetToAllSprite.y + chkSetToAllSprite.height + 7, 0, "X: [0]"); uiBase.add(lblCurX);
-        vchCurX = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurX.y - 1, 100, function(value:Float){}); uiBase.add(vchCurX); vchCurX.name = "SPRITE_X";
+        vchCurX = new UIValueChanger(tabSPRITE.width - 105, lblCurX.y - 1, 100, function(value:Float){}); uiBase.add(vchCurX); vchCurX.name = "SPRITE_X";
         lblCurY = new FlxText(lblCurX.x, lblCurX.y + lblCurX.height + 3, 0, "Y: [0]"); uiBase.add(lblCurY);
-        vchCurY = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurY.y - 1, 100, function(value:Float){}); uiBase.add(vchCurY); vchCurY.name = "SPRITE_Y";
+        vchCurY = new UIValueChanger(tabSPRITE.width - 105, lblCurY.y - 1, 100, function(value:Float){}); uiBase.add(vchCurY); vchCurY.name = "SPRITE_Y";
         
         lblCurWidth = new FlxText(lblCurY.x, lblCurY.y + lblCurY.height + 7, 0, "Width: [0]"); uiBase.add(lblCurWidth);
-        vchCurWidth = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurWidth.y - 1, 100, function(value:Float){}); uiBase.add(vchCurWidth); vchCurWidth.name = "SPRITE_WIDTH";
+        vchCurWidth = new UIValueChanger(tabSPRITE.width - 105, lblCurWidth.y - 1, 100, function(value:Float){}); uiBase.add(vchCurWidth); vchCurWidth.name = "SPRITE_WIDTH";
         lblCurHeight = new FlxText(lblCurWidth.x, lblCurWidth.y + lblCurWidth.height + 3, 0, "Height: [0]"); uiBase.add(lblCurHeight);
-        vchCurHeight = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurHeight.y - 1, 100, function(value:Float){}); uiBase.add(vchCurHeight); vchCurHeight.name = "SPRITE_HEIGHT";
+        vchCurHeight = new UIValueChanger(tabSPRITE.width - 105, lblCurHeight.y - 1, 100, function(value:Float){}); uiBase.add(vchCurHeight); vchCurHeight.name = "SPRITE_HEIGHT";
         
         lblCurFrameX = new FlxText(lblCurHeight.x, lblCurHeight.y + lblCurHeight.height + 7, 0, "Frame X: [0]"); uiBase.add(lblCurFrameX);
-        vchCurFrameX = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurFrameX.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameX); vchCurFrameX.name = "SPRITE_FRAME_X";
+        vchCurFrameX = new UIValueChanger(tabSPRITE.width - 105, lblCurFrameX.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameX); vchCurFrameX.name = "SPRITE_FRAME_X";
         lblCurFrameY = new FlxText(lblCurFrameX.x, lblCurFrameX.y + lblCurFrameX.height + 3, 0, "Frame Y: [0]"); uiBase.add(lblCurFrameY);
-        vchCurFrameY = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurFrameY.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameY); vchCurFrameY.name = "SPRITE_FRAME_Y";
+        vchCurFrameY = new UIValueChanger(tabSPRITE.width - 105, lblCurFrameY.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameY); vchCurFrameY.name = "SPRITE_FRAME_Y";
         
         lblCurFrameWidth = new FlxText(lblCurFrameY.x, lblCurFrameY.y + lblCurFrameY.height + 7, 0, "Frame Width: [0]"); uiBase.add(lblCurFrameWidth);
-        vchCurFrameWidth = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurFrameWidth.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameWidth); vchCurFrameWidth.name = "SPRITE_FRAME_WIDTH";
+        vchCurFrameWidth = new UIValueChanger(tabSPRITE.width - 105, lblCurFrameWidth.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameWidth); vchCurFrameWidth.name = "SPRITE_FRAME_WIDTH";
         lblCurFrameHeight = new FlxText(lblCurFrameWidth.x, lblCurFrameWidth.y + lblCurFrameWidth.height + 3, 0, "Frame Height: [0]"); uiBase.add(lblCurFrameHeight);
-        vchCurFrameHeight = new FlxUIValueChanger(tabSPRITE.width - 105, lblCurFrameHeight.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameHeight); vchCurFrameHeight.name = "SPRITE_FRAME_HEIGHT";
+        vchCurFrameHeight = new UIValueChanger(tabSPRITE.width - 105, lblCurFrameHeight.y - 1, 100, function(value:Float){}); uiBase.add(vchCurFrameHeight); vchCurFrameHeight.name = "SPRITE_FRAME_HEIGHT";
         
         tabSPRITE.addGroup(uiBase);
         tabSPRITE.scrollFactor.set();
@@ -631,15 +631,15 @@ class PackerEditorState extends MusicBeatState {
                     }
                 }
             }        
-        }else if((sender is FlxUIValueChanger)){
-            var nums:FlxUIValueChanger = cast sender;
+        }else if((sender is UIValueChanger)){
+            var nums:UIValueChanger = cast sender;
             var wname = nums.name;
 
             var chValue:Int = Std.int(nums.value);
             if(data){chValue = -Std.int(nums.value);}
                 
             switch(id){
-                case FlxUIValueChanger.CHANGE_EVENT:{
+                case UIValueChanger.CHANGE_EVENT:{
                     switch(wname){
                         case "SPRITE_X":{editAttribute("x", chValue);}
                         case "SPRITE_Y":{editAttribute("y", chValue);}
@@ -652,12 +652,12 @@ class PackerEditorState extends MusicBeatState {
                     }
                 }
             }
-        }else if((sender is FlxUICustomList)){
-            var nums:FlxUICustomList = cast sender;
+        }else if((sender is UIList)){
+            var nums:UIList = cast sender;
             var wname = nums.name;
             
             switch(id){
-                case FlxUICustomList.CHANGE_EVENT:{
+                case UIList.CHANGE_EVENT:{
                     switch(wname){
                         default:{}
                     }

@@ -1,18 +1,24 @@
 package substates;
 
+import objects.songs.Conductor.BPMChangeEvent;
 import flixel.addons.ui.FlxUISubState;
-import Conductor.BPMChangeEvent;
+import objects.scripts.ScriptList;
+import objects.songs.Conductor;
+import objects.utils.Controls;
+import objects.scripts.Script;
 import states.MusicBeatState;
 import flixel.util.FlxColor;
 import flixel.FlxSubState;
 import flixel.FlxCamera;
+import utils.Players;
 import flixel.FlxG;
+import utils.Mods;
 
-using SavedFiles;
+using utils.Files;
 using StringTools;
 
 class MusicBeatSubstate extends FlxUISubState {
-	public var conductor:Conductor = MusicBeatState.state.conductor;
+	public var conductor:Conductor = new Conductor();
 
 	public var onClose:Void->Void = function(){};
 
@@ -22,42 +28,19 @@ class MusicBeatSubstate extends FlxUISubState {
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
 
-	public var curCamera:FlxCamera = new FlxCamera();
+	public var curCamera:FlxCamera;
 	
-	public var principal_controls(get, never):Controls;
-	inline function get_principal_controls():Controls{return PlayerSettings.getPlayer(0).controls;}
-	private function getOtherControls(ID:Int):Controls{return PlayerSettings.getPlayer(ID).controls;}
+	public var controls(get, never):Controls;
+	inline function get_controls():Controls { return Players.get(0).controls; }
+	private function getControls(_Id:Int):Controls { return Players.get(_Id).controls; }
 	public var canControlle:Bool = false;
 	
-    public var tempScripts:Map<String, Script> = [];
-	public function pushTempScript(key:String):Void {
-		if(tempScripts.exists(key) || ModSupport.staticScripts.exists(key)){return;}
-		var nScript = new Script(); nScript.Name = key;
-		nScript.exScript(Paths.event(key).getText());
-		tempScripts.set(key, nScript);
-	}
-	public function removeTempScript(key:String):Void {
-		if(!tempScripts.exists(key) && !ModSupport.staticScripts.exists(key)){return;}
-		ModSupport.staticScripts.remove(key);
-		tempScripts.remove(key);
-	}
-
-	public var scripts(get, never):Array<Script>;
-	function get_scripts():Array<Script> {
-		var toReturn:Array<Script> = [];
-		for(sc in tempScripts.keys()){toReturn.push(tempScripts.get(sc));}
-		for(sc in ModSupport.staticScripts.keys()){
-			if(sc.contains(".") && sc != Type.getClassName(Type.getClass(this))){continue;}
-			toReturn.push(ModSupport.staticScripts.get(sc));
-		}
-		for(sc in ModSupport.modDataScripts.keys()){toReturn.push(ModSupport.modDataScripts.get(sc));}
-		return toReturn;
-	}
+	public var scripts:ScriptList = new ScriptList();
 
 	public function new(onClose:Void->Void = null){
 		if(onClose != null){this.onClose = onClose;}
-		curCamera.bgColor = FlxColor.BLACK;
-		curCamera.bgColor.alpha = 100;
+		curCamera = new FlxCamera();
+		curCamera.bgColor.alpha = 0;
 		FlxG.cameras.add(curCamera);
 		
 		super();
@@ -65,11 +48,10 @@ class MusicBeatSubstate extends FlxUISubState {
 
 	override function create() {
 		super.create();
-		
+				
 		FlxG.mouse.visible = false;
 
-		for(s in scripts){s.setVariable('getSubstate', function(){return this;});}
-		for(s in scripts){s.exFunction('create');}
+		scripts.call('create');
 	}
 
 	override function update(elapsed:Float){
@@ -81,9 +63,7 @@ class MusicBeatSubstate extends FlxUISubState {
 
 		if(oldStep != curStep && curStep > 0){stepHit();}
 
-		if(FlxG.keys.justPressed.P){for(s in tempScripts.keys()){trace(s);}}
-
-		for(s in scripts){s.exFunction('update', [elapsed]);}
+		scripts.call('update', [elapsed]);
 
 		super.update(elapsed);
 	}
@@ -95,20 +75,20 @@ class MusicBeatSubstate extends FlxUISubState {
 			bpm: 0
 		}
 
-		for(i in 0...conductor.bpmChangeMap.length){if(conductor.songPosition > conductor.bpmChangeMap[i].songTime){lastChange = conductor.bpmChangeMap[i];}}
-		curStep = lastChange.stepTime + Math.floor((conductor.songPosition - lastChange.songTime) / conductor.stepCrochet);
+		for(i in 0...conductor.bpmChangeMap.length){if(conductor.position > conductor.bpmChangeMap[i].songTime){lastChange = conductor.bpmChangeMap[i];}}
+		curStep = lastChange.stepTime + Math.floor((conductor.position - lastChange.songTime) / conductor.stepCrochet);
 	}
 
 	public function stepHit():Void {
 		if(curStep % 4 == 0){beatHit();}
 
-		for(s in scripts){s.exFunction('stepHit', [curStep]);}
+		scripts.call('stepHit', [curStep]);
 	}
 
 	public function beatHit():Void {
 		//do literally nothing dumbass
 
-		for(s in scripts){s.exFunction('beatHit', [curBeat]);}
+		scripts.call('beatHit', [curBeat]);
 	}
 
 	public function loadSubState(substate:String, args:Array<Any>):Void {
@@ -118,7 +98,7 @@ class MusicBeatSubstate extends FlxUISubState {
 	}
 
 	override function close():Void {
-		for(s in scripts){s.exFunction('onClose');}
+		scripts.call('onClose');
 
 		onClose();
 

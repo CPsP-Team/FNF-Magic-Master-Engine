@@ -5,12 +5,14 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.addons.display.FlxGridOverlay;
+import openfl.utils.Assets as OpenFlAssets;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.system.ui.FlxSoundTray;
 import flixel.addons.ui.FlxUIState;
 import flixel.graphics.FlxGraphic;
+import flixel.system.FlxAssets;
+import objects.utils.Controls;
 import flixel.sound.FlxSound;
-import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
@@ -19,39 +21,51 @@ import lime.app.Application;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.text.FlxText;
+import flixel.FlxSubState;
 import io.newgrounds.NG;
 import flixel.FlxSprite;
+import utils.Highscore;
 import flixel.FlxState;
+import utils.Language;
+import utils.Players;
 import openfl.Assets;
 import flixel.FlxG;
+import utils.Magic;
 import haxe.Timer;
+import utils.Mods;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord;
 import sys.thread.Thread;
 import sys.FileSystem;
 import sys.io.File;
 #end
 
+#if windows
+import utils.native.Windows;
+#end
+
+import substates.menus.SubMenu;
+import substates.menus.LangSubMenu;
+import substates.menus.YesNoSubMenu;
+
 import substates.CustomScriptSubState;
 import substates.InformationSubState;
 import substates.MusicBeatSubstate;
 import substates.GameOverSubstate;
-import substates.OptionsSubState;
+import substates.SettingsSubState;
+import substates.ResultSubstate;
 import substates.PauseSubState;
 import substates.FadeSubState;
 
 import states.editors.CharacterEditorState;
 import states.editors.PackerEditorState;
 import states.editors.StageEditorState;
-import states.editors.StageTesterState;
 import states.editors.ChartEditorState;
-import states.editors.SpriteTestState;
 import states.editors.XMLEditorState;
 import states.PlayerSelectorState;
 import states.CustomScriptState;
 import states.MusicBeatState;
-import states.SkinsMenuState;
 import states.StoryMenuState;
 import states.FreeplayState;
 import states.MainMenuState;
@@ -65,63 +79,64 @@ import states.TitleState;
 import states.PlayState;
 import states.VoidState;
 
-import Note.NoteSplash;
-import Character.Skins;
+import objects.notes.NoteSplash;
 
 using StringTools;
 
 class PreLoaderState extends FlxUIState {
-	override public function create():Void {
-		SavedFiles.clearMemoryAssets();
-		SavedFiles.clearUnusedAssets();
-		
+	public var nextState:Array<Dynamic> = ["states.TitleState", []];
+	public var menu_list:Array<Dynamic> = [];
+
+	override public function create():Void {		
 		FlxG.autoPause = false;
-
-		NGio.noLogin(APIStuff.API);
-
-		#if ng
-		var ng:NGio = new NGio(APIStuff.API, APIStuff.EncKey);
-		trace('NEWGROUNDS LOL');
-		#end
-
 		super.create();
 
-		FlxG.save.bind('funkin', 'Yirius125');
-
-		Controls.init();
-		PreSettings.init();
+		FlxAssets.FONT_DEFAULT = "assets/fonts/funkin.ttf";
 		
-        PreSettings.loadSettings();
-		
-		PlayerSettings.init();
+		#if windows Windows.resetBorderColor(); #end
+		Players.init();
 
-		Highscore.load();	
-		LangSupport.init();
-		ModSupport.init();
-		Skins.init();
-		
-		#if desktop
-		DiscordClient.initialize();
-		Application.current.onExit.add(function(exitCode){DiscordClient.shutdown();});
+		if(!FlxG.save.data.first){menu_list.push(["substates.menus.LangSubMenu", [()->{FlxG.resetState();}]]);}
+		if(!Mods.same()){menu_list.push(["substates.menus.YesNoSubMenu", [
+			Language.get("mod_advert"), 
+			()->{
+				nextState[0] = "states.ModListState";
+				nextState[1] = ["states.MainMenuState"];
+			}, 
+			()->{ 
+				Mods.reload();
+				Magic.reload(); 
+			}
+		]]);}
 
-            #if !switch
-                NGio.unlockMedal(60960);
+		if(menu_list.length <= 0){ 
+			Mods.reload();
+			Magic.reload(); 
+		}
 
-                // If it's Friday according to da clock
-                if(Date.now().getDay() == 5){NGio.unlockMedal(61034);}
-			#end
-		#end
+		checkSubMenu();
+	}
 
-		if(!FlxG.save.data.inLang){
-			MusicBeatState.switchState("states.PopLangState", [ModSupport.is_same() ? "states.TitleState" : "states.PopModState"]);
+	override function closeSubState():Void {
+		super.closeSubState();
+
+		Timer.delay(()->{checkSubMenu();}, 300);		
+	}
+
+	public function checkSubMenu():Void {
+		if(menu_list.length > 0){
+			var cur_menu = menu_list.shift();
+			loadSubState(cur_menu[0], cur_menu[1]);
 			return;
 		}
-		if(!ModSupport.is_same()){
-			MusicBeatState.switchState("states.PopModState", ["states.TitleState"]);
-			return;
-		}
-		
-		MagicStuff.reload_data();
-		MusicBeatState.loadState("states.TitleState", [], []);
+
+		MusicBeatState.switchState(nextState[0], nextState[1]);
+	}
+
+	public function loadSubState(substate:String, args:Array<Any>):Void {
+		var to_create:Class<FlxSubState> = Type.resolveClass(substate) != null ? cast Type.resolveClass(substate) : null;
+		if(to_create == null){ trace("Null SubState"); return;}
+		var new_substate:FlxSubState = cast Type.createInstance(to_create, args);
+		openSubState(new_substate);
 	}
 }

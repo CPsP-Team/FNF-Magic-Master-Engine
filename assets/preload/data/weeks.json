@@ -6,9 +6,9 @@
             "display": "Tutorial",
             "title": "",
             "categories": [
-                {"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}
+                {"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}
             ],
-            "songs":["Tutorial"],
+            "songs": ["Tutorial"],
             "keyLock": null,
             "hiddenOnWeeks": false,
             "hiddenOnFreeplay": false,
@@ -20,9 +20,9 @@
             "display": "Week 1",
             "title": "Daddy Dearest",
             "categories": [
-                {"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}
+                {"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}
             ],
-            "songs":["Bopeebo", "Fresh", "Dad_Battle"],
+            "songs": ["Bopeebo", "Fresh", "Dad_Battle"],
             "keyLock": null,
             "hiddenOnWeeks": false,
             "hiddenOnFreeplay": false,
@@ -34,9 +34,9 @@
             "display": "Week 2",
             "title": "Spooky Month",
             "categories": [
-                {"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}
+                {"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}
             ],
-            "songs":["Spookeez", "South", "Monster"],
+            "songs": ["Spookeez", "South", "Monster"],
             "keyLock": null,
             "hiddenOnWeeks": false,
             "hiddenOnFreeplay": false,
@@ -48,9 +48,9 @@
             "display": "Week 3",
             "title": "PICO",
             "categories": [
-                {"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}
+                {"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}
             ],
-            "songs":["Pico", "Philly", "Blammed"],
+            "songs": ["Pico", "Philly", "Blammed"],
             "keyLock": null,
             "hiddenOnWeeks": false,
             "hiddenOnFreeplay": false,
@@ -62,9 +62,9 @@
             "display": "Week 4",
             "title": "MOMMY MUST MURDER",
             "categories": [
-                {"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}
+                {"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}
             ],
-            "songs":["Satin_Panties", "High", "Milf"],
+            "songs": ["Satin_Panties", "High", "Milf"],
             "keyLock": null,
             "hiddenOnWeeks": false,
             "hiddenOnFreeplay": false,
@@ -76,9 +76,9 @@
             "display": "Week 5",
             "title": "RED SNOW",
             "categories": [
-                {"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}
+                {"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}
             ],
-            "songs":["Cocoa", "Eggnog", "Winter_Horrorland"],
+            "songs": ["Cocoa", "Eggnog", "Winter_Horrorland"],
             "keyLock": null,
             "hiddenOnWeeks": false,
             "hiddenOnFreeplay": false,
@@ -90,9 +90,9 @@
             "display": "Week 6",
             "title": "hating simulator ft. moawling",
             "categories": [
-                {"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}
+                {"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}
             ],
-            "songs":["Senpai", "Roses", "Thorns"],
+            "songs": ["Senpai", "Roses", "Thorns"],
             "keyLock": null,
             "hiddenOnWeeks": false,
             "hiddenOnFreeplay": false,
@@ -104,9 +104,9 @@
             "display": "Week 7",
             "title": "Tankman",
             "categories": [
-                {"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}
+                {"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}
             ],
-            "songs":["Ugh", "Guns", "Stress"],
+            "songs": ["Ugh", "Guns", "Stress"],
             "keyLock": null,
             "hiddenOnWeeks": false,
             "hiddenOnFreeplay": false,
@@ -117,14 +117,14 @@
     "freeplayData": [
         {
             "song": "Sassy_Magic",
-            "categories": [{"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}],
+            "categories": [{"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}],
             "keyLock": null,
             "hidden": false,
             "color": "#1a172b"
         },
         {
             "song": "Test",
-            "categories": [{"category": "Normal", "difficults": ["Easy", "Normal", "Hard"]}],
+            "categories": [{"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}],
             "keyLock": null,
             "hidden": true,
             "color": "#883dd9"

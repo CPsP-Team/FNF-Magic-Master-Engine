@@ -1,0 +1,111 @@
+{
+	"script": "Pico_Script",
+	"aspect": "Speaker",
+	"position": [
+		-140,
+		-59
+	],
+	"scale": 1,
+	"animations": [
+		{
+			"symbol": "Pico shoot 1",
+			"loop": false,
+			"fps": 24,
+			"key": "right1",
+			"indices": []
+		},
+		{
+			"symbol": "Pico shoot 2",
+			"loop": false,
+			"fps": 24,
+			"key": "right2",
+			"indices": []
+		},
+		{
+			"symbol": "Pico shoot 3",
+			"loop": false,
+			"fps": 24,
+			"key": "left2",
+			"indices": []
+		},
+		{
+			"symbol": "Pico shoot 4",
+			"loop": false,
+			"fps": 24,
+			"key": "left1",
+			"indices": []
+		},
+		{
+			"loop": true,
+			"symbol": "Pico shoot 1",
+			"key": "right1-loop",
+			"fps": 24,
+			"indices": [
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			]
+		},
+		{
+			"loop": true,
+			"symbol": "Pico shoot 2",
+			"key": "right2-loop",
+			"fps": 24,
+			"indices": [
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			]
+		},
+		{
+			"loop": true,
+			"symbol": "Pico shoot 3",
+			"key": "left1-loop",
+			"fps": 24,
+			"indices": [
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			]
+		},
+		{
+			"loop": true,
+			"symbol": "Pico shoot 4",
+			"key": "left2-loop",
+			"fps": 24,
+			"indices": [
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			]
+		}
+	],
+	"zoom": 0.8,
+	"image": "Pico_Speakers",
+	"name": "Pico",
+	"antialiasing": true,
+	"camera": [
+		-100,
+		-10
+	],
+	"icon": "pico",
+	"onRight": false,
+	"skin": "Default",
+	"singTime": 1
+}

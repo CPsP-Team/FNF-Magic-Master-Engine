@@ -9,7 +9,9 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.ui.FlxUIButton;
+import objects.songs.Song.Song_File;
 import flixel.addons.ui.FlxUIGroup;
+import flixel.ui.FlxCustomButton;
 import flixel.addons.ui.FlxUI;
 import flixel.tweens.FlxTween;
 import flixel.sound.FlxSound;
@@ -19,22 +21,17 @@ import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import objects.game.Stage;
 import flixel.FlxSubState;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.FlxG;
 
-import FlxCustom.FlxUICustomNumericStepper;
-import FlxCustom.FlxUICustomButton;
-import FlxCustom.FlxUICustomList;
-import FlxCustom.FlxCustomButton;
-import Song.SwagSong;
-
 class SingEditorSubState extends MusicBeatSubstate {
     public var last_cameras:Array<FlxCamera> = [];
     public var characters_stage:Stage;
-    public var song_edit:SwagSong;
+    public var song_edit:Song_File;
 
     public var singAnimations:Array<String> = ["singUP", "singLEFT", "singDOWN", "singRIGHT"];
 	public var curCharacter:Int = 0;
@@ -47,7 +44,7 @@ class SingEditorSubState extends MusicBeatSubstate {
     var arrayFocus:Array<FlxUIInputText> = [];
     var MENU:FlxUITabMenu;
 
-	public function new(song:SwagSong, stage:Stage, curStrum:Int, curSection:Int, onClose:Void->Void):Void {
+	public function new(song:Song_File, stage:Stage, curStrum:Int, curSection:Int, onClose:Void->Void):Void {
         this.characters_stage = stage;
         this.curSection = curSection;
         this.curStrum = curStrum;
@@ -110,24 +107,18 @@ class SingEditorSubState extends MusicBeatSubstate {
 			if(FlxG.keys.justPressed.A){changeCharacter(-1);}
 			if(FlxG.keys.justPressed.D){changeCharacter(1);}
 
-			if(principal_controls.checkAction("Menu_Back", JUST_PRESSED)){doClose();}
+			if(controls.check("MenuBack", JUST_PRESSED)){doClose();}
         }
 	}
 
     var holdSing:Float = 0.2;
     public function doSing(elapsed:Float):Void {
-        if(song_edit.sectionStrums[curStrum] == null){return;}
+        if(song_edit.strums[curStrum] == null){return;}
         holdSing -= elapsed;
         if(holdSing <= 0){
             holdSing = 0.2;
             
-            var toSing:Array<Int> = [];
-            if(song_edit.sectionStrums[curStrum].notes[curSection] != null && song_edit.sectionStrums[curStrum].notes[curSection].changeSing){
-                toSing = song_edit.sectionStrums[curStrum].notes[curSection].charToSing.copy();
-            }else{
-                toSing = song_edit.sectionStrums[curStrum].charToSing.copy();
-            }
-
+            var toSing:Array<Int> = (song_edit.strums[curStrum].sections[curSection] != null && song_edit.strums[curStrum].sections[curSection].changeCharacters) ? song_edit.strums[curStrum].sections[curSection].characters.copy() : song_edit.strums[curStrum].characters.copy();
             for(s in characters_stage.characterData){s.dance();}
             for(s in toSing){
                 var cur_character = characters_stage.characterData[s];
@@ -147,11 +138,7 @@ class SingEditorSubState extends MusicBeatSubstate {
 		var selCharacter = characters_stage.characterData[curCharacter];
 		if(selCharacter != null){selCharacter.alpha = 1;}
 
-        if(song_edit.sectionStrums[curStrum].notes[curSection] != null && song_edit.sectionStrums[curStrum].notes[curSection].changeSing){
-            chkSing.checked = song_edit.sectionStrums[curStrum].notes[curSection].charToSing.contains(curCharacter); 
-        }else{
-            chkSing.checked = song_edit.sectionStrums[curStrum].charToSing.contains(curCharacter);
-        }
+        chkSing.checked = (song_edit.strums[curStrum].sections[curSection] != null && song_edit.strums[curStrum].sections[curSection].changeCharacters) ? song_edit.strums[curStrum].sections[curSection].characters.contains(curCharacter) : song_edit.strums[curStrum].characters.contains(curCharacter);
 	}
 
 	public function doClose():Void {
@@ -183,7 +170,7 @@ class SingEditorSubState extends MusicBeatSubstate {
         chkSing = new FlxUICheckBox(25, 75, null, null, "Sing?", 100); tabMENU.add(chkSing);
 
         chkSecSing = new FlxUICheckBox(25, 100, null, null, "Change Section Characters?", 200);
-        chkSecSing.checked = song_edit.sectionStrums[curStrum].notes[curSection].changeSing;
+        chkSecSing.checked = song_edit.strums[curStrum].sections[curSection].changeCharacters;
         tabMENU.add(chkSecSing);
 		
         MENU.showTabId("Characters");
@@ -196,29 +183,14 @@ class SingEditorSubState extends MusicBeatSubstate {
 			var wname = check.getLabel().text;
 			switch(wname){
                 case "Sing?":{
-                    if(song_edit.sectionStrums[curStrum] == null){return;}
-                    if(check.checked){
-                        if(song_edit.sectionStrums[curStrum].notes[curSection] != null && song_edit.sectionStrums[curStrum].notes[curSection].changeSing){
-                            if(song_edit.sectionStrums[curStrum].notes[curSection].charToSing.contains(curCharacter)){return;}
-                            song_edit.sectionStrums[curStrum].notes[curSection].charToSing.push(curCharacter); 
-                        }else{
-                            if(song_edit.sectionStrums[curStrum].charToSing.contains(curCharacter)){return;}
-                            song_edit.sectionStrums[curStrum].charToSing.push(curCharacter);   
-                        }
-                    }else{
-                        if(song_edit.sectionStrums[curStrum].notes[curSection] != null && song_edit.sectionStrums[curStrum].notes[curSection].changeSing){
-                            if(!song_edit.sectionStrums[curStrum].notes[curSection].charToSing.contains(curCharacter)){return;}
-                            song_edit.sectionStrums[curStrum].notes[curSection].charToSing.remove(curCharacter);
-                        }else{
-                            if(!song_edit.sectionStrums[curStrum].charToSing.contains(curCharacter)){return;}
-                            song_edit.sectionStrums[curStrum].charToSing.remove(curCharacter);
-                        }
-                    }
+                    if(song_edit.strums[curStrum] == null){return;}
+                    var character_list = song_edit.strums[curStrum].sections[curSection] != null && song_edit.strums[curStrum].sections[curSection].changeCharacters ? song_edit.strums[curStrum].sections[curSection].characters : song_edit.strums[curStrum].characters;
+                    if (check.checked) { character_list.push(curCharacter); } else { character_list.remove(curCharacter); }
                 }
                 case "Change Section Characters?":{
-                    if(song_edit.sectionStrums[curStrum] == null){return;}
-                    if(song_edit.sectionStrums[curStrum].notes[curSection] == null){return;}
-                    song_edit.sectionStrums[curStrum].notes[curSection].changeSing = check.checked;
+                    if(song_edit.strums[curStrum] == null){return;}
+                    if(song_edit.strums[curStrum].sections[curSection] == null){return;}
+                    song_edit.strums[curStrum].sections[curSection].changeCharacters = check.checked;
                     changeCharacter();
                 }
 			}

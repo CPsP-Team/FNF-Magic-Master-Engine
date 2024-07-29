@@ -5,7 +5,7 @@
     "prefix": "TMP",
     "description": "The Mod Description",
 
-    "onlyThis": false,
+    "exclusive": false,
 
     "hideVanilla_Weeks": false,
     "hideVanilla_Songs": false

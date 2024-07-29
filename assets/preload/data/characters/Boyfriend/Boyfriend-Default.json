@@ -1,0 +1,100 @@
+{
+	"aspect": "Default",
+	"position": [
+		0,
+		340
+	],
+	"icon": "bf",
+	"scale": 1,
+	"name": "Boyfriend",
+	"image": "BOYFRIEND",
+	"zoom": 0.8,
+	"color": "#409fff",
+	"antialiasing": true,
+	"singTime": 1,
+	"skin": "Default",
+	"onRight": false,
+	"camera": [
+		171.990990990991,
+		485.621621621622
+	],
+	"animations": [
+		{
+			"symbol": "BF HEY!!",
+			"loop": false,
+			"fps": 24,
+			"key": "hey",
+			"indices": []
+		},
+		{
+			"symbol": "MISS BF NOTE DOWN",
+			"loop": false,
+			"fps": 24,
+			"key": "singDOWNmiss",
+			"indices": []
+		},
+		{
+			"symbol": "BF NOTE DOWN",
+			"loop": false,
+			"fps": 24,
+			"key": "singDOWN",
+			"indices": []
+		},
+		{
+			"symbol": "MISS BF NOTE LEFT",
+			"loop": false,
+			"fps": 24,
+			"key": "singLEFTmiss",
+			"indices": []
+		},
+		{
+			"symbol": "BF NOTE LEFT",
+			"loop": false,
+			"fps": 24,
+			"key": "singLEFT",
+			"indices": []
+		},
+		{
+			"symbol": "MISS BF NOTE RIGHT",
+			"loop": false,
+			"fps": 24,
+			"key": "singRIGHTmiss",
+			"indices": []
+		},
+		{
+			"symbol": "BF NOTE RIGHT",
+			"loop": false,
+			"fps": 24,
+			"key": "singRIGHT",
+			"indices": []
+		},
+		{
+			"symbol": "MISS BF NOTE UP",
+			"loop": false,
+			"fps": 24,
+			"key": "singUPmiss",
+			"indices": []
+		},
+		{
+			"symbol": "BF NOTE UP",
+			"loop": false,
+			"fps": 24,
+			"key": "singUP",
+			"indices": []
+		},
+		{
+			"symbol": "BF idle dance",
+			"loop": false,
+			"fps": 24,
+			"key": "idle",
+			"indices": []
+		},
+		{
+			"symbol": "BF idle shaking",
+			"loop": false,
+			"fps": 24,
+			"key": "scared",
+			"indices": []
+		}
+	]
+}

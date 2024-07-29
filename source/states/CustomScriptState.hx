@@ -11,6 +11,7 @@ import flixel.input.mouse.FlxMouse;
 import flixel.effects.FlxFlicker;
 import flixel.util.FlxGradient;
 import flixel.tweens.FlxTween;
+import objects.scripts.Script;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import lime.app.Application;
@@ -25,7 +26,7 @@ import flixel.FlxState;
 import flixel.FlxG;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord;
 import sys.FileSystem;
 import sys.io.File;
 #end
@@ -37,7 +38,8 @@ class CustomScriptState extends MusicBeatState {
 
     public function new(new_script:Script, ?onConfirm:String, ?onBack:String):Void {
         custom_script = new_script;
+        custom_script.parent = this;
         super(onConfirm, onBack);
-        tempScripts.set(new_script.Name, new_script);
+        scripts.set(new_script.name, new_script);
     }
 }
