@@ -784,7 +784,7 @@ class FlxSprite extends FlxObject
 	{
 		checkEmptyFrame();
 
-		if (alpha == 0 || _frame.type == FlxFrameType.EMPTY)
+		if (_frame.type == FlxFrameType.EMPTY)
 			return;
 
 		if (dirty) // rarely

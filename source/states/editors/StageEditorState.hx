@@ -573,9 +573,6 @@ class StageEditorState extends MusicBeatState {
                 if (ScriptBuilder.addAttribute(curObjMenu, _att_name) == null) { return;}
                 setPropertiesMenu();
             });
-            btnAttribute._.update = (elapsed:Float) -> {
-                btnAttribute.visible = btnAttribute.y >= ctnAttributesMenu.y + ctnAttributesMenu.list_height / 2;
-            };
             ctnAttributesMenu.addList(btnAttribute);
         }
     }

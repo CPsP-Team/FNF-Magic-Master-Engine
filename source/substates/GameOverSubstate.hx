@@ -25,7 +25,9 @@ class GameOverSubstate extends MusicBeatSubstate {
     public var camFollow:FlxObject;
 
     public var curPlaystate:PlayState;
+
     public var otherCamera:FlxCamera;
+    public var hudCamera:FlxCamera;
     
     public var curCharacters:Array<Character>;
     public var curStyleUI:String;
@@ -44,8 +46,13 @@ class GameOverSubstate extends MusicBeatSubstate {
         otherCamera = new FlxCamera();
 		otherCamera.bgColor.alpha = 0;
         otherCamera.zoom = FlxG.camera.zoom;
-        otherCamera.scroll = FlxG.camera.scroll;
+        otherCamera.scroll = FlxG.camera.scroll.clone();
+        
+        hudCamera = new FlxCamera();
+		hudCamera.bgColor.alpha = 0;
+
 		FlxG.cameras.add(otherCamera);
+		FlxG.cameras.add(hudCamera);
 
         death_characters = new FlxTypedGroup<Character>();
         death_characters.camera = otherCamera;
@@ -68,16 +75,18 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 		conductor.changeBPM(100);
 
+        var l_firstCharacter:Character = death_characters.members[0];
 		camFollow = new FlxObject(
-            curCharacters[0].characterSprite.x + (curCharacters[0].characterSprite.width / 2), 
-            curCharacters[0].characterSprite.y + (curCharacters[0].characterSprite.height / 2), 
-            1, 
-            1
+            l_firstCharacter.x + l_firstCharacter.cameraPosition.x, 
+            l_firstCharacter.y + l_firstCharacter.cameraPosition.y, 
+            1, 1
         ); 
         add(camFollow);
 
         otherCamera.follow(camFollow, LOCKON, 0.01);
 		FlxG.camera.follow(camFollow, LOCKON, 0.01);
+
+		scripts.call('created');
     }
 
 	override function update(elapsed:Float):Void {
@@ -140,7 +149,7 @@ class GameOverSubstate extends MusicBeatSubstate {
         for (char in death_characters) { char.playAnim('deathConfirm', true); }
 
         new FlxTimer().start(0.7, (tmr:FlxTimer) -> { 
-            otherCamera.fade(FlxColor.BLACK, 2, false, () -> {
+            hudCamera.fade(FlxColor.BLACK, 2, false, () -> {
                 VoidState.clearAssets = false;
                 Songs.play(Songs.isStoryMode);
             });

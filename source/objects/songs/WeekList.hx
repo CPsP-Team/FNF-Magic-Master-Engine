@@ -36,9 +36,10 @@ class WeekList {
 		for (cur_item in list) {
             if (cur_item.data.name != new_item.data.name) { continue; }
             cur_item.append(new_item);
-			trace(true);
+			
             return;
         }
+
 		list.push(new_item);
 	}
 	public function remove(id:Int):Bool { return list.remove(list[id]); }
@@ -57,14 +58,12 @@ class WeekList {
 		this.list = [];
 
 		var path_list:Array<String> = Paths.readFile('assets/data/weeks.json');
-		if (Mods.hide_vanilla) {path_list.shift(); }
+		if (Mods.hide_vanilla) { path_list.shift(); }
 
 		for (mod_path in path_list) {
 			var mod_data:WeeksFile_Data = cast mod_path.getJson();
 
-			for (week in mod_data.weekData) {
-				add(new WeekItem(week));
-			}
+			for (week in mod_data.weekData) { add(new WeekItem(week)); }
 		}
 
 		if (_removeHiddens) { this.removeHiddens(); }

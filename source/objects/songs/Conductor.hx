@@ -42,17 +42,46 @@ class Conductor {
 		for (i in 0...song.sections.length) {
 			if (song.sections[i].changeBPM && song.sections[i].bpm != curBPM) {
 				curBPM = song.sections[i].bpm;
+
 				var event:BPMChangeEvent = {
 					stepTime: totalSteps,
 					songTime: totalPos,
 					bpm: curBPM
 				};
+
 				bpmChangeMap.push(event);
 			}
 
 			var deltaSteps:Int = song.sections[i].lengthInSteps;
 			totalSteps += deltaSteps;
 			totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
+		}
+		trace("new BPM map BUDDY " + bpmChangeMap);
+	}
+	public function mapBPMBrute(_list:Array<Dynamic>):Void {
+		bpmChangeMap = [];
+
+		var curBPM:Float = bpm;
+		var totalSteps:Int = 0;
+		var totalPos:Float = 0;
+
+		for (i in 0..._list.length) {
+			if (_list[i].bpm != curBPM) {
+				curBPM = _list[i].bpm;
+
+				var deltaSteps:Int = Math.floor(16 * _list[i].sections);
+
+				totalSteps += deltaSteps;
+				totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
+
+				var event:BPMChangeEvent = {
+					stepTime: totalSteps,
+					songTime: totalPos,
+					bpm: curBPM
+				};
+				
+				bpmChangeMap.push(event);
+			}
 		}
 		trace("new BPM map BUDDY " + bpmChangeMap);
 	}

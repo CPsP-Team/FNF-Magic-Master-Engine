@@ -27,6 +27,9 @@ function preload():Void {
         if (l_characterMap.exists(l_keyCharacter)) { continue; }
 
         var l_chrNew:Character = new Character(0, 0, l_curCharacter.name, l_curCharacter.aspect, l_curCharacter.type == "Default" ? null : l_curCharacter.type);
+        l_chrNew.alpha = 0.000001;
+        getState().add(l_chrNew);
+
         l_characterMap.set(l_keyCharacter, l_chrNew);
     }
 }
@@ -48,7 +51,9 @@ function execute(_id:Int, _name:String, _aspect:String, _type:String):Void {
     l_chrChange.setPosition(l_chrCurrent.x, l_chrCurrent.y);
     l_chrChange.scaleCharacter(l_chrCurrent.curScale);
     l_chrChange.turnLook(l_chrCurrent.onRight); 
-
+    l_chrChange.alpha = 1;
+    
+    getState().remove(l_chrChange);
     getState().stage.members[l_characterIndex] = getState().stage.characterData[_id] = l_chrChange;
 }
 

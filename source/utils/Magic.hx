@@ -31,9 +31,9 @@ using utils.Files;
 using utils.Paths;
 
 class Magic {
-	public static final version:String = "2.0";
+	public static final version:String = "3.0";
 
-    public static function browser(site:String) {#if linux Sys.command('/usr/bin/xdg-open', [site, "&"]); #else FlxG.openURL(site); #end}
+    public static function browser(site:String) { #if linux Sys.command('/usr/bin/xdg-open', [site, "&"]); #else FlxG.openURL(site); #end }
     public static function key(_key:FlxKey):String { return _key.toString(); }
 
     public static function unload():Void {
@@ -76,17 +76,20 @@ class Magic {
     
     public static function sortMembersByX(group:FlxTypedGroup<FlxObject>, selectedX:Float, selected:Int = 0, offset:Int = 10, delay:Float = 0.3):Void {
         if (group == null || group.members.length <= 0 || group.members[selected] == null) { return; }
-
+        
         var selObj:FlxObject = group.members[selected];
-        var upWidth:Float = selectedX;
-        var downWidth:Float = selectedX + selObj.width + offset;
+        selObj.x = FlxMath.lerp(selObj.x, selectedX - (selObj.width / 2), delay);
+        
+        var leftWidth:Float = selectedX - (selObj.width / 2) - offset;
+        var rightWidth:Float = selectedX + (selObj.width / 2) + offset;
 
-        var current:Int = selected;
+        var current:Int = selected - 1;
         while(current >= 0) {
             var curObj:FlxObject = group.members[current];
 
-            curObj.x = FlxMath.lerp(curObj.x, upWidth, delay);
-            upWidth -= curObj.width + offset;
+            leftWidth -= curObj.width;
+            curObj.x = FlxMath.lerp(curObj.x, leftWidth, delay);
+            leftWidth -= offset;
             current--;
         }
 
@@ -94,8 +97,8 @@ class Magic {
         while(current < group.length) {
             var curObj:FlxObject = group.members[current];
 
-            curObj.x = FlxMath.lerp(curObj.x, downWidth, delay);
-            downWidth += curObj.width + offset;
+            curObj.x = FlxMath.lerp(curObj.x, rightWidth, delay);
+            rightWidth += curObj.width + offset;
             current++;
         }
     }
@@ -104,10 +107,22 @@ class Magic {
         if (group == null || group.members.length <= 0 || group.members[selected] == null) { return; }
 
         var selObj:FlxObject = group.members[selected];
-        var upHeight:Float = selectedY;
-        var downHeight:Float = selectedY;
+        selObj.y = FlxMath.lerp(selObj.y, selectedY - (selObj.height / 2), delay);
 
-        var current:Int = selected;
+        var upHeight:Float = selectedY - (selObj.height / 2) - offset;
+        var downHeight:Float = selectedY + (selObj.height / 2) + offset;
+        
+        var current:Int = selected - 1;
+        while(current >= 0) {
+            var curObj:FlxObject = group.members[current];
+
+            upHeight -= curObj.height;
+            curObj.y = FlxMath.lerp(curObj.y, upHeight, delay);
+            upHeight -= offset;
+            current--;
+        }   
+        
+        current = selected + 1;
         while(current < group.length) {
             var curObj:FlxObject = group.members[current];
 
@@ -115,15 +130,6 @@ class Magic {
             downHeight += curObj.height + offset;
             current++;
         }
-        
-        current = selected - 1;
-        while(current >= 0) {
-            var curObj:FlxObject = group.members[current];
-
-            upHeight -= curObj.height + offset;
-            curObj.y = FlxMath.lerp(curObj.y, upHeight, delay);
-            current--;
-        }   
     }
 
     public static function roundRect(_x:Float, _y:Float, _width:Int, _height:Int, _ellipseWidth:Float = 15, _ellipseHeight:Float = 15, _color:FlxColor = FlxColor.BLACK):FlxSprite {        

@@ -169,48 +169,6 @@ function preload():Void {
     shootStrumLine = strums.members[2];
     if (!Settings.get('Animated', 'GraphicSettings')) { return; }
     if (shootStrumLine == null) { return; }
-
-    for (n in shootStrumLine.notelist) {  
-        if (!FlxG.random.bool(16)) { continue; }
-        
-        var new_tank:FlxSprite = new FlxSprite(500, 200 + FlxG.random.int(50, 100));
-        new_tank.flipX = n.noteData == 0;
-        
-		new_tank.frames = Files.getAtlas(Paths.image('walk_tank', 'stages/war'));
-		new_tank.animation.addByPrefix('run', 'tankman running', 24, true);
-		new_tank.animation.addByPrefix('shot', 'John Shot ' + FlxG.random.int(1, 2), 24, false);
-		new_tank.animation.play('run');
-		new_tank.animation.curAnim.curFrame = FlxG.random.int(0, new_tank.animation.curAnim.frames.length - 1);
-
-		new_tank.updateHitbox();
-		new_tank.setGraphicSize(Std.int(0.8 * new_tank.width));
-		new_tank.updateHitbox();
-        
-		new_tank._.endingOffset = FlxG.random.float(50, 200);
-		new_tank._.tankSpeed = FlxG.random.float(0.6, 1);
-		new_tank._.strumTime = n.strumTime;
-
-        new_tank._.update = function(elpased:Float) {
-            new_tank.visible = (new_tank.x > -0.5 * FlxG.width && new_tank.x < 1.2 * FlxG.width);
-
-            if (new_tank.animation.curAnim.name == "run") {
-                var speed:Float = (conductor.position - new_tank._.strumTime) * new_tank._.tankSpeed;
-                
-                if (new_tank.flipX) {new_tank.x = (0.02 * FlxG.width - new_tank._.endingOffset) + speed; }
-                else{new_tank.x = (0.74 * FlxG.width + new_tank._.endingOffset) - speed; }
-            } else if (new_tank.animation.curAnim.finished) {
-                new_tank.kill();
-				Timer.delay(function() {new_tank.destroy(); }, 500);
-            }
-    
-            if (conductor.position > new_tank._.strumTime) {
-                new_tank.animation.play('shot');
-                if (new_tank.flipX) { new_tank.offset.x = 300; new_tank.offset.y = 200; }
-            }            
-        }
-
-        tanksGroup.add(new_tank);
-    }
 }
 
 function beatHit(curBeat:Int):Void {

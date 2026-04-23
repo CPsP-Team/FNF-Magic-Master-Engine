@@ -99,6 +99,7 @@ class Character extends FlxSpriteGroup {
 		var focused_character = song.sections[section].character;
 
 		if (strum_list == null || strum_list[focused_strum] == null) { return 0; }
+		
 		if (
 			strum_list[focused_strum].sections[section] != null && 
 			strum_list[focused_strum].sections[section].changeCharacters
@@ -331,13 +332,12 @@ class Character extends FlxSpriteGroup {
 
 		if (l_callResults == Stop || l_callResults.callback == Stop) { return; }
 
-		isDanceRight = l_callResults.right != null ? l_callResults.right : isDanceRight;
 		l_curForce = l_callResults.force != null ? l_callResults.force : l_curForce;
 		l_curAnim = l_callResults.name != null ? l_callResults.name : l_curAnim;
 
 		defaultSprite.animation.play(l_curAnim, l_curForce);
 
-		curAnim = getCurAnimName();
+		curAnim = "idle";
 	}
 
 	public function emoteAnim(AnimName:String, Force:Bool = false, Special:Bool = false):Void {		
@@ -360,22 +360,33 @@ class Character extends FlxSpriteGroup {
 		Force = l_callResults.force != null ? l_callResults.force : Force;
 				
 		specialAnim = Special;
-		curAnim = '$AnimName';
 		
 		if (defaultSprite == null) { return; }
 		
+		var l_bruteAnim:String = AnimName;
+		curAnim = '$l_bruteAnim';
+
 		if (defaultSprite.flipX) {
-			if (AnimName.contains("LEFT")) { AnimName = AnimName.replace("LEFT", "RIGHT"); }
-			else { AnimName = AnimName.replace("RIGHT", "LEFT"); }
+			if (AnimName.contains("LEFT")) { l_bruteAnim = AnimName.replace("LEFT", "RIGHT"); }
+			else { l_bruteAnim = AnimName.replace("RIGHT", "LEFT"); }
 		}
 		
-		if (!defaultSprite.animation.exists(AnimName)) { return; }
-		
-		defaultSprite.animation.play(AnimName, Force || (
-			animations.exists(AnimName) && 
+		var l_bruteForce:Bool = Force || (
+			curAnim == l_bruteAnim &&
+			animations.exists(l_bruteAnim) && 
 			getCurAnim() != null && 
-			getCurAnim().curFrame >= animations[AnimName].loopTime
-		));
+			getCurAnim().curFrame >= animations.get(l_bruteAnim).loopTime
+		);
+	
+		var l_callBruteResults:Dynamic = call('bruteAnim', [l_bruteAnim, l_bruteForce]);
+		l_callBruteResults = l_callBruteResults != null ? l_callBruteResults : {};
+
+		if (l_callBruteResults == Stop || l_callBruteResults.callback == Stop) { return; }
+
+		l_bruteAnim = l_callBruteResults.name != null ? l_callBruteResults.name : l_bruteAnim;
+		l_bruteForce = l_callBruteResults.force != null ? l_callBruteResults.force : l_bruteForce;
+		
+		defaultSprite.animation.play(l_bruteAnim, l_bruteForce);
 	}
 
 	public function turnLook(toRight:Bool = true):Void {

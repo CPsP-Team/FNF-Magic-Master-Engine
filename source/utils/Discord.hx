@@ -39,7 +39,7 @@ class Discord {
 
     public static function change(details:String, state:Null<String>, ?small_image:String, ?has_start:Bool, ?end_time:Float):Void {
 		var start_time:Float = has_start ? Date.now().getTime() : 0;
-		if (end_time > 0) {end_time = start_time + end_time; }
+		if (end_time > 0) { end_time = start_time + end_time; }
 
 		DiscordRpc.presence({
 			largeImageText: "Magic Master Engine'",

@@ -150,6 +150,30 @@ class LoadingState extends MusicBeatState {
 					tempLoadingStuff.push({ type: SOUND, instance: Paths.styleSound('missnote3', _song.style) });
 					tempLoadingStuff.push({ type: MUSIC, instance: Paths.styleMusic('gameOver', _song.style) });
 					tempLoadingStuff.push({ type: MUSIC, instance: Paths.styleMusic('results', _song.style) });
+					
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num0', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num1', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num2', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num3', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num4', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num5', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num6', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num7', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num8', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('num9', _song.style) });
+					
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('healthBar_back', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('healthBar_front', _song.style) });
+
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/highscoreNew', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/maxcombo', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/missed', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/results', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/scorePopin', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/systemBack', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/systemFront', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/topBarBlack', _song.style) });
+					tempLoadingStuff.push({ type: IMAGE, instance: Paths.styleImage('result_menu/totalnotes', _song.style) });
 
 					var stage_script:Script = Scripts.quick(Paths.stage(_song.stage));
 					if (stage_script != null) { 
@@ -180,6 +204,7 @@ class LoadingState extends MusicBeatState {
 								script_event = Scripts.quick(l_curPath);
 								script_event.name = cur_action[0];
 
+								script_event.call("cache", [tempLoadingStuff]);
 								TARGET.scripts.set(cur_action[0], script_event);
 							}
 							if (script_event == null) { continue; }
@@ -221,6 +246,7 @@ class LoadingState extends MusicBeatState {
 										script_event.name = cur_action[0];
 
 										TARGET.scripts.set(cur_action[0], script_event);
+										script_event.call("cache", [tempLoadingStuff]);
 									}
 									if (script_event == null) { continue; }
 

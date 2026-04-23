@@ -57,15 +57,15 @@ class LangSubMenu extends SubMenu {
         super.update(elapsed);
 
         if (optionGroup.length > 0) {
-            Magic.sortMembersByY(cast optionGroup, menuBack.y + (menuBack.height / 2) - (optionGroup.members[curOption].height / 2), curOption);
+            Magic.sortMembersByY(cast optionGroup, menuBack.y + (menuBack.height / 2), curOption);
             optionBack.y = optionGroup.members[curOption].y - 5;
         }
 
         if (!canControlle) { return; }
 
-        if (controls.check("MenuUp")) {changeOption(-1); }
-        if (controls.check("MenuDown")) {changeOption(1); }
-        if (controls.check("MenuAccept")) {chooseOption(); }
+        if (controls.check("MenuUp")) { changeOption(-1); }
+        if (controls.check("MenuDown")) { changeOption(1); }
+        if (controls.check("MenuAccept")) { chooseOption(); }
     }
 
     public function changeOption(_value:Int = 0, _force:Bool = false):Void {
@@ -86,17 +86,17 @@ class LangSubMenu extends SubMenu {
 
     public function chooseOption():Void {
         canControlle = false;
-        FlxG.sound.play(Paths.sound("confirmMenu").getSound(), 0.5);
 
-        cast(Settings.get_setting("Language"), objects.settings.List_Setting).set(curOption);
-        Language.load();
+        Settings.get_setting("Language").set(curOption);
+        Language.load(Language.list[curOption]);
         
         FlxG.save.data.first = true;
         
         Settings.save();
         FlxG.save.flush();
         
+        FlxG.sound.play(Paths.sound("confirmMenu").getSound(), 0.5);
         FlxFlicker.flicker(optionGroup.members[curOption]);
-        Timer.delay(()->{doClose(); }, 1000);
+        Timer.delay(()->{ doClose(); }, 1000);
     }
 }

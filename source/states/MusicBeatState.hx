@@ -103,6 +103,8 @@ class MusicBeatState extends FlxUIState {
 	}
 
 	override function update(elapsed:Float) {
+		if (FlxG.keys.justPressed.F1 && FlxG.keys.pressed.SHIFT) { MusicBeatState.switchState("states.MainMenuState", []); return; }
+
 		//everyStep();
 		var oldStep:Int = curStep;
 
@@ -259,7 +261,9 @@ class MusicBeatState extends FlxUIState {
 		if (state == null) {
 			FlxG.switchState(new VoidState(nextState));
 		} else {
+			state.scripts.call('onCloseState');
 			state.canControlle = false;
+			
 			state.openSubState(new FadeSubState(nextState));
 		}
 	}

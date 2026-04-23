@@ -62,6 +62,8 @@ class ChartEditorState extends MusicBeatState {
     public var stage:Stage;
 
     public static var lastSection:Int = 0;
+    public static var lastSong:String = "";
+
     var curSection:Int = 0;
     var curStrum:Int = 0;
 
@@ -156,8 +158,9 @@ class ChartEditorState extends MusicBeatState {
 		Magic.setWindowTitle('Charting [${song.song}-${song.category}-${song.difficulty}]', 1);
 		#end
 
-        curSection = lastSection;
-		tempBpm = song.bpm;
+        curSection = lastSong != song.song ? 0 : lastSection;
+        lastSong = song.song;
+        tempBpm = song.bpm;
 
         super.create();
         
@@ -376,7 +379,7 @@ class ChartEditorState extends MusicBeatState {
                         hitNote.alpha = isSelected || inst.playing ? 1 : 0.5;
 
                         renderedNotes.add(hitNote);
-                        if (hitNote.strumTime > conductor.position || inst.playing) {notesCanHit[ii].push(hitNote); }
+                        if (hitNote.strumTime > conductor.position || inst.playing) { notesCanHit[ii].push(hitNote); }
 
                         hits--;
                         curHits++;
@@ -395,7 +398,7 @@ class ChartEditorState extends MusicBeatState {
                     nSustain.alpha = isSelected || inst.playing ? 0.5 : 0.3;
                     nSustain.setGraphicSize(KEYSIZE, (KEYSIZE * (cSusNote + 0.25))); nSustain.updateHitbox();
                     renderedSustains.add(nSustain);
-                    if (nSustain.strumTime > conductor.position || inst.playing) {notesCanHit[ii].push(nSustain); }
+                    if (nSustain.strumTime > conductor.position || inst.playing) { notesCanHit[ii].push(nSustain); }
                     
                     var nEData:Note_Data = Note.getNoteData(Note.convNoteData(nData));
                     nEData.strumTime += conductor.stepCrochet * (cSusNote + 0.75);
@@ -407,7 +410,7 @@ class ChartEditorState extends MusicBeatState {
                     nSustainEnd.playAnim("end");
                     nSustainEnd.alpha = isSelected || inst.playing ? 0.5 : 0.3;
                     renderedSustains.add(nSustainEnd);
-                    if (nSustainEnd.strumTime > conductor.position || inst.playing) {notesCanHit[ii].push(nSustainEnd); }
+                    if (nSustainEnd.strumTime > conductor.position || inst.playing) { notesCanHit[ii].push(nSustainEnd); }
                 }
             }
         }
@@ -518,8 +521,8 @@ class ChartEditorState extends MusicBeatState {
         if (song.sections[curSection + 1] == null) {addGenSection(); }
         for (i in 0...song.strums.length) {if (song.strums[i].sections[curSection + 1] == null) {addSection(i, song.sections[curSection].lengthInSteps, song.strums[i].keys); }}
 
-        if (Math.ceil(strumLine.y) >= curGrid.height) {changeSection(curSection + 1, false); }
-        if (strumLine.y <= -10) {changeSection(curSection - 1, false); }
+        if (curGrid != null && Math.ceil(strumLine.y) >= curGrid.height) { changeSection(curSection + 1, false); }
+        if (strumLine.y <= -10) { changeSection(curSection - 1, false); }
     
         FlxG.watch.addQuick('daBeat', curBeat);
         FlxG.watch.addQuick('daStep', curStep);
@@ -547,7 +550,7 @@ class ChartEditorState extends MusicBeatState {
 
                     for (ii in singArray[i]) {
                         if (stage.getCharacterById(ii) == null) { continue; }
-                        stage.getCharacterById(ii).singAnim(song_animation, true);
+                        stage.getCharacterById(ii).singAnim("sing" + song_animation, true);
                     }
                 }
             }
@@ -651,6 +654,8 @@ class ChartEditorState extends MusicBeatState {
             if (FlxG.keys.justPressed.ENTER && onConfirm == null) {
                 FlxG.save.data.autosave = song;
                 lastSection = curSection;
+				
+                VoidState.clearAssets = false;
                 Songs.quickPlay(song, false);
             }
         }
@@ -1736,7 +1741,7 @@ class ChartEditorState extends MusicBeatState {
                     camHUD.visible = !check.checked;
                     camFHUD.alpha = !check.checked ? 1 : 0.5;
                 }
-				case 'Change BPM': {
+				case 'Change Section BPM': {
                     song.sections[curSection].changeBPM = check.checked;
 					FlxG.log.add('BPM Changed to: ' + check.checked);
                     updateSection();

@@ -478,7 +478,7 @@ class CharacterEditorState extends MusicBeatState {
                     key: symbol,
                     symbol: symbol,
                     
-                    fps: 24,    
+                    fps: 26,    
                     indices: [],
                     loopTime: 0,
 

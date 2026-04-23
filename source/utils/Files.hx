@@ -279,17 +279,17 @@ class Files {
 
 		return Reflect.hasField(colorData, fileName) ? Reflect.getProperty(colorData, fileName) : "None";
 	}
-	inline static public function getDataNote(data:Int, keys:Int, ?type:String):Note_Graphic_Data {
+	inline static public function getDataNote(data:Int, keys:Int, ?type:String, ?style:String = "Default"):Note_Graphic_Data {
 		if (type == null) {type = Settings.get("NoteSkin"); }
-		var j_strum:StrumLine_Graphic_Data = getJson(Paths.strum_keys(keys, type));
+		var j_strum:StrumLine_Graphic_Data = getJson(Paths.strum_keys(keys, type, style));
 		var j_note:Note_Graphic_Data = j_strum.gameplay_notes.notes[(data % (keys)) % (j_strum.gameplay_notes.notes.length)];
 		if (j_strum.gameplay_notes.general_animations == null || j_strum.gameplay_notes.general_animations.length <= 0) { return j_note; }
 		for (anim in j_strum.gameplay_notes.general_animations) {j_note.animations.push(anim); }
 		return j_note;
 	}
-	inline static public function getDataStaticNote(data:Int, keys:Int, ?type:String):Note_Graphic_Data {
+	inline static public function getDataStaticNote(data:Int, keys:Int, ?type:String, ?style:String = "Default"):Note_Graphic_Data {
 		if (type == null) {type = Settings.get("NoteSkin"); }
-		var j_strum:StrumLine_Graphic_Data = getJson(Paths.strum_keys(keys, type));
+		var j_strum:StrumLine_Graphic_Data = getJson(Paths.strum_keys(keys, type, style));
 		var j_note:Note_Graphic_Data = j_strum.static_notes.notes[(data % (keys)) % (j_strum.static_notes.notes.length)];
 		if (j_strum == null || j_strum.gameplay_notes == null || j_strum.static_notes.general_animations == null || j_strum.static_notes.general_animations.length <= 0) { return j_note; }
 		for (anim in j_strum.static_notes.general_animations) {j_note.animations.push(anim); }

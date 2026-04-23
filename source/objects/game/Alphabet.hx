@@ -1,19 +1,14 @@
 package objects.game;
 
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.addons.ui.FlxUI9SliceSprite;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.addons.ui.FlxUIGroup;
-import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxTween;
-import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
+import flixel.sound.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
-import flixel.math.FlxMath;
 import flixel.FlxSprite;
-import haxe.io.Bytes;
 import flixel.FlxG;
 import haxe.Timer;
 
@@ -40,7 +35,7 @@ class Alphabet extends FlxUIGroup {
     public var back:FlxSprite;
 
     //------| Typing Stuff |------//
-    public dynamic function onType(cur_character:String, item_data:Dynamic):Void {}
+    public var onType:FlxTypedSignal<String->Dynamic->Void>;
     public var isTyping:Bool = false;
     var typeSound:FlxSound;
     //-----------------------------//
@@ -61,6 +56,8 @@ class Alphabet extends FlxUIGroup {
         if ((data is Array)) { cur_data = data; } else if ((data is String)) { cur_data = [({ text: data })]; } else { cur_data = [data]; }
 
 		super(x, y);
+
+        onType = new FlxTypedSignal();
 
         if (cur_data.length <= 0) { return; }
         
@@ -244,7 +241,7 @@ class Alphabet extends FlxUIGroup {
                 
                             add(letter);
                             if (typeSound != null) {typeSound.play(); }
-                            if (onType != null) {onType(cur_character, current_item); }
+                            onType.dispatch(cur_character, current_item);
 
                             _i++;
                         }
@@ -271,7 +268,7 @@ class Alphabet extends FlxUIGroup {
             _number.updateHitbox();
             add(_number);
 
-            _lastWidth += _number.width - 5;
+            _lastWidth += ((_number.width + xOffset) * xMultiplier) - 5;
 
             FlxTween.tween(
                 _number, 
@@ -299,7 +296,7 @@ class Alphabet extends FlxUIGroup {
             _number.updateHitbox();
             add(_number);
 
-            _lastWidth += _number.width;
+            _lastWidth += (_number.width + xOffset) * xMultiplier;
 
             _current++;
         }

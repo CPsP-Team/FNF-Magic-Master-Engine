@@ -50,6 +50,11 @@ class SingEditorSubState extends MusicBeatSubstate {
         this.curStrum = curStrum;
         this.song_edit = song;
         super(onClose);
+	}
+
+	override function create() {
+		super.create();
+        
 		curCamera.bgColor.alpha = 200;
 		curCamera.alpha = 0;
 
@@ -73,15 +78,11 @@ class SingEditorSubState extends MusicBeatSubstate {
 		camFollow.screenCenter();
 		add(camFollow);
 
-		curCamera.zoom = stage.zoom;
+		curCamera.zoom = characters_stage.zoom;
 
 		changeCharacter();
 
 		FlxTween.tween(curCamera, {alpha: 1}, 0.5, {onComplete: function(twn) {canControlle = true; }});
-	}
-
-	override function create() {
-		super.create();
 		
 		FlxG.mouse.visible = true;
 	}

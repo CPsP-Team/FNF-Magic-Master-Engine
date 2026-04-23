@@ -54,7 +54,7 @@ import substates.InformationSubState;
 import substates.MusicBeatSubstate;
 import substates.GameOverSubstate;
 import substates.SettingsSubState;
-import substates.ResultSubstate;
+import substates.ResultSubState;
 import substates.PauseSubState;
 import substates.FadeSubState;
 
@@ -88,6 +88,7 @@ class PreLoaderState extends FlxUIState {
 
 	override public function create():Void {		
 		FlxG.autoPause = false;
+		Paths.useMods = false;
 		
 		super.create();
 		
@@ -105,21 +106,8 @@ class PreLoaderState extends FlxUIState {
 				nextState[0] = "states.ModListState";
 				nextState[1] = ["states.MainMenuState"];
 			}, 
-			()->{ 
-				Mods.reload();
-				Magic.reload(); 
-			}
+			()->{ }
 		]]); }
-
-		if (subStateList.length <= 0) { 
-			Mods.reload();
-			Magic.reload(); 
-		}
-
-		if (nextState[0] == "states.TitleState") {
-			var l_modState = Mods.getVar("initialState");
-			if (l_modState != null) { nextState[0] = l_modState; }
-		}
 
 		checkSubMenu();
 	}
@@ -134,7 +122,16 @@ class PreLoaderState extends FlxUIState {
 		if (subStateList.length > 0) {
 			var cur_menu = subStateList.shift();
 			loadSubState(cur_menu[0], cur_menu[1]);
+			
 			return;
+		}
+		
+		Paths.useMods = true;		
+		Magic.reload(); 
+
+		if (nextState[0] == "states.TitleState") {
+			var l_modState:String = Mods.getVar("initialState");
+			if (l_modState != null) { nextState[0] = l_modState; }
 		}
 
 		MusicBeatState.switchState(nextState[0], nextState[1]);

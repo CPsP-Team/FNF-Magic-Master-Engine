@@ -87,7 +87,7 @@ class Main extends Sprite {
 		var ng:NGio = new NGio(APIStuff.API, APIStuff.EncKey);
 		trace('Newgrounds Loaded');
 		#end
-		FlxG.save.bind('funkin', 'Yirius125/Magic Master Engine');
+		FlxG.save.bind('funkin', 'Yirius125/Magic-Master-Engine');
 
 		Highscore.init();
 		Controls.init();

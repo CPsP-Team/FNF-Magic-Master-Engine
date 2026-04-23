@@ -53,7 +53,7 @@ class MenuNumber extends Alphabet {
         this.value += this.step; FlxMath.roundDecimal(this.value, 1);
         if (this.max != null && this.value > this.max) {this.value = this.max; }
 
-        if (setting != null) {Settings.get_setting(setting).set(value); }
+        if (setting != null) { Settings.get_setting(setting).set(value); }
 
         setText({font: "small_numbers", text: '${value}'});
 		FlxG.sound.play(Paths.sound("scrollMenu").getSound());
@@ -62,7 +62,7 @@ class MenuNumber extends Alphabet {
         this.value -= this.step; FlxMath.roundDecimal(this.value, 1);
         if (this.min != null && this.value < this.min) {this.value = this.min; }
         
-        if (setting != null) {Settings.get_setting(setting).set(value); }
+        if (setting != null) { Settings.get_setting(setting).set(value); }
 
         setText({font: "small_numbers", text: '${value}'});
 		FlxG.sound.play(Paths.sound("scrollMenu").getSound());

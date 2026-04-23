@@ -163,7 +163,7 @@ class MainMenuState extends MusicBeatState {
 		if (FlxG.sound.music.volume < 0.8) {FlxG.sound.music.volume += 0.5 * FlxG.elapsed; }
 		conductor.position = FlxG.sound.music.time;
 
-		Magic.sortMembersByX(cast optionGroup, (FlxG.width / 2) - (optionGroup.members[curSelected].width / 2), curSelected, 200);
+		Magic.sortMembersByX(cast optionGroup, (FlxG.width / 2), curSelected, 200);
 		curAlphabet.y = FlxMath.lerp(curAlphabet.y, 500, 0.1);
 
 		for (a in grpArrows.members) {Magic.lerpY(cast a, FlxG.height / 2); }

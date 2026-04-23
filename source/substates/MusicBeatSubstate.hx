@@ -57,6 +57,8 @@ class MusicBeatSubstate extends FlxUISubState {
 	}
 
 	override function update(elapsed:Float) {
+		if (FlxG.keys.justPressed.F1 && FlxG.keys.pressed.SHIFT) { close(); return; }
+
 		//everyStep();
 		var oldStep:Int = curStep;
 

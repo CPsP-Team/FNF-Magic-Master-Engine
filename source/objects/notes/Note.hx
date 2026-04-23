@@ -218,9 +218,9 @@ class Note extends StrumNote {
             toReturn.eventData = event[1];
 
         }
-        if (event.length >= 2 && Std.isOfType(event[2], String)) {toReturn.condition = event[2]; }
-        if (event.length >= 3 && event[3]) {toReturn.isExternal = true; }
-        if (event.length >= 4 && event[4]) {toReturn.isBroken = true; }
+        if (event.length >= 2 && Std.isOfType(event[2], String)) { toReturn.condition = event[2]; }
+        if (event.length >= 3 && event[3]) { toReturn.isExternal = true; }
+        if (event.length >= 4 && event[4]) { toReturn.isBroken = true; }
 
         return toReturn;
     }
@@ -249,6 +249,7 @@ class Note extends StrumNote {
 
     public var customChart:Bool = false;
     public var customInput:Bool = false;
+    public var doAffect:Bool = true;
 
 	public var otherData:Array<Dynamic> = [];
     public var typePreset:String = "Default";
