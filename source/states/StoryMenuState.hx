@@ -151,7 +151,7 @@ class StoryMenuState extends MusicBeatState {
         if (controls.check("MenuLeft", JUST_PRESSED)) {changeOption(-1); }
         if (controls.check("MenuRight", JUST_PRESSED)) {changeOption(1); }
 
-		Magic.sortMembersByY(cast grpWeeks, (FlxG.height - 110) - (grpWeeks.members[curWeek].height / 2), curWeek);
+		Magic.sortMembersByY(cast grpWeeks, (FlxG.height - 110), curWeek);
 
         switch (curOption) {
             case 0:{

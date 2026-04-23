@@ -97,8 +97,7 @@ class ResultSubstate extends MusicBeatSubstate {
                 (i * (-FlxG.height) / 50) + FlxG.random.float(-backSticker.height, backSticker.height)
             );
             
-            backSticker._.speed = FlxG.random.float(30, 50);
-            backSticker._.speedAngle = FlxG.random.float(-6, 6);
+            backSticker.velocity.y = FlxG.random.float(30, 50);
 
             grpBackShit.add(backSticker);
 		}
@@ -223,7 +222,9 @@ class ResultSubstate extends MusicBeatSubstate {
         add(camFollow);
 
         otherCamera.follow(camFollow, LOCKON, 0.01);
-		FlxG.camera.follow(camFollow, LOCKON, 0.01);
+		FlxG.camera.follow(camFollow, LOCKON, 0.01);        
+        
+		scripts.call('created');
     }
 
 	override function update(elapsed:Float) {
@@ -234,8 +235,6 @@ class ResultSubstate extends MusicBeatSubstate {
 				obj.x = FlxG.random.float(0, FlxG.width - obj.width);
 				obj.y = -obj.height - 5;
 			}
-			obj.angle += elapsed * obj._.speedAngle;
-			obj.y += elapsed * obj._.speed;
 		}
         
         switch (scoreState) {

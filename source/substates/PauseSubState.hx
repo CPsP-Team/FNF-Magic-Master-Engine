@@ -59,8 +59,8 @@ class PauseSubState extends MusicBeatSubstate {
 					(i * (-FlxG.height) / 50) + FlxG.random.float(-backnote.height, backnote.height)
 				);
 				
-				backnote._.speed = FlxG.random.float(6, 12);
-				backnote._.speedAngle = FlxG.random.float(-3, 3);
+            	backnote.velocity.y = FlxG.random.float(30, 50);
+				//backnote.velocity.y = 100;
 
 				grpBackShit.add(backnote);
 			} else {
@@ -72,8 +72,8 @@ class PauseSubState extends MusicBeatSubstate {
 					(i * (-FlxG.height) / 50) + FlxG.random.float(-backSticker.height, backSticker.height)
 				);
 				
-				backSticker._.speed = FlxG.random.float(6, 12);
-				backSticker._.speedAngle = FlxG.random.float(-3, 3);
+            	backSticker.velocity.y = FlxG.random.float(30, 50);
+				//backSticker.velocity.y = 100;
 
 				grpBackShit.add(backSticker);
 			}
@@ -102,6 +102,8 @@ class PauseSubState extends MusicBeatSubstate {
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
 		FlxTween.tween(curCamera, {alpha: 1}, 0.3, {ease: FlxEase.quadOut, onComplete: function(twn) {canControlle = true; }});
+		
+		scripts.call('created');
 	}
 
 	override function update(elapsed:Float) {
@@ -114,8 +116,7 @@ class PauseSubState extends MusicBeatSubstate {
 				obj.x = FlxG.random.float(0, FlxG.width - obj.width);
 				obj.y = -obj.height - 5;
 			}
-			obj.angle += elapsed * obj._.speedAngle;
-			obj.y += elapsed * obj._.speed;
+			obj.angle += elapsed;
 		}
 
 		if (canControlle) {
@@ -153,7 +154,7 @@ class PauseSubState extends MusicBeatSubstate {
 			}
 		}
 
-		Magic.sortMembersByY(cast grpMenuShit, (FlxG.height / 2) - (grpMenuShit.members[curSelected].height / 2), curSelected);
+		Magic.sortMembersByY(cast grpMenuShit, (FlxG.height / 2), curSelected);
 	}
 
 	override function destroy() {

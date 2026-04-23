@@ -19,14 +19,20 @@ class Scripts {
     public static function load(key:String, file:String):Void {
         if (global_scripts.exists(key)) { return; }
         var new_script = new Script();
+
+        Files.unsaveFile(file, TEXT);
         new_script.load(file, true);
         new_script.name = key;
+        
         if (new_script.program == null) { return; }
+        
         global_scripts.set(key, new_script);
     }
 
     public static function quick(file:String, ?name:String):Script {
         var new_script = new Script();
+        
+        Files.unsaveFile(file, TEXT);
         new_script.load(file, true);
 
         if (new_script.program == null) { return null; }

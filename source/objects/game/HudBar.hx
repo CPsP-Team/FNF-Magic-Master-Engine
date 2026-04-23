@@ -7,6 +7,7 @@ import objects.game.LifeBar;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
+import states.PlayState;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
@@ -44,8 +45,9 @@ class HudBar extends FlxUIGroup {
     public var moveIcons:Bool = true;
 
     public var iconSpace:Float = 0.25;
-    public var iconScale:Float = 1
-    ;
+    public var iconScale:Float = 1;
+    
+    public var scoreScale:Float = 0.25;
     public var scoreOffset:Float = 10;
 
     public function new(_x:Float, _y:Float, _imageBack:String, _imageFront:String):Void {
@@ -104,7 +106,7 @@ class HudBar extends FlxUIGroup {
     }
 
     public function setScore(_value:Int):Void {
-	    alpScore.setText({font: "small_numbers", scale: 0.5, text: '${_value}'});
+	    alpScore.setScore(_value, PlayState.song.style, scoreScale);
 	    alpScore.x = lifeBar.x + lifeBar.width - alpScore.width - scoreOffset;
     }
 

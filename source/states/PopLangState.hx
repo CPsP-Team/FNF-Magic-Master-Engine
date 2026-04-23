@@ -80,7 +80,7 @@ class PopLangState extends MusicBeatState {
     override function update(elapsed:Float) {        
         super.update(elapsed);
         
-        Magic.sortMembersByY(cast langGroup, (FlxG.height / 2) - (langGroup.members[curLang].height / 2), curLang, 25);
+        Magic.sortMembersByY(cast langGroup, (FlxG.height / 2), curLang, 25);
 
 		if (controls.check("MenuUp", JUST_PRESSED)) {changeLang(-1); }
 		if (controls.check("MenuDown", JUST_PRESSED)) {changeLang(1); }

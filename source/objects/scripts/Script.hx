@@ -2,7 +2,6 @@ package objects.scripts;
 
 import states.MusicBeatState;
 import flixel.FlxBasic;
-import hscript.Interp;
 import openfl.Lib;
 
 #if sys
@@ -51,6 +50,8 @@ class Script extends FlxBasic {
     }
     public function load(path:String, ?doExecute:Bool = false):Void {
 		if (!Paths.exists(path)) { return; }
+        Files.unsaveFile(path, TEXT);
+
         setup(path.getText(), doExecute);
     }
 
@@ -73,7 +74,9 @@ class Script extends FlxBasic {
         setVar('cache_event', () -> { });
 
         setVar('exit', () -> { });
+        setVar('charge', () -> { });
         setVar('create', () -> { });
+        setVar('created', () -> { });
         setVar('preload', () -> { });
         setVar('postload', () -> { });
         setVar('preload_event', () -> { });
@@ -83,26 +86,29 @@ class Script extends FlxBasic {
         setVar('onClose', () -> { });
         setVar('onFocus', () -> { });
         setVar('onFocusLost', () -> { });        
+        setVar('onCloseState', () -> { });
         setVar('onOpenSubState', () -> { });
         setVar('onCloseSubState', () -> { });
         
-        setVar('startSong', (_next) -> { _next(); });
-        setVar('endSong', (_next) -> { _next(); });
+        setVar('startSong', (_next:Void->Void) -> { _next(); });
+        setVar('endSong', (_next:Void->Void) -> { _next(); });
         
-        setVar('songStarted', () -> { });
-        setVar('songEnded', () -> { });
+        setVar('startedSong', () -> { });
+        setVar('endedSong', () -> { });
         
         setVar('paused', () -> { });
 
         setVar('beatHit', (curBeat:Int) -> { });
         setVar('stepHit', (curStep:Int) -> { });
         
+        setVar('updateStrums', () -> { });
         setVar('checkScroll', () -> { });
 
         setVar('dance', () -> { });
         setVar('turnLook', (look:Bool) -> { });
         setVar('scaleCharacter', (scale:Float) -> {});
         setVar('playAnim', (name:String, force:Bool) -> {});
+        setVar('bruteAnim', (name:String, force:Bool) -> {});
 
         setVar("preset", (name:String, func:Any) -> { setVar(name, func); });
         setVar("getset", (name:String) -> { return getVar(name); });

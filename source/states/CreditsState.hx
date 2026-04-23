@@ -130,7 +130,7 @@ class CreditsState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float):Void {
-		Magic.sortMembersByY(cast alphaGroup, (FlxG.height / 2) - (alphaGroup.members[curCredit].height / 2), curCredit, 50);
+		Magic.sortMembersByY(cast alphaGroup, (FlxG.height / 2), curCredit, 50);
 
 		if (canControlle) {
 			if (controls.check("MenuUp", JUST_PRESSED)) {changeCredit(-1); }

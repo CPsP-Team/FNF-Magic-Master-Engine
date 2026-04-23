@@ -149,7 +149,7 @@ class FreeplayState extends MusicBeatState {
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music.volume < 0.8) {FlxG.sound.music.volume += 0.5 * FlxG.elapsed; }
 
-		Magic.sortMembersByY(cast grpSongs, (FlxG.height / 2) - (grpSongs.members[curSong].height / 2), curSong, 25);
+		Magic.sortMembersByY(cast grpSongs, (FlxG.height / 2), curSong, 25);
 	
 		if (canControlle) {
 			if (controls.check("MenuLeft", JUST_PRESSED)) {changeOption(-1); }

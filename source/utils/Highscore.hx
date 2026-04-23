@@ -12,10 +12,10 @@ class Highscore {
 
 	public static function init():Void {
 		Highscore._save = new FlxSave();
-		Highscore._save.bind('scores', 'Yirius125');
+		Highscore._save.bind('scores', 'Yirius125/Magic-Master-Engine');
 		
 		scores = Highscore._save.data.scores;
-		if (scores == null) {scores = []; }
+		if (scores == null) { scores = []; }
 	}
 
 	private static function set(song:String, score:Int):Void {

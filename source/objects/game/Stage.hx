@@ -44,6 +44,8 @@ class Stage extends FlxTypedGroup<Dynamic> {
     public var initChar:Int = 0;
     public var zoom:Float = 0.7;
 
+    public var chargeCharacters:Bool = true;
+
     public var character_Length(get, never):Int;
 	inline function get_character_Length():Int {
         return characterData.length;
@@ -111,20 +113,24 @@ class Stage extends FlxTypedGroup<Dynamic> {
         for (current_part in stageData) {
             add(current_part);
             
-            for (char in characterData) {
-                var char_layer:Int = Std.int(initChar + ((char is Character) ? char.curLayer : char._.layer));
-                
-                if (char_layer < 0) { char_layer = 0; } 
-                if (char_layer >= stageData.length) { char_layer = stageData.length - 1; }
+            if (chargeCharacters) {
+                for (char in characterData) {
+                    var char_layer:Int = Std.int(initChar + ((char is Character) ? char.curLayer : char._.layer));
+                    
+                    if (char_layer < 0) { char_layer = 0; } 
+                    if (char_layer >= stageData.length) { char_layer = stageData.length - 1; }
 
-                if (char_layer == current_layer) {
-                    if (current_part.scrollFactor != null) { char.scrollFactor.set(current_part.scrollFactor.x, current_part.scrollFactor.y); }
-                    add(char);
+                    if (char_layer == current_layer) {
+                        if (current_part.scrollFactor != null) { char.scrollFactor.set(current_part.scrollFactor.x, current_part.scrollFactor.y); }
+                        add(char);
+                    }
                 }
             }
 
             current_layer++;
         }
+        
+        script.call("charge");
     }
 
     public function setCharacters(chars:Array<Dynamic>) {

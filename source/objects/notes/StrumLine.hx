@@ -1,5 +1,6 @@
 package objects.notes;
 
+import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 import flixel.addons.ui.FlxUIGroup;
@@ -88,6 +89,8 @@ class StrumLine extends FlxUIGroup {
     public var isAlive:Bool = true;
     public var isUsing:Bool = false;
 
+    public var isRight:Bool = false;
+
     public var moveByScroll:Bool = true;
 
     public var botplay(get, default):Bool = false;
@@ -112,6 +115,7 @@ class StrumLine extends FlxUIGroup {
     public var destroy_notes:Bool = true;
     public var splash_notes:Bool = true;
     public var miss_sounds:Bool = true;
+    public var customLife:Bool = false;
     public var rank_notes:Bool = true;
     public var generated:Bool = false;
 
@@ -120,29 +124,24 @@ class StrumLine extends FlxUIGroup {
     public var releaseArray:Array<Bool> = [];
     public var pressArray:Array<Bool> = [];
     public var holdArray:Array<Bool> = [];
+
+    public var lastReleaseArray:Array<Bool> = [];
+    public var lastPressArray:Array<Bool> = [];
     
     public var controlsId:Int = 0;
     public var controls(get, never):Controls;
     public function get_controls() { return Players.get(controlsId).controls; }
     
     // Dynamic Methods
-    public dynamic function onRANK(_note:Note, _score:Float, _rank:String, _pop_image:String):Void {}
-    public dynamic function onMISS(_note:Note):Void {}
-    public dynamic function onHIT(_note:Note):Void {}
-    public dynamic function onGAME_OVER():Void {}
-    public dynamic function onLIFE(value:Float):Void {
-        if (practice || !isAlive) { return; }
-
-        life += value;
-        
-        if (life > max_life) {life = max_life; }
-        if (life <= 0) {  
-            life = 0;
-            isAlive = false;
-            if (onGAME_OVER != null) { onGAME_OVER(); }
-        }
-    };
+    public var onLIFE:FlxTypedSignal<Float->Void>;
     
+    public var onHIT:FlxTypedSignal<StrumLine->Note->Void>;
+    public var onMISS:FlxTypedSignal<StrumLine->Note->Void>;
+    
+    public var onRANK:FlxTypedSignal<StrumLine->Note->Int->String->Void>;
+    
+    public var onGAMEOVER:FlxTypedSignal<Void->Void>;
+
     public function new(X:Float, Y:Float, ?_keys:Int, ?_size:Int, ?_image:String, ?_style:String, ?_type:String):Void {
         super(X, Y);
 
@@ -154,9 +153,14 @@ class StrumLine extends FlxUIGroup {
 
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-        
 
-        for (_rank in ranks) {rankList.set(_rank.popup, 0); }
+        onHIT = new FlxTypedSignal();
+        onMISS = new FlxTypedSignal();
+        onLIFE = new FlxTypedSignal();
+        onRANK = new FlxTypedSignal();
+        onGAMEOVER = new FlxTypedSignal();
+
+        for (_rank in ranks) { rankList.set(_rank.popup, 0); }
     }
 
     override function destroy() {
@@ -233,9 +237,44 @@ class StrumLine extends FlxUIGroup {
                 swagNote.updateHitbox();
 
                 swagNote.strumParent = this;
-
+                 
                 notelist.push(swagNote);
-        
+                
+                if (noteData.multiHits > 0) { 
+                    swagNote.playColor = 0xffffec41; 
+                    
+                    var totalHits:Int = noteData.multiHits;
+                    var curHits:Int = 1;
+
+                    var lastnote = swagNote;
+                    while (totalHits > 0) {
+                        var newStrumTime = noteData.strumTime + (noteData.sustainLength * curHits);
+                        var nSData:Note_Data = Note.getNoteData(Note.convNoteData(noteData));
+                        nSData.strumTime = newStrumTime;
+                        nSData.multiHits = 0;
+
+                        var hitNote:Note = new Note(nSData, keys, image, style, type);
+                        hitNote.setGraphicSize(strum_size, strum_size);
+                        hitNote.updateHitbox();
+                        
+                        hitNote.typeHit = "Ghost";
+                        hitNote.doAffect = false;
+                        hitNote.alpha = 0.5;
+                        
+                        hitNote.playColor = 0xffffec41; 
+
+                        hitNote.strumParent = this;
+                        
+                        lastnote.nextNote = hitNote;
+                        lastnote = hitNote;
+                        
+                        notelist.push(hitNote);
+
+                        totalHits--;
+                        curHits++;
+                    }
+                }
+                
                 if (noteData.sustainLength <= 0 || noteData.multiHits > 0) { continue; }
 
                 var susLength:Int = Std.int(Math.max(Math.floor(noteData.sustainLength / conductor.stepCrochet), 1));
@@ -245,7 +284,7 @@ class StrumLine extends FlxUIGroup {
                     var sustainData:Note_Data = Note.getNoteData(Note.convNoteData(noteData));
                     sustainData.strumTime = noteData.strumTime + (conductor.stepCrochet * susNote) + (conductor.stepCrochet / FlxMath.roundDecimal(getScrollSpeed(), 2));
         
-                    var noteSustain:Note = new Note(sustainData, keys, image, style, type);                    
+                    var noteSustain:Note = new Note(sustainData, keys, image, style, type);
                     noteSustain.setGraphicSize(strum_size, strum_size);
                     noteSustain.updateHitbox();
         
@@ -323,15 +362,6 @@ class StrumLine extends FlxUIGroup {
             }
         }
 
-        if (controls != null && !controls.useKeyboard && controls.hasGamepad) {
-            releaseArray = controls.check_keys(keys, JUST_RELEASED);
-            pressArray = controls.check_keys(keys, JUST_PRESSED);
-            holdArray = controls.check_keys(keys, PRESSED);
-
-            for (i in 0...pressArray.length) {if (!pressArray[i]) { continue; } staticnotes.playId(i, "pressed", true); }
-            for (i in 0...releaseArray.length) {if (!releaseArray[i]) { continue; } staticnotes.playId(i, "static", true); }
-        }
-
         forEachNote((daNote:Note) -> {
             if ((botplay || !isUsing) && (daNote.strumTime <= conductor.position || daNote.typeNote == "Sustain") && !daNote.hitMiss && daNote.noteStatus == "CanBeHit") { hitNOTE(daNote); return; } // Botplay Check
             if (daNote.strumTime <= conductor.position && (daNote.typeHit == "Ghost" || daNote.typeHit == "Always")) { hitNOTE(daNote); return; } // Ghost and Always Check
@@ -347,7 +377,7 @@ class StrumLine extends FlxUIGroup {
             var noteStrum:StrumNote = staticnotes.statics[daNote.noteData];
             if (noteStrum == null) { return; }
 
-            if (noteStrum.affectNotes) {
+            if (noteStrum.affectNotes && daNote.doAffect) {
                 daNote.visible = noteStrum.visible;
                 daNote.alpha = noteStrum.alpha;
                 daNote.angle = noteStrum.angle;
@@ -363,7 +393,7 @@ class StrumLine extends FlxUIGroup {
 
             daNote.x = noteStrum.x;
             switch (daNote.noteStatus) {
-                default:{ daNote.y = yStuff; }
+                default: { daNote.y = yStuff; }
                 case "MultiTap": {
                     var radio:Float = (conductor.position - daNote.prevStrumTime) * 1 / daNote.noteLength;
                     radio = Math.min(1, radio); radio = Math.max(0, radio);
@@ -382,7 +412,7 @@ class StrumLine extends FlxUIGroup {
 
                 if (daNote.noteStatus == "Pressed") {
                     if (daNote.clipRect != null && daNote.clipRect.height <= 0) {if (daNote.destroyOnHit) { destroyNote(daNote); } return; }
-                    if (onHIT != null) {onHIT(daNote); }
+                    onHIT.dispatch(this, daNote);
     
                     if (Settings.get("DownScroll")) {
                         var swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
@@ -401,13 +431,27 @@ class StrumLine extends FlxUIGroup {
             }
 
             //if (daNote.typeNote == "Sustain" && daNote.nextNote == null && Settings.get("DownScroll")) {daNote.y = daNote.prevNote.y; }
-
         });
+
+        if (controls != null && isUsing && !botplay && controls.hasGamepad && Settings.get("Player2Pad")) {
+            releaseArray = controls.check_keys(keys, JUST_RELEASED);
+            pressArray = controls.check_keys(keys, JUST_PRESSED);
+            holdArray = controls.check_keys(keys, PRESSED);
+
+            for (i in 0...pressArray.length) { if (!pressArray[i]) { continue; } staticnotes.playId(i, "pressed", true); }
+            for (i in 0...releaseArray.length) { if (!releaseArray[i]) { continue; } staticnotes.playId(i, "static", true); }
+
+            if (releaseArray != lastReleaseArray || pressArray != lastPressArray) { check_input(); }
+
+            lastPressArray = pressArray.copy();
+            lastReleaseArray = releaseArray.copy();
+        }
 
         for (holdnote in holdNotes) {
             if (holdnote.typeHit != "Hold") { holdNotes.remove(holdnote); continue; }
             if (!holdArray[holdnote.noteData]) { continue; }
             if (holdnote.noteStatus != "CanBeHit" || (holdnote.noteStatus == "CanBeHit" && !holdArray[holdnote.noteData])) { continue; }
+            
             hitNOTE(holdnote);
         }
 
@@ -433,11 +477,23 @@ class StrumLine extends FlxUIGroup {
 
         if (daNote.hitMiss) { missNOTE(daNote, true); return; }
 
-        staticnotes.playId(daNote.noteData, "confirm", true);
+        if (daNote.typeHit != "Ghost") { staticnotes.playId(daNote.noteData, "confirm", true); }
         
         if (daNote.typeNote == "Sustain") { daNote.hitHealth *= 0.25; }
 
         daNote.execute_events("OnHit");
+
+        if (daNote.typeHit != "Ghost") {
+            var l_fixedLife:Float = daNote.hitHealth * Settings.get("Healing");
+            if (!customLife) { changeLife(l_fixedLife); }
+            onLIFE.dispatch(l_fixedLife);
+            
+            rankNote(daNote);
+        }
+        
+        onHIT.dispatch(this, daNote);
+        
+        if (Settings.get("MuteOnMiss") && voice != null) { voice.volume = 1; }
 
         if (daNote.noteHits > 0) {
             daNote.noteStatus = "MultiTap";
@@ -445,15 +501,6 @@ class StrumLine extends FlxUIGroup {
             daNote.strumTime += daNote.noteLength;            
             daNote.noteHits--;
         }
-
-        if (daNote.typeHit != "Ghost") {
-            onLIFE(daNote.hitHealth * Settings.get("Healing"));
-
-            rankNote(daNote);
-            if (onHIT != null) { onHIT(daNote); }
-        }
-        
-        if (Settings.get("MuteOnMiss") && voice != null) { voice.volume = 1; }
 
         if (daNote.nextNote != null && daNote.nextNote.typeHit == "Hold") { holdNotes.push(daNote.nextNote); }
 
@@ -481,21 +528,25 @@ class StrumLine extends FlxUIGroup {
         total_notes++;
         score -= 100;
         combo = 0;
+        
+        percent = hits / total_notes;
 
         if (Settings.get("MuteOnMiss") && voice != null && playable) { voice.volume = 0; }
-        if (Settings.get("MissSounds") && playable) { FlxG.sound.play(Paths.styleSound('missnote${FlxG.random.int(1,3)}', states.PlayState.song.style).getSound(), 0.4); }
+        if (Settings.get("MissSounds") && playable) { FlxG.sound.play(Paths.styleSound('missnote${FlxG.random.int(1,3)}', states.PlayState.song.style).getSound(), 0.2); }
 
-        onLIFE(-daNote.missHealth * Settings.get("Damage"));
+        var l_fixedLife:Float = -daNote.missHealth * Settings.get("Damage");
+        if (!customLife) { changeLife(l_fixedLife); }
+        onLIFE.dispatch(l_fixedLife);
         
         daNote.execute_events("OnMiss");
-        if (onMISS != null) { onMISS(daNote); }
+        onMISS.dispatch(this, daNote);
 
         if (holdNotes.contains(daNote)) { holdNotes.remove(daNote); }
-        if (daNote.destroyOnMiss) { destroyNote(daNote); }
+        if (daNote.destroyOnMiss) { destroyNote(daNote, daNote.noteHits > 0 || daNote.noteStatus == "MultiTap"); }
     }
 
     public function destroyNote(daNote:Note, _allNote:Bool = false):Void {
-        if (_allNote && daNote.nextNote != null) { this.destroyNote(daNote.nextNote, _allNote); }
+        if (_allNote && daNote.nextNote != null) { destroyNote(daNote.nextNote, _allNote); }
         if (!destroy_notes) { daNote.kill(); return; }
 
         if (this.notes.members.contains(daNote)) { this.notes.remove(daNote, true); }
@@ -541,7 +592,7 @@ class StrumLine extends FlxUIGroup {
 
 		if (!isUsing || botplay) { return; }
 
-        if (onRANK != null) { onRANK(daNote, _score, _rate, _popImage); }
+        onRANK.dispatch(this, daNote, _score, _popImage);
 
         var l_noteData:Int =  daNote.noteData % keys;
         var l_strumNote:StrumNote = staticnotes.statics[l_noteData];
@@ -570,4 +621,19 @@ class StrumLine extends FlxUIGroup {
             func(cast note);
         });
     }
+
+    public function changeLife(_value:Float):Void {
+        if (practice || !isAlive) { return; }
+
+        life += _value;
+        
+        if (life > max_life) { life = max_life; }
+        
+        if (life <= 0) {  
+            life = 0;
+            isAlive = false;
+            
+            onGAMEOVER.dispatch();
+        }
+    };
 }

@@ -154,7 +154,7 @@ class ModListState extends MusicBeatState {
 	override function update(elapsed:Float) {		
 		super.update(elapsed);
 
-        Magic.sortMembersByX(cast gpMods, (FlxG.width / 2) - (gpMods.members[curMod].width / 2), curMod, 30);
+        Magic.sortMembersByX(cast gpMods, (FlxG.width / 2), curMod, 30);
 
 		if (!canControlle) { return; }
 

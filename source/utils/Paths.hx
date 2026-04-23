@@ -231,9 +231,12 @@ class Paths {
 		if (!Paths.exists(path) && song != null) { path = getPath('events/song/${song}/${key}.hx', TEXT, 'data', mod); }
 		return path;
 	}	
-	inline static public function strum_keys(keys:Int, ?type:String):String {
-		if (type == null) {type = Settings.get("NoteSkin"); }
-		var path = getPath('notes/${type}/${keys}k.json', TEXT, 'data');
+	inline static public function strum_keys(keys:Int, ?type:String, ?style:String = "Default"):String {
+		if (type == null) { type = Settings.get("NoteSkin"); }
+
+		var path = getPath('notes/${type}/${style}/${keys}k.json', TEXT, 'data');
+		if (!Paths.exists(path)) {path = getPath('notes/${type}/${style}/_k.json', TEXT, 'data'); }
+		if (!Paths.exists(path)) {path = getPath('notes/${type}/${keys}k.json', TEXT, 'data'); }
 		if (!Paths.exists(path)) {path = getPath('notes/${type}/_k.json', TEXT, 'data'); }
 		if (!Paths.exists(path)) {path = getPath('notes/Default/${keys}k.json', TEXT, 'data'); }
 		if (!Paths.exists(path)) {path = getPath('notes/Default/_k.json', TEXT, 'data'); }
@@ -241,6 +244,7 @@ class Paths {
 	}
 	inline static public function character(char:String, asp:String, ?type:String, ?mod:String):String {
 		var type_char:String = ''; if (type != null) {type_char = '-${type}'; }
+		
 		var path = getPath('characters/${char}/${char}-${asp}${type_char}.json', TEXT, 'data', mod);
 		if (!Paths.exists(path)) { path = getPath('characters/${char}/${char}-${asp}${type_char}.json', TEXT, 'data', mod); }
 		if (!Paths.exists(path)) { path = getPath('characters/${char}/${char}-Default${type_char}.json', TEXT, 'data', mod); }

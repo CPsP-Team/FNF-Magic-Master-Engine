@@ -50,7 +50,11 @@ class StrumNote extends FlxSprite {
     public var noteData:Int = 0;
     public var noteKeys:Int = 4;
 
-    public var playColor:FlxColor = FlxColor.TRANSPARENT;
+    public var playColor(default, set):FlxColor = FlxColor.TRANSPARENT;
+    public function set_playColor(_value:FlxColor):FlxColor {
+        shader = useColor && noteColor != "None" ? FlxShaderColorSwap.get_shader(noteColor, _value) : null;        
+        return playColor = _value;
+    }
     
     public var useColor(default, set):Bool = true;
     public function set_useColor(value:Bool):Bool {
@@ -90,13 +94,11 @@ class StrumNote extends FlxSprite {
         noteColor = notePath.getColorNote();
 
         frames = notePath.getAtlas();
-        var n_json:Note_Graphic_Data = (this is Note) ? Files.getDataNote(noteData, noteKeys, type) : Files.getDataStaticNote(noteData, noteKeys, type);
+        var n_json:Note_Graphic_Data = (this is Note) ? Files.getDataNote(noteData, noteKeys, type, style) : Files.getDataStaticNote(noteData, noteKeys, type, style);
         
         playColor = n_json.color != null ? FlxColor.fromString(n_json.color) : 0xffffff;  
         antialiasing = n_json.antialiasing && !style.contains("pixel-");
         singAnimation = n_json.sing_animation;
-
-        shader = useColor && noteColor != "None" ? FlxShaderColorSwap.get_shader(noteColor, playColor) : null;
 
         if (frames == null || n_json.animations == null || n_json.animations.length <= 0) { return; }
 

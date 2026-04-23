@@ -35,8 +35,6 @@ class SettingsSubState extends MusicBeatSubstate {
 
 	var curKeys:Int = 4;
 	var strumline:StrumLine;
-	var strumline_test:StrumLine;
-	var isTestingNotes:Bool = false;
 
 	var _category:Category;
 	var catList:Array<String> = [];
@@ -72,11 +70,6 @@ class SettingsSubState extends MusicBeatSubstate {
         add(ttlSettings);
 
 		strumline = new StrumLine(0, 0, 4, 448);
-		strumline_test = new StrumLine(0, 0, 4, 448);
-		strumline_test.x = FlxG.width - strumline_test.width - 20;
-		strumline_test.y = FlxG.height - strumline_test.height - 20;
-		strumline_test.visible = false;
-		add(strumline_test);
 
 		grpOptions = new FlxTypedGroup<Dynamic>();
         add(grpOptions);
@@ -90,15 +83,18 @@ class SettingsSubState extends MusicBeatSubstate {
 		}
         add(grpCategories);
 
-		FlxTween.tween(backSprite, {x: 0}, 0.5, {ease: FlxEase.quadOut});
-		FlxTween.tween(curCamera, {alpha: 1}, 1, {onComplete: function(twn) {canControlle = true; changeCategory(0, true); }});
+		FlxTween.tween(backSprite, { x: 0 }, 0.5, { ease: FlxEase.quadOut });
+		FlxTween.tween(curCamera, { alpha: 1 }, 1, { onComplete: function(twn) { canControlle = true; changeCategory(0, true); }});
+		
+		scripts.call('created');
 	}
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		if (inCategory) {
-			Magic.sortMembersByY(cast grpOptions, (FlxG.height / 2) - (grpOptions.members[curOption].height / 2), curOption, 60);
+			Magic.sortMembersByY(cast grpOptions, (FlxG.height / 2), curOption, 60);
+
 			for (i in 0...grpOptions.length) {
 				var curObj = grpCheckers.members[i];
 
@@ -110,26 +106,19 @@ class SettingsSubState extends MusicBeatSubstate {
 					curObj.y = grpOptions.members[i].y;
 				}
 			}
-		} else {
-			Magic.sortMembersByY(cast grpCategories, (FlxG.height / 2) - (grpCategories.members[curCategory].height / 2), curCategory, 40);
-		}
+		} else { Magic.sortMembersByY(cast grpCategories, (FlxG.height / 2), curCategory, 40); }
 		
 		if (canControlle) {
 			if (inCategory) {
 				if (inNoteControls) {
-					if (curOption == 1 && (controls.check("MenuLeft", JUST_PRESSED) || controls.check("MenuRight", JUST_PRESSED))) {
+					if (curOption == 0 && (controls.check("MenuLeft", JUST_PRESSED) || controls.check("MenuRight", JUST_PRESSED))) {
 						curKeys = grpCheckers.members[curOption].value;
 						loadStrum();
-					} else if (controls.check("MenuUp", JUST_PRESSED) && !isTestingNotes) { changeSetting(-1); }
-					else if (controls.check("MenuDown", JUST_PRESSED) && !isTestingNotes) { changeSetting(1); }
+					} else if (controls.check("MenuUp", JUST_PRESSED)) { changeSetting(-1); }
+					else if (controls.check("MenuDown", JUST_PRESSED)) { changeSetting(1); }
 					else if (controls.check("MenuAccept", JUST_PRESSED)) {
 						switch (curOption) {
 							case 0: { }
-							case 1: {
-								FlxG.sound.play(Paths.sound("scrollMenu").getSound());
-								strumline_test.visible = !strumline_test.visible;
-								isTestingNotes = strumline_test.visible;
-							}
 							default: { canControlle = false; }
 						}
 					} else if (controls.check("MenuBack", JUST_PRESSED)) { 
@@ -156,12 +145,12 @@ class SettingsSubState extends MusicBeatSubstate {
 					}
 				} else {
 					if (controls.check("MenuUp", JUST_PRESSED)) { changeSetting(-1); }
-					else if (controls.check("MenuDown", JUST_PRESSED)) {changeSetting(1); }
+					else if (controls.check("MenuDown", JUST_PRESSED)) { changeSetting(1); }
 					else if (controls.check("MenuBack", JUST_PRESSED)) { unSelectCategory(); }
 				}
 			} else {
-				if (controls.check("MenuUp", JUST_PRESSED)) {changeCategory(-1); }
-				else if (controls.check("MenuDown", JUST_PRESSED)) {changeCategory(1); }
+				if (controls.check("MenuUp", JUST_PRESSED)) { changeCategory(-1); }
+				else if (controls.check("MenuDown", JUST_PRESSED)) { changeCategory(1); }
 				else if (controls.check("MenuAccept", JUST_PRESSED)) {selectCategory(); }
 				else if (controls.check("MenuBack", JUST_PRESSED)) { doClose(); }
 			}
@@ -236,11 +225,11 @@ class SettingsSubState extends MusicBeatSubstate {
 				curKeys = 4;
 				
 				for (_option in keyList) {
-					var newSetting:Alphabet = new Alphabet(20, -100, {font: "tardling_font_outline", text: Language.getText('ctr_${_option[0].toLowerCase()}')});
+					var newSetting:Alphabet = new Alphabet(20, -100, { font: "tardling_font_outline", text: Language.getText('ctr_${_option[0].toLowerCase()}')});
 					grpOptions.add(newSetting);
 					
 					switch (_option[1]) {
-						case 0:{
+						case 0: {
 							var voidObject:FlxObject = new FlxObject(0, 0); 
 							grpCheckers.add(voidObject);
 						}
@@ -318,15 +307,15 @@ class SettingsSubState extends MusicBeatSubstate {
 	}
 
 	public function loadStrum():Void {
-		while(grpOptions.length > 3) {grpOptions.remove(grpOptions.members[grpOptions.length - 1], true); }
-		while(grpCheckers.length > 3) {grpCheckers.remove(grpCheckers.members[grpCheckers.length - 1], true); }
+		while (grpOptions.length > 1) { grpOptions.remove(grpOptions.members[grpOptions.length - 1], true); }
+		while (grpCheckers.length > 1) { grpCheckers.remove(grpCheckers.members[grpCheckers.length - 1], true); }
 		
 		strumline.changeKeys(curKeys);
-		strumline_test.changeKeys(curKeys);
 
 		for (i in 0...strumline.staticnotes.statics.length) {
 			var strum = strumline.staticnotes.statics[i];
 			strum.x = 20;
+
 			grpOptions.add(strum);
 
 			var newCheck:MenuKeyBind = new MenuKeyBind(20, -100, controls, '$curKeys', i);
@@ -337,11 +326,11 @@ class SettingsSubState extends MusicBeatSubstate {
 
 	public function doClose() {
 		Settings.save();
-		Language.load();
+		Language.load(Settings.get("Language"));
 
 		canControlle = false;
 		FlxG.sound.play(Paths.sound("cancelMenu").getSound());
-		FlxTween.tween(curCamera, {alpha: 0}, 1, {onComplete: function(twn) {close(); }});
+		FlxTween.tween(curCamera, {alpha: 0}, 1, { onComplete: (_twn:FlxTween) -> { close(); }});
 	}
 
 	override function destroy() {

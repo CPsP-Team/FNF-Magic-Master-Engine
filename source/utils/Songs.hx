@@ -7,6 +7,7 @@ import objects.songs.WeekList.WeekItem;
 import objects.songs.Song.Song_File;
 import states.MusicBeatState;
 import objects.songs.Song;
+import states.PlayState;
 
 typedef WeeksFile_Data = {
 	var weekData:Array<WeekItem_Data>;
@@ -35,6 +36,7 @@ class Songs {
 		Songs.weekName = "Custom Week";
 		Songs.isStoryMode = false;
 		Songs.total_score = 0;
+		PlayState.count = 0;
 		Songs.playlist = [];
 		Songs.players = [];
 	}
@@ -55,8 +57,6 @@ class Songs {
 	}
 	public static function loadWeek(week:WeekItem_Data, category:String = "Normal", difficulty:String = "Normal"):Void {
 		if (!new WeekItem(week).has_difficulty(difficulty, category)) { return; }
-
-		trace('Adding Week ${week.name} to Playlist.');
 		
 		Songs.reset(); 
 		
@@ -65,8 +65,6 @@ class Songs {
 
 		for (song in week.songs) {
 			var song_format:String = Song.format(song, category, difficulty);
-
-			trace('Adding (${week.name}) : ${song_format} to Playlist.');
 
 			var play:Song_File = Song.load(song_format);
 			playlist.push(play);

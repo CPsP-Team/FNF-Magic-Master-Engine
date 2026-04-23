@@ -25,13 +25,13 @@ class Settings {
     public static var categories(get, never):Array<String>;
     public static function get_categories():Array<String> {
         var toReturn:Array<String> = [];
-        for (cat in current) {toReturn.push(cat.name); }
+        for (cat in current) { toReturn.push(cat.name); }
         return toReturn;
     }
 
     public static function init():Void {
 		Settings._save = new FlxSave();
-		Settings._save.bind('settings', 'Yirius125/Magic Master Engine');
+		Settings._save.bind('settings', 'Yirius125/Magic-Master-Engine');
 
         Settings.reset();
     }
@@ -60,17 +60,17 @@ class Settings {
         Settings.push_setting(new Bool_Setting("SplashNotes", true), "VisualSettings");
         Settings.push_setting(new Bool_Setting("MoveCamera", true), "VisualSettings");
         Settings.push_setting(new Bool_Setting("BumpingCamera", true), "VisualSettings");
+        Settings.push_setting(new Bool_Setting("FlashingLights", true), "VisualSettings");
         
         // Graphic Settings | Category
+        Settings.push_setting(new Bool_Setting("VisibleMemory", true), "GraphicSettings");
         Settings.push_setting(new Bool_Setting("UseGpu", true), "GraphicSettings");
         Settings.push_setting(new Number_Setting("Framerate", 60, 30, 240, 1), "GraphicSettings");
         Settings.push_setting(new Bool_Setting("Antialiasing", true), "GraphicSettings");
         Settings.push_setting(new Bool_Setting("Animated", true), "GraphicSettings");
-        Settings.push_setting(new Bool_Setting("Onlynotes", false), "GraphicSettings");
+        //Settings.push_setting(new Bool_Setting("OnlyNotes", false), "GraphicSettings");
         
         // Other Settings | Category
-        Settings.push_setting(new Bool_Setting("VisibleMemory", true), "OtherSettings");
-        Settings.push_setting(new Bool_Setting("FlashingLights", true), "OtherSettings");
         Settings.push_setting(new Bool_Setting("Violence", true), "OtherSettings");
         Settings.push_setting(new Bool_Setting("Gore", true), "OtherSettings");
         Settings.push_setting(new Bool_Setting("NotSafeForWork", true), "OtherSettings");
@@ -83,7 +83,7 @@ class Settings {
     }
     
     public static function load():Void {
-        if (_save.data.settings == null) {trace("No Settings Saved"); return; }
+        if (_save.data.settings == null) { trace("No Settings Saved"); return; }
 
         for (setting in cast(_save.data.settings, Array<Dynamic>)) {
             var cur_setting = get_setting(setting.name, setting.category);

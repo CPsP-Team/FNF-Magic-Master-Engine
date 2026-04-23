@@ -25,6 +25,13 @@ class Control_Input {
         if (keys != null) {this.keys = _keys; }
         this.name = _name;
     }
+
+    public function getKeys():Array<String> {
+        var l_keys:Array<String> = [];
+        for (l_key in this.keys) { l_keys.push(l_key.toString()); }
+
+        return l_keys;
+    }
 }
 class Action_Plus {
 	inline static function isGamepad(input:FlxActionInput, deviceID:Int) {
@@ -124,24 +131,28 @@ class Controls extends FlxActionSet {
     public static function get_control(_name:String):Control_Input {
         for (control in current) {
             if (control.name != _name) { continue; }
+
             return control;
         }
+
         return null;
     }
     public static function get_key_control(_name:String):Control_Input {
         for (control in current_key) {
             if (control.name != _name) { continue; }
+            
             return control;
         }
+
         return null;
     }
 
     public static function init():Void {
 		Controls._save = new FlxSave();
-		Controls._save.bind('controls', 'Yirius125/Magic Master Engine/controls');
+		Controls._save.bind('controls', 'Yirius125/Magic-Master-Engine/controls');
 
 		Controls._key_save = new FlxSave();
-		Controls._key_save.bind('key_controls', 'Yirius125/Magic Master Engine/controls');
+		Controls._key_save.bind('key_controls', 'Yirius125/Magic-Master-Engine/controls');
 
         Controls.reset();
     }
@@ -165,16 +176,46 @@ class Controls extends FlxActionSet {
         Controls.current.push(new Control_Input("Reset", [FlxKey.R], []));
 
         // Key Controls
-        Controls.current_key.push(new Control_Input("1", [FlxKey.SPACE], []));
-        Controls.current_key.push(new Control_Input("2", [FlxKey.D, FlxKey.K], []));
-        Controls.current_key.push(new Control_Input("3", [FlxKey.D, FlxKey.SPACE, FlxKey.K], []));
-        Controls.current_key.push(new Control_Input("4", [FlxKey.A, FlxKey.S, FlxKey.UP, FlxKey.RIGHT], []));
-        Controls.current_key.push(new Control_Input("5", [FlxKey.A, FlxKey.S, FlxKey.SPACE, FlxKey.UP, FlxKey.RIGHT], []));
-        Controls.current_key.push(new Control_Input("6", [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.LEFT, FlxKey.UP, FlxKey.RIGHT], []));
-        Controls.current_key.push(new Control_Input("7", [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.SPACE, FlxKey.LEFT, FlxKey.UP, FlxKey.RIGHT], []));
-        Controls.current_key.push(new Control_Input("8", [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.F, FlxKey.H, FlxKey.J, FlxKey.K, FlxKey.L], []));
-        Controls.current_key.push(new Control_Input("9", [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.F, FlxKey.SPACE, FlxKey.H, FlxKey.J, FlxKey.K, FlxKey.L], []));
-        Controls.current_key.push(new Control_Input("10", [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.F, FlxKey.V, FlxKey.B, FlxKey.H, FlxKey.J, FlxKey.K, FlxKey.L], []));
+        Controls.current_key.push(new Control_Input("1", 
+            [FlxKey.SPACE], 
+            [FlxGamepadInputID.A]
+        ));
+        Controls.current_key.push(new Control_Input("2", 
+            [FlxKey.D, FlxKey.K], 
+            [FlxGamepadInputID.X, FlxGamepadInputID.B]
+        ));
+        Controls.current_key.push(new Control_Input("3", 
+            [FlxKey.D, FlxKey.SPACE, FlxKey.K], 
+            [FlxGamepadInputID.X, FlxGamepadInputID.A, FlxGamepadInputID.B]
+        ));
+        Controls.current_key.push(new Control_Input("4", 
+            [FlxKey.A, FlxKey.S, FlxKey.UP, FlxKey.RIGHT], 
+            [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.RIGHT_STICK_DIGITAL_UP, FlxGamepadInputID.RIGHT_STICK_DIGITAL_RIGHT]
+        ));
+        Controls.current_key.push(new Control_Input("5", 
+            [FlxKey.A, FlxKey.S, FlxKey.SPACE, FlxKey.UP, FlxKey.RIGHT], 
+            [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.LEFT_SHOULDER, FlxGamepadInputID.RIGHT_STICK_DIGITAL_UP, FlxGamepadInputID.RIGHT_STICK_DIGITAL_RIGHT]
+        ));
+        Controls.current_key.push(new Control_Input("6", 
+            [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.LEFT, FlxKey.UP, FlxKey.RIGHT], 
+            [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.LEFT_STICK_DIGITAL_RIGHT, FlxGamepadInputID.RIGHT_STICK_DIGITAL_LEFT, FlxGamepadInputID.RIGHT_STICK_DIGITAL_UP, FlxGamepadInputID.RIGHT_STICK_DIGITAL_RIGHT]
+        ));
+        Controls.current_key.push(new Control_Input("7", 
+            [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.SPACE, FlxKey.LEFT, FlxKey.UP, FlxKey.RIGHT], 
+            [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.LEFT_STICK_DIGITAL_RIGHT, FlxGamepadInputID.LEFT_SHOULDER, FlxGamepadInputID.RIGHT_STICK_DIGITAL_LEFT, FlxGamepadInputID.RIGHT_STICK_DIGITAL_UP, FlxGamepadInputID.RIGHT_STICK_DIGITAL_RIGHT]
+        ));
+        Controls.current_key.push(new Control_Input("8", 
+            [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.F, FlxKey.H, FlxKey.J, FlxKey.K, FlxKey.L], 
+            [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.LEFT_STICK_DIGITAL_UP, FlxGamepadInputID.LEFT_STICK_DIGITAL_RIGHT, FlxGamepadInputID.RIGHT_STICK_DIGITAL_LEFT, FlxGamepadInputID.RIGHT_STICK_DIGITAL_DOWN, FlxGamepadInputID.RIGHT_STICK_DIGITAL_UP, FlxGamepadInputID.RIGHT_STICK_DIGITAL_RIGHT]
+        ));
+        Controls.current_key.push(new Control_Input("9", 
+            [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.F, FlxKey.SPACE, FlxKey.H, FlxKey.J, FlxKey.K, FlxKey.L], 
+            [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.LEFT_STICK_DIGITAL_UP, FlxGamepadInputID.LEFT_STICK_DIGITAL_RIGHT, FlxGamepadInputID.LEFT_SHOULDER, FlxGamepadInputID.RIGHT_STICK_DIGITAL_LEFT, FlxGamepadInputID.RIGHT_STICK_DIGITAL_DOWN, FlxGamepadInputID.RIGHT_STICK_DIGITAL_UP, FlxGamepadInputID.RIGHT_STICK_DIGITAL_RIGHT]
+        ));
+        Controls.current_key.push(new Control_Input("10", 
+            [FlxKey.A, FlxKey.S, FlxKey.D, FlxKey.F, FlxKey.V, FlxKey.B, FlxKey.H, FlxKey.J, FlxKey.K, FlxKey.L], 
+            [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.LEFT_STICK_DIGITAL_UP, FlxGamepadInputID.LEFT_STICK_DIGITAL_RIGHT, FlxGamepadInputID.LEFT_SHOULDER, FlxGamepadInputID.RIGHT_SHOULDER, FlxGamepadInputID.RIGHT_STICK_DIGITAL_LEFT, FlxGamepadInputID.RIGHT_STICK_DIGITAL_DOWN, FlxGamepadInputID.RIGHT_STICK_DIGITAL_UP, FlxGamepadInputID.RIGHT_STICK_DIGITAL_RIGHT]
+        ));
 
         Mods.call("onControlsLoad");
     }
@@ -297,7 +338,18 @@ class Controls extends FlxActionSet {
     public function addGamepad(_id:Int):Void {
         gamepads.push(_id);
 
-        for (control in current) { actions.get(control.name).bindButtons(_id, control.buttons); }
+        for (control in current) { 
+            actions.get(control.name).bindButtons(_id, control.buttons); 
+        }
+
+        for (i in 0...current_key.length) {
+            var control = current_key[i];
+            for (ii in 0...(i + 1)) {
+                var new_action:Action_Plus = key_actions.get(i + 1)[ii];
+
+                new_action.bindButtons(_id, [control.buttons[ii]]);
+            }
+        }
     }
 
     public function check(_control:String, _state:FlxInputState = JUST_PRESSED):Bool {

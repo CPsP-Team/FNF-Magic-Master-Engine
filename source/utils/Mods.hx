@@ -56,7 +56,7 @@ class Mods {
     }
 
     public static function init():Void {
-        if (FlxG.save.data.mods != null) {saved = FlxG.save.data.mods; } //Loading Saved Mods
+        if (FlxG.save.data.mods != null) { saved = FlxG.save.data.mods; } //Loading Saved Mods
         Mods.reload(); // Load Mods from Files
     }
 

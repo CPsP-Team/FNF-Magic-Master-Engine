@@ -63,7 +63,7 @@ class Icon extends FlxSprite {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (animation.finished && animation.curAnim.name != curAnim) { animation.play(curAnim); }
+		if (animation.curAnim != null && animation.finished && animation.curAnim.name != curAnim) { animation.play(curAnim); }
 		if (parent != null) { playAnim(((isPlayer && parent.life > 0.4) || (!isPlayer && parent.life < (parent.max_life - 0.4))) ? 'default' : 'losing'); }
 	}
 

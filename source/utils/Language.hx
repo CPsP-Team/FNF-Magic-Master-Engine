@@ -1,35 +1,9 @@
 package utils;
 
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.ui.interfaces.IFlxUIClickable;
-import flixel.addons.ui.interfaces.IEventGetter;
-import flixel.addons.ui.interfaces.IFlxUIButton;
-import flixel.addons.ui.interfaces.IFlxUIWidget;
-import flixel.addons.transition.TransitionData;
-import flixel.addons.ui.interfaces.IResizable;
-import flixel.graphics.FlxGraphic;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxGradient;
-import flixel.system.FlxAssets;
-import flixel.sound.FlxSound;
-import flixel.group.FlxGroup;
-import flixel.tweens.FlxEase;
-import flixel.math.FlxPoint;
-import flixel.util.FlxTimer;
-import flash.geom.Rectangle;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import haxe.DynamicAccess;
-import flixel.FlxSprite;
 import flixel.FlxG;
 import haxe.Json;
 
 #if (desktop && sys)
-import sys.FileSystem;
 import sys.io.File;
 #end
 
@@ -56,13 +30,13 @@ class Language {
 
     public static function init():Void {
         var saved_lang:String = Settings.get("Language");
-        if (saved_lang == null) {saved_lang = current; }
+        if (saved_lang == null) { saved_lang = current; }
         Language.load(saved_lang);
     }
 
     public static function load(?new_lang:String):Void {
-        if (new_lang == null) {new_lang == Settings.get("Language"); }
-        current = Paths.exists(Paths.getPath('data/lang/lang_${new_lang}.json', TEXT)) ? new_lang : "English"; 
+        if (new_lang == null) { new_lang == Settings.get("Language"); }
+        current = Paths.exists(Paths.getPath('data/lang/lang_${new_lang}.json', TEXT)) ? new_lang : "English";
 
         var new_data:Map<String, Dynamic> = [];
         for (cur_path in Paths.readFile('assets/data/lang/lang_${current}.json')) {

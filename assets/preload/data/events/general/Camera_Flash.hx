@@ -1,3 +1,4 @@
+import utils.Settings;
 import flixel.FlxG;
 
 preset("defaultValues", [
@@ -5,5 +6,5 @@ preset("defaultValues", [
 ]);
 
 function execute(_time:Float):Void {
-    FlxG.camera.flash(0xffffffff, _time, null, true);
+    if (Settings.get("FlashingLights")) { FlxG.camera.flash(0xffffffff, _time, null, true); }
 }
