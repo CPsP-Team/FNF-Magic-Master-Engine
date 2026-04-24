@@ -125,6 +125,10 @@ class PlayState extends MusicBeatState {
 	public var doUpdateStrums:Bool = true;
 	public var showHudOnStart:Bool = true;
 	public var hideOnResults:Bool = true;
+
+	public var didPractice:Bool = false;
+	public var didBotplay:Bool = false;
+	public var didCheats:Bool = false;
 	
 	public var canPause:Bool = false;
 	public var canReset:Bool = true;
@@ -424,6 +428,10 @@ class PlayState extends MusicBeatState {
 
 		if (canControlle) {
 			if (songPlaying) {
+				if (Settings.get("BotPlay")) { didBotplay = true; }
+				if (Settings.get("Practice")) { didPractice = true; }
+				if (Settings.get("Damage") != 1 || Settings.get("Healing") != 1) { didCheats = true; }
+
 				if (controls.check("Pause") && canPause) {
 					pauseAndOpen(
 						"substates.PauseSubState", [
@@ -590,12 +598,12 @@ class PlayState extends MusicBeatState {
 		var song_score:Int = 0;
 		for (s in Songs.players) { song_score += strums.members[s].score; }
 
-		highscore = Highscore.save(Paths.format(song.song, true), song_score, song.difficulty, song.category);
+		if (!didBotplay && !didPractice && !didCheats) { highscore = Highscore.save(Paths.format(song.song, true), song_score, song.difficulty, song.category); }
 		Songs.next(song_score);
 		
 		if (Songs.playlist.length <= 0) {
 			NGio.unlockMedal(60961);
-			Highscore.saveWeek(Songs.weekName, Songs.total_score, song.difficulty, song.category);
+			if (!didBotplay && !didPractice && !didCheats) { Highscore.saveWeek(Songs.weekName, Songs.total_score, song.difficulty, song.category); }
 
 			inst.destroy();
 			for (s in voices.sounds) { s.destroy(); }

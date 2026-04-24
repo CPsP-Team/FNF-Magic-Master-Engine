@@ -41,7 +41,7 @@ class PopLangState extends MusicBeatState {
     private var toNext:String;
 
     override public function create():Void{
-        if (onConfirm != null) {toNext = onConfirm; onConfirm = null; }
+        if (onConfirm != null) { toNext = onConfirm; onConfirm = null; }
         
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
         bg.setGraphicSize(Std.int(FlxG.width), Std.int(FlxG.height)); bg.screenCenter();
@@ -61,7 +61,7 @@ class PopLangState extends MusicBeatState {
             langGroup.add(new_lang);
         }
 
-        var lblAdvice:Alphabet = new Alphabet(0, 25, {animated: true, bold: true, text: 'Choose Your Language'});
+        var lblAdvice:Alphabet = new Alphabet(0, 25, { animated: true, bold: true, text: 'Choose Your Language' });
         lblAdvice.screenCenter(X);
 
         add(bg);
@@ -82,17 +82,17 @@ class PopLangState extends MusicBeatState {
         
         Magic.sortMembersByY(cast langGroup, (FlxG.height / 2), curLang, 25);
 
-		if (controls.check("MenuUp", JUST_PRESSED)) {changeLang(-1); }
-		if (controls.check("MenuDown", JUST_PRESSED)) {changeLang(1); }
+		if (controls.check("MenuUp", JUST_PRESSED)) { changeLang(-1); }
+		if (controls.check("MenuDown", JUST_PRESSED)) { changeLang(1); }
 
-		if (controls.check("MenuAccept", JUST_PRESSED)) {chooseLang(); }
+		if (controls.check("MenuAccept", JUST_PRESSED)) { chooseLang(); }
 	}
     
 	public function changeLang(change:Int = 0, force:Bool = false):Void {
-		curLang += change; if (force) {curLang = change; }
+		curLang += change; if (force) { curLang = change; }
 
 		if (curLang < 0) {curLang = langGroup.length - 1; }
-		if (curLang >= langGroup.length) {curLang = 0; }
+		if (curLang >= langGroup.length) { curLang = 0; }
 	}
 
     public function chooseLang():Void {
