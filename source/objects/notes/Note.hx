@@ -249,6 +249,7 @@ class Note extends StrumNote {
 
     public var customChart:Bool = false;
     public var customInput:Bool = false;
+    public var flipDown:Bool = false;
     public var doAffect:Bool = true;
 
 	public var otherData:Array<Dynamic> = [];
@@ -307,6 +308,10 @@ class Note extends StrumNote {
 
     override public function playAnim(anim:String, force:Bool = false) {
 		animation.play(anim, force);
-        flipY = typeHit == "Hold" ? Settings.get("DownScroll") : false;
+
+        flipY =
+            Settings.get("DownScroll") &&
+            (typeHit == "Hold" && nextNote == null || flipDown)
+        ;
 	}
 }

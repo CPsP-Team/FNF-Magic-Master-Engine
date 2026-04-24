@@ -411,26 +411,23 @@ class StrumLine extends FlxUIGroup {
 
 
                 if (daNote.noteStatus == "Pressed") {
-                    if (daNote.clipRect != null && daNote.clipRect.height <= 0) {if (daNote.destroyOnHit) { destroyNote(daNote); } return; }
+                    if (daNote.clipRect != null && daNote.clipRect.height <= 0) { if (daNote.destroyOnHit) { destroyNote(daNote); } return; }
                     onHIT.dispatch(this, daNote);
     
                     if (Settings.get("DownScroll")) {
                         var swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
-                        swagRect.height = ((noteStrum.y + (noteStrum.height / 2)) - daNote.y) / daNote.scale.y;
-                        swagRect.y = daNote.frameHeight - swagRect.height;
+                        swagRect.height = Math.min(strum_size, Math.max(0, (noteStrum.y + (strum_size / 2) - daNote.y))) / daNote.scale.y;
     
                         daNote.clipRect = swagRect;
-                    } else{
+                    } else {
                         var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-                        swagRect.y = (noteStrum.y + strum_size / 2 - daNote.y) / daNote.scale.y;
+                        swagRect.y = (noteStrum.y + (strum_size / 2) - daNote.y) / daNote.scale.y;
                         swagRect.height -= swagRect.y;
     
                         daNote.clipRect = swagRect;
                     }
                 }
             }
-
-            //if (daNote.typeNote == "Sustain" && daNote.nextNote == null && Settings.get("DownScroll")) {daNote.y = daNote.prevNote.y; }
         });
 
         if (controls != null && isUsing && !botplay && controls.hasGamepad && Settings.get("Player2Pad")) {
