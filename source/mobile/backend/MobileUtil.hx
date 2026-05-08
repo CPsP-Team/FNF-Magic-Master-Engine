@@ -68,7 +68,7 @@ class MobileUtil
 	public static function initDirectory():String {
 		var daPath:String = '';
 		if (!FileSystem.exists(getStorageTypePath()))
-			File.saveContent(getStorageTypePath(), Options.storageType);
+			File.saveContent(getStorageTypePath(), Settings.get('Storage Type'));
 
 		var curStorageType:String = File.getContent(getStorageTypePath());
 
