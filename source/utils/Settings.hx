@@ -11,7 +11,7 @@ import flixel.util.FlxSave;
 import objects.notes.Note;
 import flixel.FlxG;
 
-#if (desktop && sys)
+#if sys
 import sys.FileSystem;
 import sys.io.File;
 #end
@@ -22,6 +22,14 @@ class Settings {
     private static var current:Array<Category> = [];
 	private static var _save:FlxSave;
 
+    #if android
+    public static var storageType:String = "EXTERNAL_DATA";
+    private static var lastStorage:String = "EXTERNAL_DATA";
+    var customPaths:Array<String> = MobileUtil.getCustomStorageDirectories(false);
+    public static var storageTypes:Array<String> = ["EXTERNAL_DATA", "EXTERNAL_MEDIA", "EXTERNAL"];
+    #end
+
+
     public static var categories(get, never):Array<String>;
     public static function get_categories():Array<String> {
         var toReturn:Array<String> = [];
@@ -30,6 +38,15 @@ class Settings {
     }
 
     public static function init():Void {
+    //Just to be safe
+    #if android
+    var path:String = getStorageTypePath();
+    if (FileSystem.exists(path)) {
+        storageType = sys.io.File.getContent(path);
+        lastStorage = storageType;
+    }
+    #end
+
 		Settings._save = new FlxSave();
 		Settings._save.bind('settings', 'Yirius125/Magic-Master-Engine');
 
@@ -74,7 +91,11 @@ class Settings {
         Settings.push_setting(new Bool_Setting("Violence", true), "OtherSettings");
         Settings.push_setting(new Bool_Setting("Gore", true), "OtherSettings");
         Settings.push_setting(new Bool_Setting("NotSafeForWork", true), "OtherSettings");
-        
+        #if android
+        storageTypes = storageTypes.concat(customPaths);
+        Settings.push_setting(new List_Setting("Storage Type", "EXTERNAL_DATA", storageTypes), "OtherSettings");
+        #end
+
         // Cheat Settings | Category
         Settings.push_setting(new Bool_Setting("BotPlay", false), "CheatSettings");
         Settings.push_setting(new Bool_Setting("Practice", false), "CheatSettings");
@@ -89,6 +110,13 @@ class Settings {
             var cur_setting = get_setting(setting.name, setting.category);
             if (cur_setting == null) { continue; }
 
+            #if android
+            if (setting.name == "Storage Type") {
+                storageType = setting.value;
+                lastStorage = setting.value; 
+            }
+             #end
+
             if ((cur_setting is Bool_Setting)) {
                 (cast(cur_setting, Bool_Setting)).toggle(setting.value);
             } else if ((cur_setting is List_Setting)) {
@@ -100,9 +128,24 @@ class Settings {
 
         Main.Info.visible = Settings.get("VisibleMemory");
         FlxG.drawFramerate = FlxG.updateFramerate = Settings.get("Framerate");
-        
-		trace("Settings Loaded Successfully!");     
+  
+		trace("Settings Loaded Successfully!");  
     }
+
+    public static function checkStorageChange():Void {
+    #if android
+    if (lastStorage != storageType) {
+        Settings.save();
+        File.saveContent(MobileUtil.getStorageTypePath(), Settings.get("Storage Type", "OtherSettings"));
+		  	MobileUtil.initDirectory();
+		  	persistentUpdate = false;
+		  	lime.app.Application.current.window.alert('The Storage Type has been changed.\nA restart is required for this change to take effect.\nAny previously installed mods will have to be moved manually to the new Storage Type directory after this restart.\n\nPress OK to reset the game and apply the changes', 'Warning: Storage Type Has Been Changed!');
+        lime.system.System.exit(1);
+    }
+    #end
+}
+
+
     public static function save():Void {
         var to_save:Array<{name:String, category:String, value:Dynamic}> = [];
 
@@ -127,7 +170,9 @@ class Settings {
         
         Main.Info.visible = Settings.get("VisibleMemory");
         FlxG.drawFramerate = FlxG.updateFramerate = Settings.get("Framerate");
-        
+      #if android
+      checkStorageChange();
+      #end
 		trace("Settings Saved Successfully!");
     }
 
