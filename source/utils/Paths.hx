@@ -62,7 +62,7 @@ class Paths {
 		for (mod in Mods.list) {
 			if (!useMods) {break; }
 			if (!mod.enabled) { continue; }
-			path = '${mod.path}/assets/$file';
+			path = MobileUtil.getDirectory() + '${mod.path}/assets/$file';
 			if (mod.exclusive #if sys || FileSystem.exists(path) #end) {break; }
 		}
 		if (!OpenFlAssets.exists(path) #if sys && !FileSystem.exists(path) #end) {path = 'assets/$file'; }
@@ -72,7 +72,7 @@ class Paths {
 		var path = '';
 		for (mod in Mods.list) {
 			if (mod.name != mod_name) { continue; }
-			path = '${mod.path}/assets/$file';
+			path = MobileUtil.getDirectory() + '${mod.path}/assets/$file';
 			break;
 		}
 		if (!OpenFlAssets.exists(path) #if sys && !FileSystem.exists(path) #end) {path = 'assets/$file'; }
@@ -103,7 +103,7 @@ class Paths {
 			var mod_path:String = setPath('${mod.path}/$file');
 			if (!mod.enabled || !FileSystem.exists(mod_path) || !FileSystem.isDirectory(mod_path)) { continue; }
 			for (i in FileSystem.readDirectory(mod_path)) {
-				var cur_path:String = '$mod_path/$i';
+				var cur_path:String = MobileUtil.getDirectory() + '$mod_path/$i';
 				if (toReturn.contains(cur_path)) { continue; }
 				toReturn.push(cur_path);
 			}
@@ -120,7 +120,7 @@ class Paths {
 		#if sys
 		if (FileSystem.exists(setPath(file))) {toReturn.push(setPath(file)); }
 		for (mod in Mods.list) {
-			var _path = setPath('${mod.path}/$file');
+			var _path = MobileUtil.getDirectory() + setPath('${mod.path}/$file');
 			if (mod.enabled && FileSystem.exists(_path)) {toReturn.push(_path);
 			if (mod.exclusive) {break; }}
 		}
@@ -260,7 +260,7 @@ class Paths {
 		for (mod in Mods.list) {
 			if (!mod.enabled || (mod_name != null && mod.name != mod_name)) { continue; }
 
-			path = '${mod.path}/scripts/${key}.hx';
+			path = MobileUtil.getDirectory() + '${mod.path}/scripts/${key}.hx';
 			cur_mod_name = mod.name;
 			
 			if (mod.exclusive #if sys || FileSystem.exists(path) #end) { break; }
