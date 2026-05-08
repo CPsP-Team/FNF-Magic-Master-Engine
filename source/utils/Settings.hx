@@ -4,7 +4,7 @@ import objects.settings.Number_Setting;
 import objects.settings.Bool_Setting;
 import objects.settings.List_Setting;
 import flixel.input.keyboard.FlxKey;
-import flixel.graphics.FlxGraphic;
+import flixelgraphics.FlxGraphic;
 import objects.settings.Category;
 import objects.settings.Setting;
 import flixel.util.FlxSave;
@@ -40,7 +40,7 @@ class Settings {
     public static function init():Void {
     //Just to be safe
     #if android
-    var path:String = getStorageTypePath();
+    var path:String = MobileUtil.getStorageTypePath();
     if (FileSystem.exists(path)) {
         storageType = sys.io.File.getContent(path);
         lastStorage = storageType;
