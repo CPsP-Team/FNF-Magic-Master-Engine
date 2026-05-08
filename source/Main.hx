@@ -45,7 +45,16 @@ class Main extends Sprite {
 
 	public function new() {
 		super();
-		
+
+		#if mobile
+		#if android
+		MobileUtil.getPermissions();
+		MobileUtil.initDirectory();
+		#end
+		Sys.setCwd(MobileUtil.getAssetDirectory());
+		MobileUtil.copyAssets();
+		#end
+
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
 		if (stage != null) {
@@ -108,7 +117,7 @@ class Main extends Sprite {
 		#end
 		
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
-		#if !mobile addChild(Info); #end
+	  addChild(Info);
 	}
 
 	function onCrash(e:UncaughtErrorEvent):Void {
